@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>LUXOR Academy — being forged</title>
+  <meta name="description" content="A retro-futuristic gamified learning platform converting a second-brain of repos, skills, and agents into interactive HTML courses. Coming soon.">
+  <meta property="og:title" content="LUXOR Academy">
+  <meta property="og:description" content="A retro-futuristic gamified learning library. Walk through the deep knowledge-ware of the cutting-edge future.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://luxor-academy.vercel.app">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='none' stroke='%23E9B949' stroke-width='2' d='M32 6 L58 50 L6 50 Z M32 6 L32 50 M6 50 L58 50 M32 6 L19 28 M32 6 L45 28'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="atlas/tokens/tokens.css">
+
+  <style>
+    /* ============================================================
+       LANDING — single page, no JS, brand showcase
+       Uses tokens.css for all design values.
+       ============================================================ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      font-feature-settings: 'kern', 'liga', 'calt';
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Skip-link */
+    .skip { position:absolute; left:-9999px; top:0; }
+    .skip:focus {
+      left: var(--space-4); top: var(--space-4);
+      background: var(--gold-300); color: var(--navy-050);
+      padding: var(--space-2) var(--space-4); border-radius: var(--radius-base);
+      z-index: 100;
+    }
+
+    /* HEADER */
+    .nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding: var(--space-6) var(--space-8);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .brand {
+      display:flex; align-items:center; gap: var(--space-3);
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+      letter-spacing: var(--tracking-wide);
+      color: var(--text-primary);
+    }
+    .brand .glyph { width: 28px; height: 28px; color: var(--gold-300); }
+    .brand .accent { color: var(--gold-300); }
+
+    .nav-links { display:flex; gap: var(--space-6); align-items:center; }
+    .nav-link {
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      letter-spacing: var(--tracking-widest); text-transform: uppercase;
+      color: var(--text-secondary); text-decoration: none;
+      transition: color var(--duration-base) var(--ease-out-quart);
+    }
+    .nav-link:hover, .nav-link:focus-visible { color: var(--gold-300); }
+
+    /* HERO */
+    .hero {
+      flex: 1;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding: var(--space-16) var(--space-6);
+      text-align:center;
+      position:relative;
+    }
+    .tag {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-widest); text-transform: uppercase;
+      color: var(--cyan-400);
+      margin-bottom: var(--space-6);
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(var(--text-3xl), 7vw, var(--text-5xl));
+      font-weight: var(--weight-bold);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight, -0.02em);
+      color: var(--text-primary);
+      margin-bottom: var(--space-6);
+      max-width: 18ch;
+    }
+    .hero h1 .accent { color: var(--gold-300); font-style: italic; }
+    .hero p.lede {
+      font-family: var(--font-body);
+      font-size: clamp(var(--text-base), 2vw, var(--text-xl));
+      line-height: var(--leading-relaxed);
+      color: var(--text-secondary);
+      max-width: 60ch;
+      margin-bottom: var(--space-10);
+    }
+
+    /* GLYPH ROW */
+    .glyphs {
+      display:flex; flex-wrap:wrap; gap: var(--space-8);
+      justify-content:center; align-items:flex-end;
+      margin-bottom: var(--space-12);
+    }
+    .glyph-card {
+      display:flex; flex-direction:column; align-items:center; gap: var(--space-3);
+      max-width: 110px;
+    }
+    .glyph-card svg {
+      width: 64px; height: 64px;
+      stroke: var(--gold-300); fill: none;
+      stroke-width: 1.5;
+      transition: transform var(--duration-slow) var(--ease-out-quart),
+                  filter var(--duration-slow) var(--ease-out-quart);
+    }
+    .glyph-card:hover svg, .glyph-card:focus-within svg {
+      transform: rotate(15deg) scale(1.08);
+      filter: drop-shadow(var(--glow-gold-md));
+    }
+    .glyph-card .label {
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      letter-spacing: var(--tracking-wide); text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .glyph-card .role {
+      font-family: var(--font-display); font-size: var(--text-sm);
+      color: var(--text-primary);
+    }
+
+    /* CTA */
+    .cta-row { display:flex; gap: var(--space-4); flex-wrap:wrap; justify-content:center; margin-bottom: var(--space-16); }
+    .btn {
+      display:inline-flex; align-items:center; gap: var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-base);
+      font-family: var(--font-mono); font-size: var(--text-sm);
+      letter-spacing: var(--tracking-wide); text-transform: uppercase;
+      text-decoration:none;
+      transition: all var(--duration-base) var(--ease-out-quart);
+      border: 1px solid var(--border-default);
+    }
+    .btn-primary {
+      background: var(--gold-300); color: var(--navy-050);
+      border-color: var(--gold-300);
+    }
+    .btn-primary:hover, .btn-primary:focus-visible {
+      box-shadow: var(--glow-gold-lg);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent; color: var(--gold-300);
+    }
+    .btn-ghost:hover, .btn-ghost:focus-visible {
+      background: rgba(233,185,73,0.08);
+      border-color: var(--border-strong);
+      box-shadow: var(--glow-gold-sm);
+    }
+
+    /* ROADMAP */
+    .roadmap {
+      width: 100%; max-width: 920px;
+      padding: var(--space-8);
+      background: var(--surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+    }
+    .roadmap h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      color: var(--gold-300);
+      margin-bottom: var(--space-6);
+      text-align: left;
+    }
+    .roadmap h2 .num {
+      font-family: var(--font-mono); font-size: var(--text-sm);
+      color: var(--cyan-400); margin-right: var(--space-3);
+      letter-spacing: var(--tracking-widest);
+    }
+    .phases { display: grid; gap: var(--space-4); }
+    .phase {
+      display: grid; grid-template-columns: 100px 1fr; gap: var(--space-6);
+      padding: var(--space-4) 0;
+      border-top: 1px dashed var(--border-subtle);
+      text-align: left;
+    }
+    .phase:first-of-type { border-top: none; }
+    .phase .when {
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      letter-spacing: var(--tracking-wide); text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .phase .what { color: var(--text-primary); font-size: var(--text-base); line-height: var(--leading-snug); }
+    .phase .what strong { color: var(--gold-300); font-weight: var(--weight-semibold); display:block; margin-bottom: var(--space-1); font-family: var(--font-display); font-size: var(--text-lg); }
+    .phase .status {
+      display:inline-block; padding: 2px var(--space-2);
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+      margin-left: var(--space-2);
+    }
+    .status-done { background: rgba(34,197,94,0.18); color: var(--color-success); }
+    .status-active { background: rgba(0,245,255,0.15); color: var(--cyan-400); }
+    .status-soon { background: rgba(233,185,73,0.12); color: var(--gold-300); }
+
+    /* FOOTER */
+    footer {
+      padding: var(--space-8);
+      border-top: 1px solid var(--border-subtle);
+      display:flex; justify-content:space-between; align-items:center;
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      color: var(--text-muted);
+      flex-wrap: wrap; gap: var(--space-4);
+    }
+    footer a { color: var(--text-secondary); text-decoration: none; }
+    footer a:hover, footer a:focus-visible { color: var(--gold-300); }
+
+    /* AMBIENT — gentle gold pulse on hero glyph row, suppressed on reduced motion */
+    @media (prefers-reduced-motion: no-preference) {
+      .glyphs svg { animation: idle-glow 6s ease-in-out infinite; }
+      .glyphs .glyph-card:nth-child(2) svg { animation-delay: 0.5s; }
+      .glyphs .glyph-card:nth-child(3) svg { animation-delay: 1.0s; }
+      .glyphs .glyph-card:nth-child(4) svg { animation-delay: 1.5s; }
+      .glyphs .glyph-card:nth-child(5) svg { animation-delay: 2.0s; }
+      .glyphs .glyph-card:nth-child(6) svg { animation-delay: 2.5s; }
+    }
+    @keyframes idle-glow {
+      0%, 100% { filter: none; }
+      50% { filter: drop-shadow(0 0 6px rgba(233,185,73,0.45)); }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .nav { padding: var(--space-4); }
+      .nav-links { display: none; }
+      .phase { grid-template-columns: 80px 1fr; gap: var(--space-3); }
+      .roadmap { padding: var(--space-5); }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">Skip to content</a>
+
+  <header class="nav">
+    <a href="/" class="brand" aria-label="LUXOR Academy home">
+      <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+        <!-- vector equilibrium glyph -->
+        <circle cx="32" cy="32" r="2" fill="currentColor"/>
+        <g stroke="currentColor" stroke-width="1.5" fill="none">
+          <path d="M32 8 L52 20 L52 44 L32 56 L12 44 L12 20 Z"/>
+          <path d="M32 8 L32 56 M12 20 L52 44 M52 20 L12 44"/>
+        </g>
+      </svg>
+      LUXOR <span class="accent">Academy</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a class="nav-link" href="#roadmap">Roadmap</a>
+      <a class="nav-link" href="https://github.com/Luxor-Studios/luxor-academy" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main id="main" class="hero">
+    <p class="tag">[ ACADEMY :: BEING FORGED ]</p>
+    <h1>Walk through the <span class="accent">deep knowledge-ware</span> of the cutting-edge future.</h1>
+    <p class="lede">A retro-futuristic gamified learning library that turns your second-brain — repos, skills, agents — into interactive HTML quests. Built atop the Luxor canonical brand. Architected for sovereignty: ship your own artifact, earn it.</p>
+
+    <section class="glyphs" aria-label="Synergetic primitives mapping to academy hierarchy">
+      <div class="glyph-card">
+        <!-- tetrahedron — module -->
+        <svg viewBox="0 0 64 64" role="img" aria-label="Tetrahedron — Module">
+          <path d="M32 8 L58 50 L6 50 Z M32 8 L32 50 M32 8 L19 28 M32 8 L45 28"/>
+        </svg>
+        <span class="role">Module</span>
+        <span class="label">Tetrahedron</span>
+      </div>
+      <div class="glyph-card">
+        <!-- octahedron — quest -->
+        <svg viewBox="0 0 64 64" role="img" aria-label="Octahedron — Quest">
+          <path d="M32 6 L56 32 L32 58 L8 32 Z M32 6 L32 58 M8 32 L56 32"/>
+        </svg>
+        <span class="role">Quest</span>
+        <span class="label">Octahedron</span>
+      </div>
+      <div class="glyph-card">
+        <!-- cuboctahedron / vector equilibrium — track -->
+        <svg viewBox="0 0 64 64" role="img" aria-label="Cuboctahedron — Track">
+          <path d="M32 4 L52 16 L52 40 L32 52 L12 40 L12 16 Z M32 4 L32 52 M12 16 L52 40 M52 16 L12 40 M12 16 L32 28 L52 16 M12 40 L32 28 L52 40"/>
+        </svg>
+        <span class="role">Track</span>
+        <span class="label">Vector Equilibrium</span>
+      </div>
+      <div class="glyph-card">
+        <!-- jitterbug — transition -->
+        <svg viewBox="0 0 64 64" role="img" aria-label="Jitterbug — Transition">
+          <g>
+            <path d="M32 10 L54 32 L32 54 L10 32 Z"/>
+            <path d="M32 10 L20 32 L32 54 L44 32 Z" opacity="0.6"/>
+          </g>
+        </svg>
+        <span class="role">Transition</span>
+        <span class="label">Jitterbug</span>
+      </div>
+      <div class="glyph-card">
+        <!-- icosahedron — mastery -->
+        <svg viewBox="0 0 64 64" role="img" aria-label="Icosahedron — Mastery">
+          <path d="M32 4 L56 20 L46 50 L18 50 L8 20 Z M32 4 L32 50 M8 20 L56 20 M18 50 L46 50 M8 20 L46 50 M56 20 L18 50"/>
+        </svg>
+        <span class="role">Mastery</span>
+        <span class="label">Icosahedron</span>
+      </div>
+      <div class="glyph-card">
+        <!-- geodesic sphere — atlas -->
+        <svg viewBox="0 0 64 64" role="img" aria-label="Geodesic Sphere — Atlas">
+          <circle cx="32" cy="32" r="26"/>
+          <ellipse cx="32" cy="32" rx="26" ry="10"/>
+          <ellipse cx="32" cy="32" rx="10" ry="26"/>
+          <path d="M6 32 L58 32 M32 6 L32 58"/>
+        </svg>
+        <span class="role">Atlas</span>
+        <span class="label">Geodesic Sphere</span>
+      </div>
+    </section>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#roadmap">View the Roadmap</a>
+      <a class="btn btn-ghost" href="https://github.com/Luxor-Studios/luxor-academy" target="_blank" rel="noopener">Watch the Build →</a>
+    </div>
+
+    <section class="roadmap" id="roadmap" aria-labelledby="roadmap-h">
+      <h2 id="roadmap-h"><span class="num">[ ROADMAP :: 5 PHASES ]</span></h2>
+      <div class="phases">
+        <div class="phase">
+          <span class="when">Phase 0</span>
+          <span class="what">
+            <strong>Architecture &amp; Validation <span class="status status-done">DONE</span></strong>
+            5-phase plan, 6-slot module schema, design tokens (Luxor canonical navy + gold), MERCURIO + MARS validation.
+          </span>
+        </div>
+        <div class="phase">
+          <span class="when">Phase 0.5</span>
+          <span class="what">
+            <strong>Substrate <span class="status status-active">BUILDING</span></strong>
+            Atlas shell, web-components, slot validator, codebase-to-course pipeline skeleton, CI (Lighthouse + axe + Playwright).
+          </span>
+        </div>
+        <div class="phase">
+          <span class="when">Phase 1</span>
+          <span class="what">
+            <strong>Forge BARQUE — flagship Quest <span class="status status-soon">NEXT</span></strong>
+            First instantiated Quest: 3 modules + the canonical "Ship Your Own" pattern. Demo-ready in 7 days from start.
+          </span>
+        </div>
+        <div class="phase">
+          <span class="when">Phase 2-4</span>
+          <span class="what">
+            <strong>Three Tracks Populated</strong>
+            HALCON deploy, parallel agent composition, your first DSL. Live interactive widgets. CETI funnel integration. Beta cohort.
+          </span>
+        </div>
+        <div class="phase">
+          <span class="when">Phase 5</span>
+          <span class="what">
+            <strong>Public Launch</strong>
+            5 Tracks · 20-30 Quests · ~120 Modules. Free Initiate/Adept tier, paid Synergist cohort.
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>LUXOR Studios · 2026</span>
+    <span>
+      <a href="https://github.com/Luxor-Studios/luxor-academy" target="_blank" rel="noopener">github.com/Luxor-Studios/luxor-academy</a>
+    </span>
+    <span style="color: var(--text-muted);">[ phase 0 :: tokens locked :: substrate in flight ]</span>
+  </footer>
+</body>
+</html>
