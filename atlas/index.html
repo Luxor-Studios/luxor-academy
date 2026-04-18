@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="obsidian">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LUXOR Academy — Atlas</title>
+  <meta name="description" content="A retro-futuristic gamified knowledge library. Walk through a star-atlas of your own mind." />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0A1628" />
+
+  <!-- Fonts: 3 families max (Playfair Display / Inter / JetBrains Mono). CSS-loaded; does not count toward JS budget. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <link rel="stylesheet" href="./tokens/tokens.css" />
+  <link rel="stylesheet" href="./styles/atlas.css" />
+  <link rel="icon" type="image/svg+xml" href="./icons/synergetics/geodesic-sphere.svg" />
+
+  <!-- Entry point: single ES module that registers every custom element + installs keyboard + XP. -->
+  <script type="module" src="./components/index.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header" role="banner">
+    <a class="brand" href="/" aria-label="LUXOR Academy — home">
+      <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+        <polygon points="50,8 86,29 86,71 50,92 14,71 14,29" fill="none" stroke="#E9B949" stroke-width="2.5"/>
+        <polygon points="50,32 68,50 32,50" fill="none" stroke="#E9B949" stroke-width="2"/>
+        <polygon points="50,68 32,50 68,50" fill="none" stroke="#E9B949" stroke-width="2"/>
+      </svg>
+      <span class="brand-name">LUXOR</span>
+      <span class="brand-sub">Academy · v0.5</span>
+    </a>
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <a href="/">Atlas</a>
+      <a href="#grimoire" aria-disabled="true">Grimoire</a>
+      <a href="#about" aria-disabled="true">About</a>
+    </nav>
+  </header>
+
+  <main id="main" class="site-main" tabindex="-1">
+    <section class="hero" aria-labelledby="hero-title">
+      <span class="hero-tag">Phase 0.5 · substrate live</span>
+      <h1 id="hero-title" class="hero-title">
+        A star-atlas of your <em>own mind.</em>
+      </h1>
+      <p class="hero-sub">
+        Every Quest below corresponds to a real repository in the second-brain.
+        No toy problems — only ship-ready artifacts.
+        Press <kbd>?</kbd> anywhere to see keyboard shortcuts.
+      </p>
+    </section>
+
+    <section aria-labelledby="atlas-title">
+      <h2 id="atlas-title" class="vh">Atlas — 12 tracks</h2>
+      <atlas-map></atlas-map>
+    </section>
+
+    <aside aria-labelledby="xp-title">
+      <h2 id="xp-title" class="vh">Your progress</h2>
+      <xp-bar></xp-bar>
+      <badge-display></badge-display>
+    </aside>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <p>
+      <span class="vh">Built by</span>
+      <a href="https://luxor.studio" rel="noopener">Luxor Studios</a> ·
+      Fuller-synergetics canon ·
+      <a href="https://github.com/Luxor-Studios/luxor-academy">source</a>
+    </p>
+  </footer>
+
+  <!-- ⌘K palette (rendered on demand). -->
+  <command-palette></command-palette>
+</body>
+</html>
