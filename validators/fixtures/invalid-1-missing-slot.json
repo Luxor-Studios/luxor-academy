@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "id": "broken-missing-self-check",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "This module is missing the self_check slot"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "Filler content that is long enough to satisfy the 300-character minLength requirement on the primer markdown field. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
+      "word_count": 130
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "An octahedron"
+    },
+    "interactive": {
+      "kind": "quiz",
+      "sandbox_policy": {
+        "csp": "default-src 'none'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      }
+    },
+    "artifact": {
+      "source_path": "BARQUE/README.md",
+      "permalink": "https://github.com/luxor/barque/blob/main/README.md",
+      "excerpt": "An excerpt long enough to clear minLength."
+    },
+    "next": {
+      "next_module_id": "dual-theme-css-via-variables"
+    }
+  }
+}

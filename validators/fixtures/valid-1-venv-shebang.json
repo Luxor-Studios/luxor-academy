@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "id": "venv-shebang-trap",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "The venv-Shebang Trap",
+    "xp_reward": 75,
+    "estimated_minutes": 12,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/BARQUE/"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Why your CLI says `bad interpreter`\n\nWhen Homebrew installs a CLI like weasyprint, it writes an absolute shebang to a Python that may move underneath you. After a Python upgrade, the shebang points at a binary that no longer exists, and the tool fails with a `bad interpreter` error. Activating a virtual environment shadows the broken absolute path with a relative one — `python3` resolves to the venv binary, and the shebang is rewritten on `pip install`. Understanding this single failure mode unlocks reproducible CLI tooling on macOS.\n",
+      "word_count": 130,
+      "key_insight": "An absolute shebang is a fragile pointer; venv activation makes it relocatable."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Two Python paths colliding at the shebang line",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "modules/build-and-ship/forge-barque/widgets/venv-shell.html",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; script-src 'self'; style-src 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "User runs `which python3` inside the activated venv pane and sees the venv path.",
+      "interactive_kind_is_static_readable_in_phase_1": false
+    },
+    "artifact": {
+      "source_path": "BARQUE/00-START-HERE.md",
+      "permalink": "https://github.com/luxor/barque/blob/main/00-START-HERE.md#L1-L40",
+      "excerpt": "## CRITICAL: Always activate venv first\nsource /Users/manu/Documents/LUXOR/PROJECTS/BARQUE/venv/bin/activate\n",
+      "language": "bash"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Why does `weasyprint` fail with `bad interpreter` after a Python upgrade?",
+          "correct": 1,
+          "explanation": "The absolute shebang in /opt/homebrew/bin/weasyprint references a Python binary that no longer exists at that path."
+        },
+        {
+          "prompt": "What does `source venv/bin/activate` change?",
+          "correct": 0,
+          "explanation": "It prepends the venv bin directory to PATH so `python3` resolves there first."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "dual-theme-css-via-variables",
+      "siblings": ["dual-theme-css-via-variables", "ship-it-with-resend", "ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

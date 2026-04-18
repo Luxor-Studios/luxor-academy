@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "id": "no-eval-violated",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "Interactive widget declares no_eval=false (forbidden)"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "Filler content that is long enough to satisfy the 300-character minLength requirement on the primer markdown field. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
+      "word_count": 130
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "An octahedron"
+    },
+    "interactive": {
+      "kind": "code-sandbox",
+      "sandbox_policy": {
+        "csp": "default-src *",
+        "iframe_sandbox": "allow-scripts allow-same-origin allow-top-navigation",
+        "no_eval": false
+      }
+    },
+    "artifact": {
+      "source_path": "BARQUE/README.md",
+      "permalink": "https://github.com/luxor/barque/blob/main/README.md",
+      "excerpt": "An excerpt long enough to clear minLength."
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        { "prompt": "Should sandbox_policy.no_eval be true?", "correct": "always" }
+      ]
+    },
+    "next": {
+      "next_module_id": null
+    }
+  }
+}

@@ -12,3 +12,6 @@ coverage/
 playwright-report/
 test-results/
 lighthouse-report/
+.lighthouseci/
+.vercel/
+*.tsbuildinfo

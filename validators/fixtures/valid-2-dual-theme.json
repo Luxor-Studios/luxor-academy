@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "id": "dual-theme-css-via-variables",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "Dual-Theme CSS via Variables",
+    "xp_reward": 75,
+    "estimated_minutes": 15,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/BARQUE/"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# One stylesheet, two themes\n\nDual-theme PDF generation in BARQUE is achieved with a single stylesheet that defines design tokens at the `:root` level and overrides them under a `[data-theme=\"parchment\"]` selector. The renderer toggles a single attribute and re-runs WeasyPrint; the same Markdown produces either a dark or a light PDF without source-level forking. The lesson here is invariant: token-driven theming is reversible at runtime, deterministic at build time, and impossible to corrupt with one-off overrides if the token system is the only source of color.\n",
+      "word_count": 140,
+      "key_insight": "Token-only theming makes both themes derivable from one source."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/cuboctahedron.svg",
+      "alt": "Vector equilibrium showing two theme states as mirrored vertices",
+      "reduced_motion_fallback": "atlas/icons/synergetics/cuboctahedron.svg"
+    },
+    "interactive": {
+      "kind": "code-sandbox",
+      "entry": "modules/build-and-ship/forge-barque/widgets/dual-theme-preview.html",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'self' 'unsafe-inline'",
+        "iframe_sandbox": "allow-same-origin",
+        "no_eval": true
+      },
+      "success_criterion": "Static side-by-side preview of dark + parchment theme renders without console errors.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "atlas/tokens/tokens.css",
+      "permalink": "https://github.com/Luxor-Studios/luxor-academy/blob/main/atlas/tokens/tokens.css#L114-L126",
+      "excerpt": "[data-theme=\"parchment\"] { --surface-0: #FAF6F0; --text-primary: #1A1A2E; --text-accent: var(--gold-600); }",
+      "language": "css"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Where does the parchment theme override its tokens?",
+          "correct": 0,
+          "explanation": "Inside the [data-theme=\"parchment\"] selector — siblings of :root, not children."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "ship-it-with-resend",
+      "siblings": ["venv-shebang-trap", "ship-it-with-resend", "ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

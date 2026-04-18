@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "id": "ship-your-own-pdf-generator",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "Ship Your Own — Markdown → PDF Generator",
+    "xp_reward": 500,
+    "estimated_minutes": 30,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Make this Quest yours\n\nYou've walked through BARQUE end-to-end: venv hygiene, dual-theme tokens, and Resend delivery. The final move is to point the same pipeline at your own report-generator repo. Paste the URL, watch the codebase-to-course pipeline draft a personalized Quest, and ship it as a permalink that lives in your account, not in the academy's library. This inverts the economics: the academy is no longer Manu's brain — it is a substrate for everyone's second brains. Your repo, your Quest, your XP.\n",
+      "word_count": 130,
+      "key_insight": "Every Quest ends by handing the engine to the learner."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/jitterbug.svg",
+      "alt": "Jitterbug morphing from vector equilibrium to icosahedron, signifying transformation",
+      "reduced_motion_fallback": "atlas/icons/synergetics/cuboctahedron.svg"
+    },
+    "interactive": {
+      "kind": "code-sandbox",
+      "entry": "modules/build-and-ship/forge-barque/widgets/ship-your-own.html",
+      "sandbox_policy": {
+        "csp": "default-src 'self'; connect-src 'self' https://api.github.com",
+        "iframe_sandbox": "allow-scripts allow-forms",
+        "no_eval": true
+      },
+      "success_criterion": "Pipeline ingests learner repo URL, emits draft module JSON validated against slots.schema.json.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "pipelines/codebase-to-course/extract.ts",
+      "permalink": "https://github.com/Luxor-Studios/luxor-academy/blob/main/pipelines/codebase-to-course/extract.ts",
+      "excerpt": "export function extractFromRepo(repoPath: string): DraftModule { /* parse README + tests + examples */ }",
+      "language": "typescript"
+    },
+    "self_check": {
+      "kind": "test-must-pass",
+      "questions": [
+        {
+          "prompt": "Run `node validators/six-slots.js <draft.json>` against your generated module — does it exit 0?",
+          "correct": "exit-0",
+          "explanation": "The pipeline must produce slot-valid output before the Quest is published."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["venv-shebang-trap", "dual-theme-css-via-variables", "ship-it-with-resend"],
+      "ship_your_own": true
+    }
+  }
+}
