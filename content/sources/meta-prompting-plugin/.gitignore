@@ -1,0 +1,14 @@
+.DS_Store
+*.log
+*.bak
+node_modules/
+dist/
+.coverage
+.pytest_cache/
+.hypothesis/
+__pycache__/
+*.pyc
+.env
+.env.local
+.idea/
+.vscode/
