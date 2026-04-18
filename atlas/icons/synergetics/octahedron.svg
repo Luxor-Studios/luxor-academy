@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Octahedron — Quest glyph (6 vertices, 8 faces)">
+  <title>Octahedron</title>
+  <desc>Two square pyramids joined at the base. Six vertices, twelve edges, eight triangular faces. Quest-tier glyph.</desc>
+  <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer diamond silhouette -->
+    <polygon points="50,8 92,50 50,92 8,50"/>
+    <!-- Equatorial square (front-back vertices visible as horizontal line) -->
+    <line x1="8" y1="50" x2="92" y2="50"/>
+    <!-- Edges from top vertex to equator front + back -->
+    <line x1="50" y1="8" x2="50" y2="50"/>
+    <!-- Edges from bottom vertex to equator -->
+    <line x1="50" y1="92" x2="50" y2="50"/>
+    <!-- Hidden equatorial perimeter (dashed) -->
+    <line x1="50" y1="50" x2="92" y2="50" stroke-dasharray="3 3" opacity="0.0"/>
+    <!-- Vertex dots -->
+    <circle cx="50" cy="8" r="1.6" fill="#E9B949"/>
+    <circle cx="50" cy="92" r="1.6" fill="#E9B949"/>
+    <circle cx="8" cy="50" r="1.6" fill="#E9B949"/>
+    <circle cx="92" cy="50" r="1.6" fill="#E9B949"/>
+    <circle cx="50" cy="50" r="1.6" fill="#E9B949"/>
+  </g>
+</svg>

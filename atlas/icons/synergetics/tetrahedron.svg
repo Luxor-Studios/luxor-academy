@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Tetrahedron — Module glyph (4 vertices, 4 faces)">
+  <title>Tetrahedron</title>
+  <desc>The minimum-system tetrahedron. Four vertices, six edges, four triangular faces. Module-tier glyph in LUXOR Academy hierarchy.</desc>
+  <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Front face (visible triangle) -->
+    <polygon points="50,12 86,78 14,78"/>
+    <!-- Back vertex projected behind centroid + edges to it (dashed = hidden edges) -->
+    <line x1="50" y1="12" x2="50" y2="58"/>
+    <line x1="14" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
+    <line x1="86" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
+    <!-- Vertex dots -->
+    <circle cx="50" cy="12" r="1.5" fill="#E9B949"/>
+    <circle cx="86" cy="78" r="1.5" fill="#E9B949"/>
+    <circle cx="14" cy="78" r="1.5" fill="#E9B949"/>
+    <circle cx="50" cy="58" r="1.5" fill="#E9B949"/>
+  </g>
+</svg>

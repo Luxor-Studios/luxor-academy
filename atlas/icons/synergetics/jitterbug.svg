@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Jitterbug transformation — animated VE ↔ icosahedron morph (suppressed under prefers-reduced-motion)">
+  <title>Jitterbug</title>
+  <desc>Buckminster Fuller's jitterbug: a vector equilibrium that contracts through icosahedron, octahedron, and tetrahedron states by twisting opposing triangular faces. Animation pauses when the user prefers reduced motion.</desc>
+  <style>
+    .ve-tri-up   { animation: jitter-up 4s ease-in-out infinite; transform-origin: 50px 50px; }
+    .ve-tri-down { animation: jitter-down 4s ease-in-out infinite; transform-origin: 50px 50px; }
+    @keyframes jitter-up   {
+      0%, 100% { transform: rotate(0deg)   scale(1.00); }
+      50%      { transform: rotate(60deg)  scale(0.72); }
+    }
+    @keyframes jitter-down {
+      0%, 100% { transform: rotate(0deg)   scale(1.00); }
+      50%      { transform: rotate(-60deg) scale(0.72); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ve-tri-up, .ve-tri-down { animation: none; }
+    }
+  </style>
+  <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Static outer hexagon — the VE silhouette -->
+    <polygon points="50,8 86,29 86,71 50,92 14,71 14,29" opacity="0.35"/>
+    <!-- Two counter-rotating triangles — the jitterbug motion -->
+    <polygon class="ve-tri-up"   points="50,18 78,66 22,66"/>
+    <polygon class="ve-tri-down" points="50,82 22,34 78,34"/>
+    <!-- Center dot -->
+    <circle cx="50" cy="50" r="2" fill="#E9B949"/>
+  </g>
+</svg>
