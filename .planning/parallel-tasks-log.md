@@ -68,3 +68,13 @@
   - Tip commit `59903da` message claims "Rewrite HANDOFF.md as the single operator entry" but `git show --stat` confirms it ONLY added `META-PROMPT.md` (317 lines). Commit-message/diff mismatch.
 - ⚠️ **HANDOFF not being updated by workers** — both tracks are committing code but neither has touched `HANDOFF.md` in ~148 min (main) / ~144 min (landing). User-stated requirement ("ensure handoff is being updated") is NOT currently satisfied by the autonomous workers.
 - **Risks:** handoff is the hand-off contract for a fresh Claude session; if both workers stop without updating it, next cold-context session will see stale "substrate ready to start" text rather than "#1-12 landed on main / autonomy loop landed on landing". Recommend user intervention or a worker prompt tweak.
+
+## Tick 2 — 2026-04-18 22:43Z
+
+- Track A · `main` @ `50a923c` (20 min old) — **no new commits**. 🛑 **STALLED** (past 18-min threshold).
+- Track B · `landing/coming-soon` @ `59903da` (25 min old) — **no new commits**. 🛑 **STALLED** (past 18-min threshold).
+- No new or deleted branches. Only `claude/monitor-parallel-tasks-pIjpH` has been pushed to this tick (by this watcher).
+- **HANDOFF.md:** still last-touched at `5476fac` on both branches (main: 148m behind HEAD · landing: 144m behind HEAD). **No change.** ⚠️ handoff still not being updated.
+- **Assessment:** both autonomous workers appear to have stopped or paused. Neither has produced a commit in the ~20-25 min window since the last observed activity (`50a923c` on main at 22:23Z · `59903da` on landing at 22:18Z).
+- **Possible causes:** workers finished their atomic unit and exited as designed (Track B's `autonomy/run.sh` is a reentrant loop — each Claude invocation commits ONE unit then exits); driver may not have relaunched them; or they hit the no-progress / wall-clock cap.
+- **Recommendation:** if workers are expected to keep running, check the driver (e.g. `autonomy/run.sh`) logs to see whether it's looping or exited. If they're designed to fire-and-exit, this stall is expected and the user may need to kick the next iteration.
