@@ -1,0 +1,41 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "node scripts/serve.js",
+      "startServerReadyPattern": "serving",
+      "url": ["http://localhost:4173/atlas/"],
+      "numberOfRuns": 1,
+      "settings": {
+        "preset": "perf",
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "cpuSlowdownMultiplier": 4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.56,
+          "uploadThroughputKbps": 675
+        },
+        "screenEmulation": {
+          "mobile": true,
+          "width": 360,
+          "height": 640,
+          "deviceScaleFactor": 2,
+          "disabled": false
+        },
+        "skipAudits": ["uses-http2", "csp-xss", "uses-text-compression"]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["warn", { "minScore": 0.85 }],
+        "interactive": ["error", { "maxNumericValue": 1000 }],
+        "total-byte-weight": ["warn", { "maxNumericValue": 200000 }],
+        "unused-javascript": "off"
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}
