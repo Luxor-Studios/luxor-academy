@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxor.academy/schemas/slots.schema.json",
+  "title": "LUXOR Academy Module Slot Contract",
+  "description": "Single source of truth for the 6-slot module contract. Consumed by: (a) build-time validator, (b) codebase-to-course pipeline exit criterion, (c) dev-mode browser console warnings, (d) Playwright assertion suite. MARS-recommended consolidation.",
+  "type": "object",
+  "required": ["meta", "slots"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["id", "version", "track", "quest", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "version": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "track": { "type": "string" },
+        "quest": { "type": "string" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "xp_reward": { "type": "integer", "minimum": 50, "maximum": 500 },
+        "estimated_minutes": { "type": "integer", "minimum": 5, "maximum": 45 },
+        "tier": { "enum": ["Initiate", "Adept", "Journeyman", "Master", "Synergist"] },
+        "license": { "type": "string", "description": "SPDX identifier; defaults to CC-BY-SA-4.0 for prose, repo-LICENSE for code excerpts" },
+        "source_repo": { "type": "string", "description": "URL or local path to canonical artifact repo" }
+      }
+    },
+    "slots": {
+      "type": "object",
+      "required": ["primer", "visual", "interactive", "artifact", "self_check", "next"],
+      "additionalProperties": false,
+      "properties": {
+        "primer": {
+          "type": "object",
+          "description": "150-300 word concept primer, one key insight.",
+          "required": ["markdown", "word_count"],
+          "properties": {
+            "markdown": { "type": "string", "minLength": 300 },
+            "word_count": { "type": "integer", "minimum": 120, "maximum": 400 },
+            "key_insight": { "type": "string", "description": "The single takeaway, rendered as pull-quote" }
+          }
+        },
+        "visual": {
+          "type": "object",
+          "description": "SVG diagram OR CSS/Canvas animation. Must degrade under prefers-reduced-motion.",
+          "required": ["type", "src"],
+          "properties": {
+            "type": { "enum": ["svg-inline", "svg-external", "mermaid", "canvas", "webgl", "img"] },
+            "src": { "type": "string" },
+            "alt": { "type": "string", "minLength": 10 },
+            "reduced_motion_fallback": { "type": "string", "description": "Static SVG/image used when prefers-reduced-motion: reduce" }
+          }
+        },
+        "interactive": {
+          "type": "object",
+          "description": "Live widget: code sandbox, quiz, simulator. MUST be sandboxed (iframe + CSP).",
+          "required": ["kind", "sandbox_policy"],
+          "properties": {
+            "kind": { "enum": ["code-sandbox", "quiz", "simulator", "diagram-explorer", "mock-api"] },
+            "entry": { "type": "string", "description": "path to widget JS/HTML" },
+            "sandbox_policy": {
+              "type": "object",
+              "required": ["csp", "iframe_sandbox"],
+              "properties": {
+                "csp": { "type": "string", "description": "Content-Security-Policy header or meta" },
+                "iframe_sandbox": { "type": "string", "description": "sandbox attribute e.g. 'allow-scripts'" },
+                "no_eval": { "type": "boolean", "const": true }
+              }
+            },
+            "success_criterion": { "type": "string", "description": "When is the widget 'completed'? Testable predicate." },
+            "interactive_kind_is_static_readable_in_phase_1": {
+              "type": "boolean",
+              "description": "MERCURIO-mandated: if true, widget is a readable static example, not live. Phase 1 allows this for 2 of 3 modules."
+            }
+          }
+        },
+        "artifact": {
+          "type": "object",
+          "description": "Real file excerpt from user's codebase, deep-linked.",
+          "required": ["source_path", "permalink", "excerpt"],
+          "properties": {
+            "source_path": { "type": "string" },
+            "permalink": { "type": "string", "format": "uri", "description": "GitHub permalink with commit SHA" },
+            "excerpt": { "type": "string", "minLength": 20, "maxLength": 4000 },
+            "language": { "type": "string", "description": "highlight.js language hint" }
+          }
+        },
+        "self_check": {
+          "type": "object",
+          "description": "3-5 questions OR a 'make it pass' test. Success = XP unlock.",
+          "required": ["kind", "questions"],
+          "properties": {
+            "kind": { "enum": ["multiple-choice", "test-must-pass", "fill-in-blank"] },
+            "questions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 5,
+              "items": {
+                "type": "object",
+                "required": ["prompt"],
+                "properties": {
+                  "prompt": { "type": "string", "minLength": 5 },
+                  "correct": { "type": ["string", "integer", "array"] },
+                  "explanation": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "next": {
+          "type": "object",
+          "description": "Pointer to next module + sibling modules in the quest.",
+          "required": ["next_module_id"],
+          "properties": {
+            "next_module_id": { "type": ["string", "null"], "description": "null only if this is the final 'Ship Your Own' module" },
+            "siblings": { "type": "array", "items": { "type": "string" } },
+            "ship_your_own": {
+              "type": "boolean",
+              "default": false,
+              "description": "MERCURIO canonical-last-module pattern: if true, this module accepts a learner repo URL and pipes it through the codebase-to-course pipeline to generate a personalized permalink quest."
+            }
+          }
+        }
+      }
+    }
+  }
+}
