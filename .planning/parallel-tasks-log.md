@@ -56,3 +56,15 @@
 
 ---
 <!-- APPEND NEW TICKS BELOW THIS LINE -->
+
+## Tick 1 — 2026-04-18 22:37Z
+
+- Track A · `main` @ `50a923c` (14 min old) — **no new commits** since Tick 0.
+- Track B · `landing/coming-soon` @ `59903da` (19 min old) — **no new commits** since Tick 0.
+- No new or deleted branches.
+- **Stall status:** neither track past 18 min threshold yet. Track A: 14m quiet · Track B: 19m quiet (1m over threshold for B — watch next tick).
+- **HANDOFF.md forensics:**
+  - `git log -- HANDOFF.md` on **both** `main` and `landing/coming-soon` shows last touch = `5476fac` ("Phase 0 planning complete"), ~2h28m ago. Neither branch has modified it since the baseline.
+  - Tip commit `59903da` message claims "Rewrite HANDOFF.md as the single operator entry" but `git show --stat` confirms it ONLY added `META-PROMPT.md` (317 lines). Commit-message/diff mismatch.
+- ⚠️ **HANDOFF not being updated by workers** — both tracks are committing code but neither has touched `HANDOFF.md` in ~148 min (main) / ~144 min (landing). User-stated requirement ("ensure handoff is being updated") is NOT currently satisfied by the autonomous workers.
+- **Risks:** handoff is the hand-off contract for a fresh Claude session; if both workers stop without updating it, next cold-context session will see stale "substrate ready to start" text rather than "#1-12 landed on main / autonomy loop landed on landing". Recommend user intervention or a worker prompt tweak.
