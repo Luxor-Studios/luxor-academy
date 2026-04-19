@@ -86,3 +86,16 @@
 - No new or deleted branches.
 - **HANDOFF.md:** unchanged. main 148m behind HEAD · landing 144m behind HEAD. ⚠️ handoff still untouched since baseline.
 - **Status:** extended stall confirmed. No forward progress on either track for 3 ticks (≈18 min of observation). Asked user for direction (observe / investigate driver / stop loop); awaiting guidance.
+
+## Ticks 4–15 — 2026-04-18 22:55Z → 2026-04-19 00:01Z (coalesced: long stall, no change)
+
+Twelve consecutive heartbeats received while the main session was awaiting user direction. Rather than write 12 empty tick entries, coalesced into one catch-up.
+
+- Heartbeats observed: 22:55Z · 23:01Z · 23:07Z · 23:13Z · 23:19Z · 23:25Z · 23:31Z · 23:37Z · 23:43Z · 23:49Z · 23:55Z · 00:01Z (12 ticks over ≈72 min).
+- Track A · `main` @ `50a923c` — **zero new commits across the entire window**. Now 98 min quiet. 🛑 DEEP STALL.
+- Track B · `landing/coming-soon` @ `59903da` — **zero new commits across the entire window**. Now 103 min quiet. 🛑 DEEP STALL.
+- No new or deleted branches (only this watcher pushed: Ticks 0-3 commits on `claude/monitor-parallel-tasks-pIjpH`).
+- **HANDOFF.md:** still last-touched at `5476fac` on both branches. main: 148m behind HEAD · landing: 144m behind HEAD. ⚠️ handoff still NOT being updated by either worker.
+- **Interpretation:** both autonomous workers have been silent for well over an hour. Consistent with the Track B design ("each Claude invocation is a fresh cold-context session that reads META-PROMPT.md and loop-state.json, executes ONE atomic unit, commits, exits") — if the external driver (`autonomy/run.sh`) isn't looping, workers won't relaunch themselves. Track A has no such driver described, so its single worker may have simply completed its atomic unit and exited too.
+- **Verdict:** the parallel-task setup is **NOT currently working** as a continuously-running autonomous system. Either the driver exited / was never started, or the workers finished their scoped work and the user needs to kick the next iteration manually.
+- Still awaiting user direction (observe / investigate driver / stop).
