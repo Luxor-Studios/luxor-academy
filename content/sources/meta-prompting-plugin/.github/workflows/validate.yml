@@ -1,0 +1,48 @@
+name: validate
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate plugin.json is valid JSON
+        run: |
+          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
+          echo "OK: plugin.json parses"
+
+      - name: Validate every command has YAML frontmatter
+        run: |
+          set -euo pipefail
+          for f in commands/*.md; do
+            head -1 "$f" | grep -q '^---$' || { echo "FAIL: $f missing frontmatter"; exit 1; }
+          done
+          echo "OK: all $(ls commands/*.md | wc -l) commands have frontmatter"
+
+      - name: Validate every skill has YAML frontmatter with name + description
+        run: |
+          set -euo pipefail
+          fail=0
+          while IFS= read -r f; do
+            head -6 "$f" | grep -q '^name:'        || { echo "FAIL: $f missing 'name:'"; fail=1; }
+            head -8 "$f" | grep -q '^description:' || { echo "FAIL: $f missing 'description:'"; fail=1; }
+          done < <(find skills -name SKILL.md -type f)
+          [ "$fail" -eq 0 ] && echo "OK: all skills have frontmatter"
+          exit "$fail"
+
+      - name: Validate INSTALL.sh is executable and passes shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck INSTALL.sh
+
+      - name: Validate no secrets leaked
+        run: |
+          set -euo pipefail
+          ! grep -rE 'sk-[A-Za-z0-9]{20,}|gho_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}' . \
+            --exclude-dir=.git --exclude-dir=node_modules \
+            && echo "OK: no obvious secrets"

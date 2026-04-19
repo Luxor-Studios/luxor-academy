@@ -1,0 +1,207 @@
+{
+  "id": "meta-prompting-plugin",
+  "name": "Meta-Prompting Plugin",
+  "version": "0.1.0",
+  "description": "Compositional prompt engineering for Claude Code — chain commands, iterate with quality gates, extract context, and swap strategies. Inspired by category theory (functors, monads, comonads, natural transformations) but usable without the math.",
+  "author": "Manu Tej <manutej@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/manutej/meta-prompting-plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/manutej/meta-prompting-plugin.git"
+  },
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "meta-prompting",
+    "prompt-engineering",
+    "compositional",
+    "quality-gating",
+    "recursive-meta-prompting",
+    "category-theory-inspired"
+  ],
+  "contents": {
+    "commands": [
+      "chain.md",
+      "meta.md",
+      "rmp.md",
+      "context.md",
+      "transform.md"
+    ],
+    "skills": [
+      {
+        "name": "meta-self",
+        "path": "skills/meta-self",
+        "description": "Master reference for meta-prompting unified syntax: modifiers, operators, composition patterns."
+      },
+      {
+        "name": "recursive-meta-prompting",
+        "path": "skills/recursive-meta-prompting",
+        "description": "RMP patterns with iterative refinement and quality convergence."
+      },
+      {
+        "name": "quality-enriched-prompting",
+        "path": "skills/quality-enriched-prompting",
+        "description": "[0,1]-enriched quality tracking and visualization across prompt pipelines."
+      },
+      {
+        "name": "prompt-dsl",
+        "path": "skills/prompt-dsl",
+        "description": "Domain-specific language for composable prompt construction."
+      },
+      {
+        "name": "prompt-benchmark",
+        "path": "skills/prompt-benchmark",
+        "description": "Systematic prompt evaluation framework with MATH, GSM8K, Game of 24."
+      },
+      {
+        "name": "categorical-property-testing",
+        "path": "skills/categorical-property-testing",
+        "description": "Property-based testing for functor/monad laws using fp-ts and fast-check."
+      },
+      {
+        "name": "polynomial-functors",
+        "path": "skills/polynomial-functors",
+        "description": "Spivak-Niu polynomial functor patterns for learner composition."
+      },
+      {
+        "name": "cc2-research-framework",
+        "path": "skills/cc2-research-framework",
+        "description": "Seven-function research workflow: Observe, Reason, Create, Orchestrate, Learn, Verify, Deploy."
+      },
+      {
+        "name": "arxiv-categorical-ai",
+        "path": "skills/arxiv-categorical-ai",
+        "description": "Systematic analysis patterns for categorical AI research papers."
+      },
+      {
+        "name": "dspy-categorical",
+        "path": "skills/integrations/dspy-categorical",
+        "description": "DSPy compositional prompt optimization (requires: pip install dspy)."
+      },
+      {
+        "name": "lmql-constraints",
+        "path": "skills/integrations/lmql-constraints",
+        "description": "LMQL constraint-guided generation (requires: pip install lmql)."
+      },
+      {
+        "name": "langgraph-orchestration",
+        "path": "skills/integrations/langgraph-orchestration",
+        "description": "LangGraph stateful multi-agent orchestration (requires: pip install langgraph)."
+      },
+      {
+        "name": "guidance-grammars",
+        "path": "skills/integrations/guidance-grammars",
+        "description": "Guidance library grammar-constrained generation (requires: pip install guidance)."
+      },
+      {
+        "name": "discopy-nlp",
+        "path": "skills/integrations/discopy-nlp",
+        "description": "DisCoPy string-diagram NLP (requires: pip install discopy)."
+      },
+      {
+        "name": "effect-ts-ai",
+        "path": "skills/integrations/effect-ts-ai",
+        "description": "@effect/ai integration patterns for typed AI composition (requires: npm install @effect/ai)."
+      },
+      {
+        "name": "voltagent-multiagent",
+        "path": "skills/integrations/voltagent-multiagent",
+        "description": "VoltAgent multi-agent design patterns (requires: npm install voltagent)."
+      },
+      {
+        "name": "mcp-categorical",
+        "path": "skills/integrations/mcp-categorical",
+        "description": "MCP server patterns with typed tool composition."
+      }
+    ],
+    "agents": []
+  },
+  "structures": {
+    "functor": {
+      "symbol": "F",
+      "signature": "Task -> Prompt",
+      "command": "/meta",
+      "description": "Structure-preserving task-to-prompt transformation with complexity tiering."
+    },
+    "monad": {
+      "symbol": "M",
+      "signature": "Prompt ->^n Prompt",
+      "command": "/rmp",
+      "description": "Iterative refinement with quality convergence."
+    },
+    "comonad": {
+      "symbol": "W",
+      "signature": "History -> Context",
+      "command": "/context",
+      "description": "Context extraction and meta-observation."
+    },
+    "natural_transformation": {
+      "symbol": "alpha",
+      "signature": "F => G",
+      "command": "/transform",
+      "description": "Strategy switching between prompting functors."
+    },
+    "exception_monad": {
+      "symbol": "E",
+      "signature": "Either<Error, A>",
+      "modifiers": ["@catch:", "@fallback:"],
+      "description": "Error handling with monadic semantics."
+    },
+    "enriched": {
+      "symbol": "[0,1]",
+      "signature": "Hom_Q(A, B) = [0,1]",
+      "modifiers": ["@quality:", "@quality:visualize"],
+      "description": "Quality tracking, gating, and visualization."
+    }
+  },
+  "composition_operators": {
+    "sequential": {"symbol": "->", "description": "Kleisli composition (output -> input)", "quality_rule": "min(q1, q2)"},
+    "parallel":   {"symbol": "||", "description": "Concurrent execution with aggregation", "quality_rule": "mean(q1, q2, ...)"},
+    "tensor":     {"symbol": "(x)", "description": "Quality-degrading combination", "quality_rule": "min(q1, q2)"},
+    "kleisli":    {"symbol": ">=>", "description": "Monadic refinement with quality gates", "quality_rule": "improves iteratively"}
+  },
+  "modifiers": {
+    "mode":            {"syntax": "@mode:",            "values": ["active", "iterative", "dry-run", "spec"],             "default": "active"},
+    "quality":         {"syntax": "@quality:",         "values": "0.0-1.0",                                                "default": "0.8"},
+    "tier":            {"syntax": "@tier:",            "values": ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],               "default": "auto"},
+    "budget":          {"syntax": "@budget:",          "values": ["integer", "[array]", "auto"],                           "default": "auto"},
+    "variance":        {"syntax": "@variance:",        "values": "percentage",                                             "default": "20%"},
+    "max_iterations":  {"syntax": "@max_iterations:",  "values": "integer",                                                "default": "5"},
+    "catch":           {"syntax": "@catch:",           "values": ["halt", "log", "retry:N", "skip", "substitute:/cmd"],    "default": "halt"},
+    "fallback":        {"syntax": "@fallback:",        "values": ["return-best", "return-last", "use-default:[val]", "empty"], "default": null},
+    "quality_visualize": {"syntax": "@quality:visualize", "values": ["bar", "flow", "detailed", "compact"],                "default": "bar"},
+    "template":        {"syntax": "@template:",        "values": "{context}+{mode}+{format}",                              "default": "auto"},
+    "domain":          {"syntax": "@domain:",          "values": ["ALGORITHM", "SECURITY", "API", "DEBUG", "TESTING", "GENERAL"], "default": "auto"}
+  },
+  "dependencies": {
+    "claudeCode": ">=1.0.0",
+    "mcpServers": []
+  },
+  "statistics": {
+    "totalCommands": 5,
+    "totalSkills": 17,
+    "coreSkills": 9,
+    "integrationSkills": 8,
+    "compositionOperators": 4,
+    "modifiers": 11
+  },
+  "quality": {
+    "dimensions": ["correctness", "clarity", "completeness", "efficiency"],
+    "weights": {"correctness": 0.40, "clarity": 0.25, "completeness": 0.20, "efficiency": 0.15},
+    "thresholds": {"excellent": 0.9, "good": 0.8, "acceptable": 0.7, "poor": 0.6}
+  },
+  "laws": [
+    "Functor Identity: F(id) = id",
+    "Functor Composition: F(g . f) = F(g) . F(f)",
+    "Monad Left Identity: return >=> f = f",
+    "Monad Right Identity: f >=> return = f",
+    "Monad Associativity: (f >=> g) >=> h = f >=> (g >=> h)",
+    "Comonad Left Identity: extract . duplicate = id",
+    "Comonad Associativity: duplicate . duplicate = fmap duplicate . duplicate",
+    "Naturality: alpha_B . F(f) = G(f) . alpha_A",
+    "Exception Catch Identity: catch(Right(a), h) = Right(a)",
+    "Exception Catch Error: catch(Left(e), h) = h(e)",
+    "Quality Monotonicity: quality(A (x) B) <= min(quality(A), quality(B))"
+  ]
+}

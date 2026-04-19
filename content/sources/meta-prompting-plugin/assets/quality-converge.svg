@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="640" height="220" role="img" aria-label="quality convergence across /rmp iterations">
+  <defs>
+    <linearGradient id="bar" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0"  stop-color="#fbbf24"/>
+      <stop offset="0.5" stop-color="#f97316"/>
+      <stop offset="1"  stop-color="#10b981"/>
+    </linearGradient>
+    <style>
+      .axis { stroke:#cbd5e1; stroke-width:1; }
+      .label { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; fill:#64748b; }
+      .val { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; fill:#0f172a; font-weight:600; }
+      .title { font-family:"Inter",ui-sans-serif,system-ui,sans-serif; font-weight:600; font-size:13px; fill:#0f172a; }
+      .threshold { stroke:#ef4444; stroke-width:1.2; stroke-dasharray:4 3; fill:none; }
+      .thresholdlbl { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10px; fill:#ef4444; }
+    </style>
+  </defs>
+
+  <text x="320" y="22" text-anchor="middle" class="title">Quality convergence across /rmp iterations</text>
+
+  <!-- axes -->
+  <line class="axis" x1="60" y1="180" x2="600" y2="180"/>
+  <line class="axis" x1="60" y1="40"  x2="60"  y2="180"/>
+
+  <!-- threshold line at 0.85 (y = 180 - 140*0.85 = 180 - 119 = 61) -->
+  <line class="threshold" x1="60" y1="61" x2="600" y2="61"/>
+  <text class="thresholdlbl" x="604" y="64">threshold 0.85</text>
+
+  <!-- bars: q = 0.42, 0.71, 0.88, 0.93, 0.94 -->
+  <g>
+    <rect x="90"  y="121.2" width="64" height="58.8"  fill="url(#bar)" opacity="0.55"><animate attributeName="opacity" values="0.55;1;0.55" dur="3s" repeatCount="indefinite" begin="0s"/></rect>
+    <rect x="194" y="80.6"  width="64" height="99.4"  fill="url(#bar)" opacity="0.55"><animate attributeName="opacity" values="0.55;1;0.55" dur="3s" repeatCount="indefinite" begin="0.6s"/></rect>
+    <rect x="298" y="56.8"  width="64" height="123.2" fill="url(#bar)" opacity="0.7"><animate attributeName="opacity" values="0.7;1;0.7"   dur="3s" repeatCount="indefinite" begin="1.2s"/></rect>
+    <rect x="402" y="49.8"  width="64" height="130.2" fill="url(#bar)"><animate attributeName="opacity" values="0.9;1;0.9" dur="3s" repeatCount="indefinite" begin="1.8s"/></rect>
+    <rect x="506" y="48.4"  width="64" height="131.6" fill="url(#bar)"><animate attributeName="opacity" values="0.9;1;0.9" dur="3s" repeatCount="indefinite" begin="2.4s"/></rect>
+  </g>
+
+  <!-- values above bars -->
+  <text class="val" x="122" y="115" text-anchor="middle">0.42</text>
+  <text class="val" x="226" y="74"  text-anchor="middle">0.71</text>
+  <text class="val" x="330" y="50"  text-anchor="middle">0.88 ✓</text>
+  <text class="val" x="434" y="43"  text-anchor="middle">0.93</text>
+  <text class="val" x="538" y="42"  text-anchor="middle">0.94</text>
+
+  <!-- x labels -->
+  <text class="label" x="122" y="196" text-anchor="middle">v0</text>
+  <text class="label" x="226" y="196" text-anchor="middle">v1</text>
+  <text class="label" x="330" y="196" text-anchor="middle">v2</text>
+  <text class="label" x="434" y="196" text-anchor="middle">v3</text>
+  <text class="label" x="538" y="196" text-anchor="middle">v4</text>
+
+  <!-- y labels -->
+  <text class="label" x="54" y="184" text-anchor="end">0.0</text>
+  <text class="label" x="54" y="114" text-anchor="end">0.5</text>
+  <text class="label" x="54" y="44"  text-anchor="end">1.0</text>
+</svg>

@@ -1,0 +1,314 @@
+# LUXOR Academy — Autonomous Work Queue
+# Consumed top-down by the Academy Forge meta-prompt.
+# Each unit is atomic: one iteration = one unit.
+
+version: 1
+created: 2026-04-18
+notes: |
+  Ordering encodes priority. Drain critical_path FIRST.
+  When a unit blocks (source missing, upstream broken), skip to next
+  and log to autonomy/logs/skipped-<date>.md.
+
+critical_path:
+  - id: wait-substrate
+    type: pipeline-run
+    target: self-check
+    description: Confirm Phase 0.5 substrate (validator, atlas shell, CI) exists on main. If not, exit with next_unit=wait-for-substrate for 10 min.
+
+  - id: scaffold-track-build-and-ship
+    type: quest-scaffold
+    target: build-and-ship
+    description: Create modules/build-and-ship/ directory + track.manifest.json (tier Initiate, icon cuboctahedron, description)
+
+  - id: scaffold-quest-forge-barque
+    type: quest-scaffold
+    target: build-and-ship:forge-barque
+    description: Create modules/build-and-ship/forge-barque/ + quest.manifest.json referencing content/sources/barque (vendored)
+
+  - id: module-barque-01
+    type: module
+    track: build-and-ship
+    quest: forge-barque
+    module_id: 01-venv-shebang-trap
+    source_repo: content/sources/barque
+    upstream_repo: https://github.com/manutej/luxor-barque
+    source_artifacts:
+      - README.md (venv + weasyprint section)
+      - requirements-service.txt
+      - barque/ (package init + main module)
+      - pyproject.toml (entry point)
+    slot_hints:
+      primer: "why system weasyprint's broken Python 3.13 shebang breaks PDFs; venv activation is the fix"
+      visual: "side-by-side terminal: broken shebang vs activated venv"
+      interactive: "live shell simulator — user types 'which python3', sees path"
+      artifact: "bin/barque shebang + venv activate line, GitHub permalink"
+      self_check: "3 MCQs: 'what does #! mean?', 'why does venv/bin/python matter?', 'what fixes it?'"
+      next: "next_module_id: 02-dual-theme-css"
+    interactive_kind_is_static_readable_in_phase_1: false  # this is the ONE live widget
+    xp_reward: 75
+    estimated_minutes: 15
+
+  - id: module-barque-02
+    type: module
+    track: build-and-ship
+    quest: forge-barque
+    module_id: 02-dual-theme-css
+    source_repo: content/sources/barque
+    upstream_repo: https://github.com/manutej/luxor-barque
+    source_artifacts:
+      - templates/*.css (CSS variable definitions)
+      - README.md (theme section)
+    slot_hints:
+      primer: "CSS custom properties enable light/dark theme from ONE stylesheet; how BARQUE uses :root vs [data-theme='dark']"
+      visual: "side-by-side rendered PDF preview: parchment vs obsidian"
+      interactive: "STATIC-READABLE in Phase 1 — code block showing tokens.css pattern"
+      artifact: "BARQUE templates/light.css + dark.css (shared variables, swapped values)"
+      self_check: "3 MCQs on CSS variable inheritance, --color-primary resolution, theme toggle"
+      next: "next_module_id: 03-ship-it-resend"
+    interactive_kind_is_static_readable_in_phase_1: true
+    xp_reward: 50
+    estimated_minutes: 12
+
+  - id: module-barque-03
+    type: module
+    track: build-and-ship
+    quest: forge-barque
+    module_id: 03-ship-it-resend
+    source_repo: content/sources/barque
+    upstream_repo: https://github.com/manutej/luxor-barque
+    source_artifacts:
+      - barque/email.py (or barque/send.py)
+      - README.md (email section)
+    slot_hints:
+      primer: "why Resend beats SMTP for transactional mail in 2026; idempotency via idempotency-key header"
+      visual: "sequence diagram: Markdown → PDF → Resend POST → delivered"
+      interactive: "STATIC-READABLE — structured POST body with annotations"
+      artifact: "Barque email.py excerpt: the actual api.resend.com call with idempotency key"
+      self_check: "3 MCQs on idempotency, rate limits, attachment sizing"
+      next: "next_module_id: 04-ship-your-own"
+    interactive_kind_is_static_readable_in_phase_1: true
+    xp_reward: 50
+    estimated_minutes: 12
+
+  - id: module-barque-04
+    type: module
+    track: build-and-ship
+    quest: forge-barque
+    module_id: 04-ship-your-own
+    source_repo: null  # learner-provided
+    slot_hints:
+      primer: "you've learned how BARQUE ships Markdown as emailed PDFs. Now apply it: paste YOUR own markdown-to-something generator repo. The pipeline extracts, renders, and gives you back a personal permalink quest that teaches what YOU built."
+      visual: "form field icon → pipeline gears → permalink ribbon"
+      interactive: "repo URL input + 'Forge' button; runs codebase-to-course pipeline server-side (or shows the command to run locally in Phase 1); returns a preview JSON"
+      artifact: "the generated module draft for learner's repo"
+      self_check: "single quest-completion check: 'did you run the pipeline and receive a permalink?'"
+      next: "ship_your_own: true; next_module_id: null"
+    interactive_kind_is_static_readable_in_phase_1: true  # Phase 1 mock; real pipeline in Phase 3
+    xp_reward: 500  # shipped artifact tier
+    estimated_minutes: 18
+    notes: "MERCURIO canonical-last-module pattern. Required for every Quest."
+
+  - id: activate-atlas-vertex-bas
+    type: atlas-vertex
+    target: build-and-ship
+    description: Activate the Build & Ship VE vertex on atlas/index.html, link to forge-barque quest, glyph=cuboctahedron
+
+  - id: validate-phase-1
+    type: validation-round
+    phase: 1
+    description: Run MERCURIO three-plane + MARS systems validation on completed forge-barque quest. Require ≥8/10 MERCURIO and ≥85% MARS confidence before moving to phase_2.
+
+  - id: human-gate-phase-1
+    type: human-gate
+    phase: 1
+    description: Halt loop. Write .planning/human-gate-phase-1.md. Wait for loop-state.json.human_approval.phase-1 == true.
+
+phase_2:
+  # Build & Ship — Quest 2: Deploy HALCON to Vercel
+  - id: scaffold-quest-deploy-halcon
+    type: quest-scaffold
+    target: build-and-ship:deploy-halcon
+  - id: module-halcon-01
+    type: module
+    track: build-and-ship
+    quest: deploy-halcon
+    module_id: 01-vercel-config
+    source_repo: content/sources/halcon
+    slot_hints:
+      primer: "vercel.json anatomy: framework detection, build commands, output dir, rewrites"
+      interactive: live # promote from Phase 1 static-readable now
+    estimated_minutes: 15
+  - id: module-halcon-02
+    type: module
+    module_id: 02-env-vars-hygiene
+    track: build-and-ship
+    quest: deploy-halcon
+    source_repo: content/sources/halcon
+    estimated_minutes: 12
+  - id: module-halcon-03
+    type: module
+    module_id: 03-preview-branches
+    track: build-and-ship
+    quest: deploy-halcon
+    source_repo: content/sources/halcon
+    estimated_minutes: 12
+  - id: module-halcon-04
+    type: module
+    module_id: 04-custom-domain
+    track: build-and-ship
+    quest: deploy-halcon
+    source_repo: content/sources/halcon
+    estimated_minutes: 12
+  - id: module-halcon-05-ship-your-own
+    type: module
+    module_id: 05-ship-your-own
+    track: build-and-ship
+    quest: deploy-halcon
+    source_repo: null
+    estimated_minutes: 18
+
+  # Agent Mastery — Quest 1: Compose Parallel Agents
+  - id: scaffold-track-agent-mastery
+    type: quest-scaffold
+    target: agent-mastery
+  - id: scaffold-quest-compose-parallel
+    type: quest-scaffold
+    target: agent-mastery:compose-parallel-agents
+  - id: module-agents-01
+    type: module
+    module_id: 01-dispatch-pattern
+    track: agent-mastery
+    quest: compose-parallel-agents
+    source_repo: vendor/agents
+    source_artifacts:
+      - mercurio-orchestrator.md
+      - MERCURIO_AGENT_DEFINITION.md
+    estimated_minutes: 15
+  - id: module-agents-02
+    type: module
+    module_id: 02-result-synthesis
+    track: agent-mastery
+    quest: compose-parallel-agents
+    source_repo: vendor/agents
+    estimated_minutes: 12
+  - id: module-agents-03
+    type: module
+    module_id: 03-convergence-mercurio
+    track: agent-mastery
+    quest: compose-parallel-agents
+    source_repo: vendor/agents
+    estimated_minutes: 12
+  - id: module-agents-04-ship-your-own
+    type: module
+    module_id: 04-ship-your-own
+    track: agent-mastery
+    quest: compose-parallel-agents
+    estimated_minutes: 18
+
+  - id: activate-atlas-vertex-agent
+    type: atlas-vertex
+    target: agent-mastery
+
+  - id: validate-phase-2
+    type: validation-round
+    phase: 2
+
+phase_3:
+  # Categorical Wizardry — Quest 1: Your First DSL
+  - id: scaffold-track-categorical
+    type: quest-scaffold
+    target: categorical-wizardry
+  - id: scaffold-quest-first-dsl
+    type: quest-scaffold
+    target: categorical-wizardry:your-first-dsl
+  - id: module-dsl-01
+    type: module
+    module_id: 01-atomic-blocks
+    track: categorical-wizardry
+    quest: your-first-dsl
+    source_repo: vendor/skills/categorical-meta-prompting-ts
+    estimated_minutes: 15
+  - id: module-dsl-02
+    type: module
+    module_id: 02-composition
+    track: categorical-wizardry
+    quest: your-first-dsl
+    source_repo: vendor/skills/categorical-meta-prompting-ts
+    estimated_minutes: 12
+  - id: module-dsl-03
+    type: module
+    module_id: 03-quality-gates
+    track: categorical-wizardry
+    quest: your-first-dsl
+    source_repo: vendor/skills/categorical-meta-prompting-ts
+    estimated_minutes: 12
+  - id: module-dsl-04
+    type: module
+    module_id: 04-ship-the-dsl
+    track: categorical-wizardry
+    quest: your-first-dsl
+    source_repo: vendor/skills/categorical-meta-prompting-ts
+    estimated_minutes: 12
+  - id: module-dsl-05-ship-your-own
+    type: module
+    module_id: 05-ship-your-own
+    track: categorical-wizardry
+    quest: your-first-dsl
+    estimated_minutes: 18
+
+  - id: activate-atlas-vertex-cat
+    type: atlas-vertex
+    target: categorical-wizardry
+
+  # Verification & Rigor — Quest 1: Six-Slot Contract (meta!)
+  - id: scaffold-track-verification
+    type: quest-scaffold
+    target: verification-and-rigor
+  - id: scaffold-quest-six-slot
+    type: quest-scaffold
+    target: verification-and-rigor:the-six-slot-contract
+  - id: module-slot-01
+    type: module
+    module_id: 01-why-six-slots
+    track: verification-and-rigor
+    quest: the-six-slot-contract
+    source_repo: self  # this very repo
+    source_artifacts:
+      - validators/slots.schema.json
+    estimated_minutes: 15
+  - id: module-slot-02
+    type: module
+    module_id: 02-custom-elements
+    track: verification-and-rigor
+    quest: the-six-slot-contract
+    source_repo: self
+    estimated_minutes: 12
+  - id: module-slot-03
+    type: module
+    module_id: 03-ajv-validator
+    track: verification-and-rigor
+    quest: the-six-slot-contract
+    source_repo: self
+    estimated_minutes: 12
+  - id: module-slot-04-ship-your-own
+    type: module
+    module_id: 04-ship-your-own
+    track: verification-and-rigor
+    quest: the-six-slot-contract
+    estimated_minutes: 18
+
+  - id: activate-atlas-vertex-verify
+    type: atlas-vertex
+    target: verification-and-rigor
+
+  - id: validate-phase-3
+    type: validation-round
+    phase: 3
+
+phase_4_and_beyond:
+  # Populated opportunistically after phase 3. Below are placeholders.
+  - scaffold-track-synergetic-systems
+  - scaffold-quest-vector-equilibrium
+  - scaffold-track-research-to-agent
+  - scaffold-quest-paper2agent
+  - publish-atlas-vercel

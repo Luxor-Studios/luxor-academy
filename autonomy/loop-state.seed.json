@@ -1,0 +1,27 @@
+{
+  "$schema": "Academy Forge loop state (seeded by META-PROMPT §12 bootstrap)",
+  "iteration": 0,
+  "started_at": null,
+  "last_iteration_at": null,
+  "next_unit": "wait-substrate",
+  "resume_from": null,
+  "budget_used_tokens_estimate": 0,
+  "budget_limit_tokens_estimate": 2400000,
+  "wall_clock_budget_hours": 4,
+  "completed": [],
+  "skipped": [],
+  "blockers": [],
+  "queue_cursor": {
+    "section": "critical_path",
+    "index": 0
+  },
+  "human_approval": {
+    "phase-1": false,
+    "phase-2": false,
+    "phase-3": false
+  },
+  "validation_scores": {},
+  "current_branch": "main",
+  "repo_url": "https://github.com/Luxor-Studios/luxor-academy",
+  "notes": "This is the seed. The meta-prompt will rewrite this file every iteration."
+}
