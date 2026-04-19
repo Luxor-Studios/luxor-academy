@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Luxor Academy brand tokens.
+ * Source of truth: ../../atlas/tokens/tokens.css
+ * Values mirrored here so shadcn/ui + Tailwind v4 theme utilities resolve correctly.
+ * Any palette change MUST be made in both files. */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-display: var(--font-playfair);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+  --font-heading: var(--font-playfair);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* LUXOR dark-first palette — canonical navy + gold */
+:root {
+  --background: #0A1628;           /* navy-050 canonical */
+  --foreground: #FFFFFF;
+  --card: #111D33;                 /* navy-100 / surface-0 */
+  --card-foreground: #FFFFFF;
+  --popover: #162440;              /* navy-200 / surface-1 */
+  --popover-foreground: #FFFFFF;
+  --primary: #E9B949;              /* gold-300 LUXOR CANONICAL */
+  --primary-foreground: #0A1628;
+  --secondary: #1C2B47;            /* navy-300 / surface-2 */
+  --secondary-foreground: #F5D06B;
+  --muted: #162440;
+  --muted-foreground: #94A3B8;
+  --accent: #00F5FF;               /* cyan phosphor — arcade accent */
+  --accent-foreground: #0A1628;
+  --destructive: #FF3B3B;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(233, 185, 73, 0.30);
+  --input: rgba(233, 185, 73, 0.15);
+  --ring: #E9B949;
+  --radius: 0.625rem;
+  --chart-1: #E9B949;
+  --chart-2: #00F5FF;
+  --chart-3: #FF4DD8;
+  --chart-4: #39FF14;
+  --chart-5: #F5D06B;
+  --sidebar: #0A1628;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #E9B949;
+  --sidebar-primary-foreground: #0A1628;
+  --sidebar-accent: #162440;
+  --sidebar-accent-foreground: #E9B949;
+  --sidebar-border: rgba(233, 185, 73, 0.15);
+  --sidebar-ring: #E9B949;
+}
+
+/* Parchment / light reserved for Phase 5 — dark-first MVP per launch-plan-v1.1 */
+[data-theme="parchment"] {
+  --background: #FAF6F0;
+  --foreground: #1A1A2E;
+  --card: #F0EBE3;
+  --card-foreground: #1A1A2E;
+  --popover: #E8E2D8;
+  --popover-foreground: #1A1A2E;
+  --primary: #9E6A3C;
+  --primary-foreground: #FAF6F0;
+  --muted: #E8E2D8;
+  --muted-foreground: #6B5C47;
+  --border: rgba(158, 106, 60, 0.35);
+  --input: rgba(158, 106, 60, 0.18);
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    /* Synergetic grid — subtle IVM texture */
+    background-image:
+      linear-gradient(rgba(233, 185, 73, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(233, 185, 73, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+  code, pre, kbd {
+    @apply font-mono;
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+    box-shadow: 0 0 16px rgba(233, 185, 73, 0.55), 0 0 4px rgba(233, 185, 73, 0.8);
+  }
+}
+
+/* Motion — reduced by default per v1.1 invariant */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -11,8 +11,8 @@
 | **Last updated** | 2026-04-19 |
 | **Current session** | v2 — autonomous local build, tier curriculum pivot |
 | **Mode** | Autonomous execution, regular commits + push to `main` |
-| **Current milestone** | Foundation wave — CI + architecture decision + HANDOFF rewrite |
-| **Next milestone** | Merge `landing/coming-soon` assets → scaffold `web/` → tier pages |
+| **Current milestone** | Web shell scaffolded (Next.js 16 + shadcn/ui + 4 routes building clean) |
+| **Next milestone** | Generate BARQUE forge-barque modules via codebase-to-course; run MERCURIO+MARS verification |
 | **Blockers** | None |
 | **Human gate pending** | None |
 
@@ -124,19 +124,20 @@ Launched on-demand via `Agent` tool, not all at once:
 
 ## 8 · Current work queue (live — see `TaskList`)
 
-Foundation wave (this commit):
+Completed this session:
 1. ✅ Close Phase 0.5: CI workflow
-2. ✅ Rewrite HANDOFF.md (you are reading it)
+2. ✅ Rewrite HANDOFF.md
 3. ✅ Create docs/EXECUTION-LOG.md dashboard
 4. ✅ Create docs/ARCHITECTURE-v2.md decision record
-5. 🔄 Commit + push foundation wave
+5. ✅ Commit + push foundation wave → `d0f27db`
+6. ✅ Merge landing/coming-soon assets → `2240dd8`
+7. ✅ Scaffold web/ with Next.js 16 + shadcn/ui + 4 building routes
+8. ✅ Build three tier landing pages (landing + /novice + /experienced + /expert)
 
-Build wave (queued):
-6. Merge landing/coming-soon assets
-7. Scaffold web/ with Next.js 15 + shadcn/ui
-8. Build three tier landing pages
-9. Generate BARQUE forge-barque modules via codebase-to-course
-10. MERCURIO + MARS verification pass
+Next (content wave):
+9. Generate BARQUE forge-barque modules via codebase-to-course (4 modules: 01-venv-shebang-trap, 02-dual-theme-css, 03-ship-it-resend, 04-ship-your-own)
+10. MERCURIO + MARS parallel verification pass on the quest
+11. (queued) Generate Experienced + Expert tier first quests
 
 ## 9 · If you are resuming
 
