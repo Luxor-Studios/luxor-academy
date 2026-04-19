@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "04-ship-your-own",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "Ship Your Own",
+    "xp_reward": 500,
+    "estimated_minutes": 18,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-barque"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Run the pipeline on your own repo\n\nYou have just read how BARQUE activates its venv, themes its CSS, and wires its email. That pattern generalises. Any repo that converts Markdown (or YAML, or JSON) into a rendered artifact and ships it somewhere is fair game for the same treatment.\n\nThis module is the canonical last module of every LUXOR Academy Quest. You paste a URL to your own repo — your report generator, your invoice renderer, your daily-digest bot, your static-site builder — and the Academy's codebase-to-course pipeline extracts the same six slots from *your* code: a primer anchored in your README, a visual traced from your architecture, an interactive sandbox pointed at your real CLI, an artifact deep-link into your canonical file, a self-check derived from your tests, and a next-step that routes a future learner through *your* codebase.\n\nWhat you get back is a permalink. Not a certificate. Not a badge. A URL that teaches someone else the thing you just built, with your name on the attribution line. The economy inverts: by completing this Quest you have not only learned BARQUE's shape, you have produced a teachable specimen of your own. That is the sovereignty clause — you own your progress, and you own the Quest your progress generated.\n\nPhase 1 of LUXOR Academy captures your repo URL and queues it for the pipeline. In Phase 3 the pipeline runs live and returns a draft `.module.json` that you can review, edit, and publish.",
+      "word_count": 244,
+      "key_insight": "Every Quest ends the same way — you put your own repo through the same contract and walk away with a permalink quest that teaches what you built."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/geodesic-sphere.svg",
+      "alt": "A flow diagram: a repo URL icon enters a pipeline of gears labelled `extract → validate → render`, which emits a permalink ribbon stamped with the learner's handle and a six-slot module card. The six slots are visible on the card: primer, visual, interactive, artifact, self_check, next.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/geodesic-sphere.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "04-ship-your-own.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner pastes a GitHub repo URL into the form, reviews the preview of what the pipeline would extract, and submits. Phase 1 stores the URL locally for Phase 3 pipeline activation; the submit button is a visual stub in Phase 1.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "README.md",
+      "permalink": "https://github.com/manutej/luxor-barque/blob/main/README.md#L65-L85",
+      "excerpt": "### Basic Usage\n\n```bash\n# Initialize BARQUE in your project\nbarque init\n\n# Generate PDF from single markdown file\nbarque generate document.md\n\n# Generate both light and dark themes\nbarque generate document.md --theme both\n\n# Generate and send via email\nbarque send report.md --to boss@company.com\n\n# Process entire directory\nbarque batch docs/ --output pdfs/\n\n# Send existing PDF file\nbarque email report.pdf --to client@example.com --subject \"Monthly Report\"\n```",
+      "language": "bash"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Why is the canonical last module of every LUXOR Academy Quest a 'Ship Your Own' step rather than a summary quiz?",
+          "correct": 1,
+          "explanation": "Sovereignty. Per §13 of the Academy meta-prompt and MERCURIO's canonical-last-module pattern, learners must end every Quest holding a permalink to their own work, not a score. Summary quizzes train for the Quest. Ship-Your-Own trains for the next repo."
+        },
+        {
+          "prompt": "BARQUE's README.md §Basic Usage lists six one-line commands that, together, describe the full shape of the tool. Which one maps most directly to the skill you just learned in Module 03 (Ship It with Resend)?",
+          "correct": 2,
+          "explanation": "`barque send report.md --to boss@company.com` (README.md line 78) is the one-liner that runs Markdown → dual-theme PDF → email-through-Pop-Resend in a single command. It is the end state of the Quest: Markdown goes in, a delivered email comes out."
+        },
+        {
+          "prompt": "You paste your own repo URL into the form below. What does the Academy pipeline do with it?",
+          "correct": 0,
+          "explanation": "It runs the same codebase-to-course pipeline that produced the three modules you just completed: extract canonical artifacts, validate against `validators/slots.schema.json`, render a draft `.module.json` plus HTML, and return a permalink. In Phase 1 the submission is captured for the Phase 3 live pipeline."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["01-venv-shebang-trap", "02-dual-theme-css", "03-ship-it-resend"],
+      "ship_your_own": true
+    }
+  }
+}

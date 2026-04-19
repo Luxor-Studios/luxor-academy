@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "03-ship-it-resend",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "Ship It with Resend",
+    "xp_reward": 50,
+    "estimated_minutes": 12,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-barque"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Transactional mail without the SMTP detour\n\nBARQUE does not speak SMTP directly. It shells out to [Charm Pop](https://github.com/charmbracelet/pop), a single-binary CLI that already knows how to talk to Resend's HTTP API or fall back to SMTP on request. The integration lives in `barque/core/email.py`.\n\nThe contract is simple and mostly environmental: set `RESEND_API_KEY` in your shell, pick a verified `--from` address, and call `barque send doc.md --to someone@example.com`. BARQUE builds a `pop` command line (`--from`, `--to`, `--subject`, `--attach`), injects `RESEND_API_KEY` into the subprocess environment via `_get_env_vars()`, and hands off. Pop takes it from there.\n\nWhy Resend instead of your company's SMTP relay? Two reasons, both load-bearing for a solo builder. First, SMTP credentials are the highest-value secret on your machine — Resend lets you rotate a narrow-scope API key instead. Second, Resend ships a free tier that only delivers to your verified email (BARQUE's `README.md` calls this out explicitly). That constraint is a feature: it makes Resend safe as a development dependency without a domain verification ritual, and you can promote to full-domain delivery by verifying at resend.com/domains when you are ready to ship for real.",
+      "word_count": 200,
+      "key_insight": "BARQUE treats email as a subprocess, not a protocol. The Pop CLI wraps Resend's HTTP API behind `--from/--to/--subject/--attach`, and the only secret that crosses the process boundary is `RESEND_API_KEY`."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/jitterbug.svg",
+      "alt": "A sequence diagram: Markdown file enters barque CLI, barque CLI invokes pandoc+WeasyPrint to emit a PDF, then constructs a pop subprocess command with --from/--to/--subject/--attach flags and RESEND_API_KEY in its environment, then pop posts to Resend's HTTP API, then Resend delivers to the recipient mailbox.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/jitterbug.svg"
+    },
+    "interactive": {
+      "kind": "code-sandbox",
+      "entry": "03-ship-it-resend.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'none'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the annotated `_get_env_vars` block and can explain where `RESEND_API_KEY` enters the subprocess environment and why it never touches the Pop command-line arguments.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "barque/core/email.py",
+      "permalink": "https://github.com/manutej/luxor-barque/blob/main/barque/core/email.py#L225-L253",
+      "excerpt": "    def _get_env_vars(self) -> Dict[str, str]:\n        \"\"\"Get environment variables for Pop\"\"\"\n        import os\n        env = os.environ.copy()\n\n        # Resend API key\n        if self.config.provider == EmailProvider.RESEND and self.config.resend_api_key:\n            env[\"RESEND_API_KEY\"] = self.config.resend_api_key\n\n        # SMTP configuration\n        if self.config.provider == EmailProvider.SMTP:\n            if self.config.smtp_host:\n                env[\"POP_SMTP_HOST\"] = self.config.smtp_host\n            if self.config.smtp_port:\n                env[\"POP_SMTP_PORT\"] = str(self.config.smtp_port)\n            if self.config.smtp_username:\n                env[\"POP_SMTP_USERNAME\"] = self.config.smtp_username\n            if self.config.smtp_password:\n                env[\"POP_SMTP_PASSWORD\"] = self.config.smtp_password\n\n        # From email\n        if self.config.from_email:\n            env[\"POP_FROM\"] = self.config.from_email\n\n        # Signature\n        if self.config.signature:\n            env[\"POP_SIGNATURE\"] = self.config.signature\n\n        return env",
+      "language": "python"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per `barque/core/email.py`, where does `RESEND_API_KEY` live at the moment BARQUE invokes the `pop` subprocess?",
+          "correct": 2,
+          "explanation": "email.py lines 231-232: `env[\"RESEND_API_KEY\"] = self.config.resend_api_key`. The key is injected into the subprocess environment via the `env=` argument of `subprocess.run` (line 121). It is never passed as a command-line flag, where it would appear in process listings."
+        },
+        {
+          "prompt": "BARQUE's `README.md` Email Setup section warns that free Resend accounts have a specific delivery constraint. What is it?",
+          "correct": 0,
+          "explanation": "README.md line 48: \"Free Resend accounts can only send to your verified email (the one you signed up with). To send to any recipient, verify a domain at resend.com/domains.\" This is why BARQUE's default recipient in many configs is the author's own address — it works out of the box on a free tier."
+        },
+        {
+          "prompt": "If you set `--provider smtp` instead of the default, which of these environment variables does BARQUE set for the Pop subprocess?",
+          "correct": 1,
+          "explanation": "email.py lines 236-243: the SMTP branch sets `POP_SMTP_HOST`, `POP_SMTP_PORT`, `POP_SMTP_USERNAME`, `POP_SMTP_PASSWORD`. `RESEND_API_KEY` is only set when `provider == EmailProvider.RESEND`, so choosing SMTP swaps the entire secret surface."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "04-ship-your-own",
+      "siblings": ["01-venv-shebang-trap", "02-dual-theme-css", "04-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

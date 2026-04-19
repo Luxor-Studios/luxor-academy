@@ -1,0 +1,28 @@
+{
+  "_note": "Provenance log for vendored source repos. Every module's artifact.permalink must cite a SHA listed here. When a placeholder SHA is 'main' it points to moving HEAD and MUST be replaced with a real commit SHA before the quest is published.",
+  "vendored": {
+    "barque": {
+      "upstream": "https://github.com/manutej/luxor-barque",
+      "sha": "main",
+      "sha_is_placeholder": true,
+      "reason": "No .git dir or VENDOR-SHA marker was present when the source was first copied into content/sources/. Record the actual commit SHA on next refresh.",
+      "used_by_quest": "build-and-ship/forge-barque",
+      "last_updated": "2026-04-19"
+    },
+    "halcon": {
+      "upstream": null,
+      "sha": "main",
+      "sha_is_placeholder": true,
+      "reason": "Placeholder; no quests yet reference halcon modules.",
+      "last_updated": "2026-04-19"
+    },
+    "meta-prompting-plugin": {
+      "upstream": null,
+      "sha": "main",
+      "sha_is_placeholder": true,
+      "reason": "Placeholder; no quests yet reference meta-prompting-plugin modules.",
+      "last_updated": "2026-04-19"
+    }
+  },
+  "next_action": "Write scripts/refresh-sources.sh that git-clones each upstream, captures the commit SHA, then git-archive-pipes the tree into content/sources/<repo>/. Update this file atomically at the end of each run."
+}

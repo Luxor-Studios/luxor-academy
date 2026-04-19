@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 03 — Ship It with Resend · Forge BARQUE · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--background:#0A1628;--surface-1:#111D33;--surface-2:#162440;--surface-3:#1C2B47;--primary:#E9B949;--primary-soft:#F5D06B;--accent:#00F5FF;--text:#FFFFFF;--text-dim:#94A3B8;--text-muted:#64748B;--border:rgba(233,185,73,0.22);--border-strong:rgba(233,185,73,0.6);--danger:#FF3B3B;--success:#22C55E;--glow-gold:0 0 16px rgba(233,185,73,0.45);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:var(--background);background-image:linear-gradient(rgba(233,185,73,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(233,185,73,0.025) 1px,transparent 1px);background-size:32px 32px;color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-gold)}
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+.primer p{margin-bottom:1rem}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code,section code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-gold)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+.ann-code{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:0.82rem;line-height:1.65;color:#D4E4F7;overflow-x:auto}
+.ann-code .note{display:block;color:var(--accent);opacity:0.85;font-style:italic;margin:0.15rem 0 0.15rem 1rem}
+.ann-code .key{color:var(--primary-soft);font-weight:600}
+.ann-code .hl{background:rgba(233,185,73,0.12);border-radius:3px;padding:0 0.15em}
+.warning-box{background:rgba(233,185,73,0.08);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:4px;padding:0.9rem 1.1rem;margin:1.25rem 0;font-size:0.9rem;color:var(--text-dim)}
+.warning-box strong{color:var(--primary-soft)}
+@media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Cuboctahedron Track glyph">
+    <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29"/>
+      <polygon points="50,32 68,50 32,50"/>
+      <polygon points="50,68 32,50 68,50"/>
+      <line x1="50" y1="8" x2="50" y2="32"/><line x1="86" y1="29" x2="68" y2="50"/>
+      <line x1="86" y1="71" x2="68" y2="50"/><line x1="50" y1="92" x2="50" y2="68"/>
+      <line x1="14" y1="71" x2="32" y2="50"/><line x1="14" y1="29" x2="32" y2="50"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Build &amp; Ship · Forge BARQUE · Module 03 of 04</div>
+    <div class="qname">Ship It with Resend</div>
+  </div>
+  <div class="stats">
+    <span><strong>+50</strong> XP</span>
+    <span><strong>12</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Ship It with Resend</h1>
+<div class="module-subtitle">// Tier: Initiate · Source: content/sources/barque/barque/core/email.py</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Transactional mail without the SMTP detour</h1>
+  <p>BARQUE does not speak SMTP directly. It shells out to <a href="https://github.com/charmbracelet/pop" target="_blank" rel="noopener noreferrer">Charm Pop</a>, a single-binary CLI that already knows how to talk to Resend's HTTP API or fall back to SMTP on request. The integration lives in <code>barque/core/email.py</code>.</p>
+  <p>The contract is simple and mostly environmental: set <code>RESEND_API_KEY</code> in your shell, pick a verified <code>--from</code> address, and call <code>barque send doc.md --to someone@example.com</code>. BARQUE builds a <code>pop</code> command line (<code>--from</code>, <code>--to</code>, <code>--subject</code>, <code>--attach</code>), injects <code>RESEND_API_KEY</code> into the subprocess environment via <code>_get_env_vars()</code>, and hands off. Pop takes it from there.</p>
+  <p>Why Resend instead of your company's SMTP relay? Two reasons, both load-bearing for a solo builder. First, SMTP credentials are the highest-value secret on your machine — Resend lets you rotate a narrow-scope API key instead. Second, Resend ships a free tier that only delivers to your verified email (BARQUE's <code>README.md</code> calls this out explicitly). That constraint is a feature: it makes Resend safe as a development dependency without a domain verification ritual, and you can promote to full-domain delivery by verifying at <code>resend.com/domains</code> when you are ready to ship for real.</p>
+  <blockquote class="pullquote">BARQUE treats email as a subprocess, not a protocol. Pop wraps Resend's HTTP API behind <code>--from/--to/--subject/--attach</code>, and the only secret that crosses the process boundary is <code>RESEND_API_KEY</code>.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 220" role="img" aria-label="Sequence diagram: Markdown file enters barque CLI, barque CLI invokes pandoc+WeasyPrint to emit a PDF, then constructs a pop subprocess command with --from/--to/--subject/--attach flags and RESEND_API_KEY in its environment, then pop posts to Resend's HTTP API, then Resend delivers to the recipient mailbox." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;fill:#E9B949}
+          .box{fill:#111D33;stroke:#E9B949;stroke-opacity:0.5}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .env{fill:#1C2B47;stroke:#E9B949;stroke-opacity:0.4;stroke-dasharray:3 2}
+          .envlbl{font-family:'JetBrains Mono',monospace;font-size:8px;fill:#E9B949}
+        </style>
+        <marker id="a3" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+      </defs>
+
+      <rect class="box" x="10" y="40" width="90" height="50" rx="3"/>
+      <text class="head" x="55" y="58" text-anchor="middle">report.md</text>
+      <text class="lbl" x="55" y="74" text-anchor="middle">Markdown</text>
+
+      <path class="arrow" d="M100 65 L 130 65" marker-end="url(#a3)"/>
+
+      <rect class="box" x="130" y="40" width="110" height="50" rx="3"/>
+      <text class="head" x="185" y="58" text-anchor="middle">barque send</text>
+      <text class="lbl" x="185" y="74" text-anchor="middle">pandoc+WeasyPrint</text>
+
+      <path class="arrow" d="M240 65 L 270 65" marker-end="url(#a3)"/>
+
+      <rect class="box" x="270" y="40" width="110" height="50" rx="3"/>
+      <text class="head" x="325" y="58" text-anchor="middle">pop subprocess</text>
+      <text class="lbl" x="325" y="74" text-anchor="middle">--from --to --attach</text>
+
+      <path class="arrow" d="M380 65 L 410 65" marker-end="url(#a3)"/>
+
+      <rect class="box" x="410" y="40" width="100" height="50" rx="3"/>
+      <text class="head" x="460" y="58" text-anchor="middle">Resend API</text>
+      <text class="lbl" x="460" y="74" text-anchor="middle">HTTP POST</text>
+
+      <path class="arrow" d="M460 90 L 460 130" marker-end="url(#a3)"/>
+      <rect class="box" x="410" y="130" width="100" height="40" rx="3"/>
+      <text class="head" x="460" y="148" text-anchor="middle">Mailbox</text>
+      <text class="lbl" x="460" y="162" text-anchor="middle">delivered</text>
+
+      <!-- env sidecar -->
+      <rect class="env" x="270" y="110" width="110" height="50" rx="3"/>
+      <text class="envlbl" x="280" y="126">env (subprocess):</text>
+      <text class="envlbl" x="280" y="140">RESEND_API_KEY=re_•••</text>
+      <text class="envlbl" x="280" y="154">POP_FROM=you@...</text>
+      <path class="arrow" d="M325 110 L 325 90" stroke-dasharray="2 2"/>
+
+      <text class="lbl" x="280" y="200" text-anchor="middle">* API key never appears on the command line *</text>
+    </svg>
+    <p class="visual-caption">Fallback: static sequence diagram. Reduced-motion safe by design.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Annotated Source</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Static-readable in Phase 1. Read BARQUE's actual <code>_get_env_vars()</code> method. Annotations call out where each secret lives and why command-line flags would be wrong.</p>
+  <div class="ann-code" aria-label="Annotated email.py excerpt">
+<pre style="margin:0;background:transparent;padding:0;color:inherit"><span class="note"># email.py L225: pack a fresh copy of os.environ so we don't mutate the parent shell</span>
+    def _get_env_vars(self) -&gt; Dict[str, str]:
+        <span class="note"># L227: copy — never pass by reference; subprocess should not inherit parent mutations</span>
+        env = os.environ.copy()
+
+        <span class="note"># L230–232: the Resend branch. Key goes into env, never into argv.</span>
+        if self.config.provider == EmailProvider.RESEND and self.config.resend_api_key:
+            env[<span class="key">"RESEND_API_KEY"</span>] = self.config.<span class="hl">resend_api_key</span>
+
+        <span class="note"># L235–243: the SMTP branch. Four variables; all POP_SMTP_* prefixed, read by pop.</span>
+        if self.config.provider == EmailProvider.SMTP:
+            if self.config.smtp_host:
+                env[<span class="key">"POP_SMTP_HOST"</span>] = self.config.smtp_host
+            ...
+
+        <span class="note"># L246–251: sender identity. POP_FROM is read by pop as the From: header default.</span>
+        if self.config.from_email:
+            env[<span class="key">"POP_FROM"</span>] = self.config.from_email
+        if self.config.signature:
+            env[<span class="key">"POP_SIGNATURE"</span>] = self.config.signature
+
+        return env
+</pre>
+  </div>
+  <div class="warning-box">
+    <strong>Why env vars, not flags?</strong> Command-line arguments appear in <code>ps</code> listings, shell history, and log files. Environment variables of a subprocess do not. BARQUE deliberately routes every secret through <code>env=</code> so <code>RESEND_API_KEY</code> never becomes visible to other users on the machine.
+  </div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">barque/core/email.py · _get_env_vars() · lines 225–253</span>
+      <a href="https://github.com/manutej/luxor-barque/blob/main/barque/core/email.py#L225-L253" target="_blank" rel="noopener noreferrer">view on github →</a>
+    </div>
+<pre><code>    def _get_env_vars(self) -&gt; Dict[str, str]:
+        """Get environment variables for Pop"""
+        import os
+        env = os.environ.copy()
+
+        # Resend API key
+        if self.config.provider == EmailProvider.RESEND and self.config.resend_api_key:
+            env["RESEND_API_KEY"] = self.config.resend_api_key
+
+        # SMTP configuration
+        if self.config.provider == EmailProvider.SMTP:
+            if self.config.smtp_host:
+                env["POP_SMTP_HOST"] = self.config.smtp_host
+            if self.config.smtp_port:
+                env["POP_SMTP_PORT"] = str(self.config.smtp_port)
+            if self.config.smtp_username:
+                env["POP_SMTP_USERNAME"] = self.config.smtp_username
+            if self.config.smtp_password:
+                env["POP_SMTP_PASSWORD"] = self.config.smtp_password
+
+        # From email
+        if self.config.from_email:
+            env["POP_FROM"] = self.config.from_email
+
+        # Signature
+        if self.config.signature:
+            env["POP_SIGNATURE"] = self.config.signature
+
+        return env</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="2" id="q1">
+    <div class="q">1 — Per <code>barque/core/email.py</code>, where does <code>RESEND_API_KEY</code> live at the moment BARQUE invokes the <code>pop</code> subprocess?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>It is passed as <code>--api-key</code> on the <code>pop</code> command line.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>It is written to a temp file; <code>pop</code> reads it with <code>--api-key-file</code>.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>It is injected into the subprocess environment (<code>env=</code>). It is never a command-line flag, so it does not appear in <code>ps</code> listings.</span></button>
+    </div>
+    <div class="explanation">email.py lines 231–232: <code>env["RESEND_API_KEY"] = self.config.resend_api_key</code>. The key is injected into the subprocess environment via the <code>env=</code> argument of <code>subprocess.run</code> (line 121). It is never passed as a command-line flag, where it would appear in process listings.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q2">
+    <div class="q">2 — BARQUE's <code>README.md</code> Email Setup section warns that free Resend accounts have a specific delivery constraint. What is it?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Free accounts can only send to the email address they signed up with. Full recipient freedom requires verifying a domain at <code>resend.com/domains</code>.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Free accounts are limited to one email per day.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Free accounts can send but cannot include attachments.</span></button>
+    </div>
+    <div class="explanation">README.md line 48: "Free Resend accounts can only send to your verified email (the one you signed up with). To send to any recipient, verify a domain at resend.com/domains." This is why BARQUE's default recipient in many configs is the author's own address — it works out of the box on a free tier.</div>
+  </div>
+
+  <div class="question" data-correct="1" id="q3">
+    <div class="q">3 — If you set <code>--provider smtp</code> instead of the default, which of these environment variables does BARQUE set for the Pop subprocess?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>SMTP_URL</code>, <code>SMTP_TOKEN</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>POP_SMTP_HOST</code>, <code>POP_SMTP_PORT</code>, <code>POP_SMTP_USERNAME</code>, <code>POP_SMTP_PASSWORD</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>RESEND_API_KEY</code> is still set as a fallback.</span></button>
+    </div>
+    <div class="explanation">email.py lines 236–243: the SMTP branch sets <code>POP_SMTP_HOST</code>, <code>POP_SMTP_PORT</code>, <code>POP_SMTP_USERNAME</code>, <code>POP_SMTP_PASSWORD</code>. <code>RESEND_API_KEY</code> is only set when <code>provider == EmailProvider.RESEND</code>, so choosing SMTP swaps the entire secret surface.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="02-dual-theme-css.html">
+      <span class="label">← previous module</span>
+      <span class="title">02 · Dual-Theme CSS via Variables</span>
+    </a>
+    <a href="04-ship-your-own.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">04 · Ship Your Own</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) { c.classList.add('correct'); } else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+  try { localStorage.setItem('luxor.academy.visited.forge-barque.03', '1'); } catch(e){}
+})();
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

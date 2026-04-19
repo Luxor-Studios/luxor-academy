@@ -1,0 +1,31 @@
+{
+  "id": "build-and-ship",
+  "version": "v0.1.0",
+  "title": "Build & Ship",
+  "subtitle": "From half-finished repo to live artifact in the wild.",
+  "tier": "Initiate",
+  "glyph": "cuboctahedron",
+  "glyph_src": "atlas/icons/synergetics/cuboctahedron.svg",
+  "vertex_index": 0,
+  "description": "The Vector-Equilibrium vertex where builders learn the last mile: activate the venv, theme the PDF, wire the email, push the repo. Every Quest in this track ends with a 'Ship Your Own' module — you forge a personal permalink quest from your own repo.",
+  "pedagogy": "Real artifacts only. No synthetic examples. Every module excerpts a file from a shipped repo and links to the original commit.",
+  "quests": [
+    {
+      "id": "forge-barque",
+      "title": "Forge BARQUE",
+      "path": "forge-barque/quest.manifest.json",
+      "module_count": 4,
+      "total_xp": 675,
+      "estimated_minutes": 57,
+      "status": "ready"
+    }
+  ],
+  "prerequisites": [],
+  "outcomes": [
+    "Diagnose and fix broken CLI shebangs with virtual environments",
+    "Build dual-theme stylesheets from a single set of CSS custom properties",
+    "Ship transactional email through Resend without burning a weekend on SMTP",
+    "Run a learner repo through the codebase-to-course pipeline and receive a permalink quest"
+  ],
+  "license": "CC-BY-SA-4.0"
+}

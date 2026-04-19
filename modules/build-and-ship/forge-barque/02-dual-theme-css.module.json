@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "02-dual-theme-css",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "Dual-Theme CSS via Variables",
+    "xp_reward": 50,
+    "estimated_minutes": 12,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-barque"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# One stylesheet, two PDFs\n\nBARQUE's headline feature is a single Markdown input that produces both a light-theme and a dark-theme PDF. Look at the generator and you will not find two parallel stylesheets. You will find one, parameterised by CSS custom properties declared on `:root`.\n\nThe logic lives in `barque/core/themes.py`. The `ThemeProcessor.generate_css(theme)` method takes a string — `\"light\"` or `\"dark\"` — pulls the corresponding colour dict from `BarqueConfig`, and emits a CSS block whose `:root` declares `--bg-primary`, `--text-primary`, `--accent-color`, `--code-bg` and friends. Every downstream rule (`body`, `h1`, `pre`, `blockquote`, `table`) references those variables rather than hard-coded hex. Change the six colour tokens, render again, and the entire document retypes itself in the new palette.\n\nThis is the same pattern `atlas/tokens/tokens.css` uses for this very course — `--gold-300`, `--navy-050`, `--surface-0`, swapped under a `[data-theme=\"parchment\"]` selector. CSS variables are a runtime indirection: the browser (or in BARQUE's case, WeasyPrint) resolves the token at paint time, so two themes never mean two stylesheets. They mean one stylesheet, two inputs.",
+      "word_count": 194,
+      "key_insight": "Dual themes are not two stylesheets — they are one stylesheet and two palettes, wired together through `:root` custom properties."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/tetrahedron.svg",
+      "alt": "A single CSS stylesheet in the centre, with two arrows branching to two rendered PDF pages: one on parchment-white with dark text, one on obsidian-dark with light text. Each PDF is annotated with the CSS variable values flowing into it: --bg-primary, --text-primary, --accent-color, --code-bg.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/tetrahedron.svg"
+    },
+    "interactive": {
+      "kind": "code-sandbox",
+      "entry": "02-dual-theme-css.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'none'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the annotated CSS block, identifies which `:root` variables change between light and dark, and recognises that the downstream rules never reference hex values directly.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "barque/core/themes.py",
+      "permalink": "https://github.com/manutej/luxor-barque/blob/main/barque/core/themes.py#L54-L73",
+      "excerpt": ":root {{\n    /* Theme Colors */\n    --bg-primary: {bg_color};\n    --bg-secondary: {self._lighten_darken(bg_color, 0.05 if theme == \"dark\" else -0.03)};\n    --text-primary: {theme_data.get('text', '#000000')};\n    --text-secondary: {self._lighten_darken(theme_data.get('text', '#000000'), -0.2 if theme == \"light\" else 0.15)};\n    --border-color: {theme_data.get('border', '#e0e0e0')};\n    --accent-color: {theme_data.get('accent', '#2563eb')};\n    --code-bg: {code_bg_enhanced};\n    --code-border: {code_border};\n    --code-text: {theme_data.get('code_text', theme_data.get('text', '#000000'))};\n    --link-color: {theme_data.get('accent', '#2563eb')};\n    --link-hover: {self._lighten_darken(theme_data.get('accent', '#2563eb'), -0.1)};\n\n    /* Typography - Enhanced for readability */\n    --font-family: {self.config.font_family};\n    --base-font-size: {base_font};\n    --line-height: {self.config.line_height};\n    --max-width: {self.config.max_width};\n}}",
+      "language": "python"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In `barque/core/themes.py`, where does `ThemeProcessor.generate_css` look up the colour values for the chosen theme?",
+          "correct": 1,
+          "explanation": "`_get_theme_data(theme)` (themes.py lines 354-361) returns `self.config.light_theme` or `self.config.dark_theme` — both `Dict[str, str]` defined on `BarqueConfig` (config.py lines 29-45). The CSS template interpolates those values into `:root`."
+        },
+        {
+          "prompt": "Per `barque/core/config.py`, what is the default `accent` colour for the `light_theme` dict?",
+          "correct": 2,
+          "explanation": "config.py line 33: `\"accent\": \"#2563eb\"`. The dark theme's accent (line 42) is `\"#60a5fa\"`. Those two hex values are the only thing distinguishing light from dark at the accent-colour level — everything downstream is just `var(--accent-color)`."
+        },
+        {
+          "prompt": "A `body` rule inside the generated CSS references `background-color: var(--bg-primary);`. Why does this one rule produce two different backgrounds in the two PDFs?",
+          "correct": 0,
+          "explanation": "`var(--bg-primary)` is resolved at paint time against the `:root` declaration, which was emitted with a different hex value per theme (themes.py line 56). The rule is identical in both stylesheets. The palette is not."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "03-ship-it-resend",
+      "siblings": ["01-venv-shebang-trap", "03-ship-it-resend", "04-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

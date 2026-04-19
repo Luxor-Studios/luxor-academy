@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 02 — Dual-Theme CSS via Variables · Forge BARQUE · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--background:#0A1628;--surface-1:#111D33;--surface-2:#162440;--surface-3:#1C2B47;--primary:#E9B949;--primary-soft:#F5D06B;--accent:#00F5FF;--text:#FFFFFF;--text-dim:#94A3B8;--text-muted:#64748B;--border:rgba(233,185,73,0.22);--border-strong:rgba(233,185,73,0.6);--danger:#FF3B3B;--success:#22C55E;--glow-gold:0 0 16px rgba(233,185,73,0.45);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:var(--background);background-image:linear-gradient(rgba(233,185,73,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(233,185,73,0.025) 1px,transparent 1px);background-size:32px 32px;color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-gold)}
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+.primer p{margin-bottom:1rem}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code,section code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-gold)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+/* Module-02 specific: side-by-side theme preview */
+.theme-demo{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.25rem}
+.theme-card{border:1px solid var(--border);border-radius:6px;padding:1.1rem;font-family:var(--font-body);transition:all 200ms}
+.theme-card h3{font-family:var(--font-display);font-size:1.1rem;margin-bottom:0.3rem;font-weight:700}
+.theme-card p{font-size:0.88rem;line-height:1.5;margin-bottom:0.75rem}
+.theme-card pre{font-family:var(--font-mono);font-size:0.75rem;padding:0.6rem 0.8rem;border-radius:4px;border-left-width:3px;border-left-style:solid}
+.theme-card .badge{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.2rem 0.5rem;border-radius:3px;margin-bottom:0.75rem;display:inline-block}
+.theme-card.light{background:#FAF6F0;color:#1A1A2E}
+.theme-card.light h3{color:#1A1A2E;border-bottom:2px solid #9E6A3C;padding-bottom:0.3rem}
+.theme-card.light pre{background:#F0EBE3;color:#2C2C3A;border-left-color:#9E6A3C}
+.theme-card.light .badge{background:#E8E2D8;color:#6B5C47}
+.theme-card.dark{background:#1A1A1A;color:#E8E8E8}
+.theme-card.dark h3{color:#E8E8E8;border-bottom:2px solid #60A5FA;padding-bottom:0.3rem}
+.theme-card.dark pre{background:#2D2D2D;color:#E8E8E8;border-left-color:#60A5FA}
+.theme-card.dark .badge{background:#3D3D3D;color:#94A3B8}
+.var-legend{display:grid;grid-template-columns:auto 1fr 1fr;gap:0.35rem 1rem;font-family:var(--font-mono);font-size:0.78rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:0.9rem 1.1rem;margin-top:1.25rem}
+.var-legend .head{color:var(--primary);letter-spacing:0.08em;text-transform:uppercase;font-size:0.7rem}
+.var-legend .name{color:var(--accent)}
+.var-legend .light{color:#9E6A3C}
+.var-legend .dark{color:#60A5FA}
+.swatch{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:middle;margin-right:0.3rem;border:1px solid var(--border)}
+@media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.theme-demo{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Cuboctahedron Track glyph">
+    <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29"/>
+      <polygon points="50,32 68,50 32,50"/>
+      <polygon points="50,68 32,50 68,50"/>
+      <line x1="50" y1="8" x2="50" y2="32"/><line x1="86" y1="29" x2="68" y2="50"/>
+      <line x1="86" y1="71" x2="68" y2="50"/><line x1="50" y1="92" x2="50" y2="68"/>
+      <line x1="14" y1="71" x2="32" y2="50"/><line x1="14" y1="29" x2="32" y2="50"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Build &amp; Ship · Forge BARQUE · Module 02 of 04</div>
+    <div class="qname">Dual-Theme CSS via Variables</div>
+  </div>
+  <div class="stats">
+    <span><strong>+50</strong> XP</span>
+    <span><strong>12</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Dual-Theme CSS via Variables</h1>
+<div class="module-subtitle">// Tier: Initiate · Source: content/sources/barque/barque/core/themes.py</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>One stylesheet, two PDFs</h1>
+  <p>BARQUE's headline feature is a single Markdown input that produces both a light-theme and a dark-theme PDF. Look at the generator and you will not find two parallel stylesheets. You will find one, parameterised by CSS custom properties declared on <code>:root</code>.</p>
+  <p>The logic lives in <code>barque/core/themes.py</code>. The <code>ThemeProcessor.generate_css(theme)</code> method takes a string — <code>"light"</code> or <code>"dark"</code> — pulls the corresponding colour dict from <code>BarqueConfig</code>, and emits a CSS block whose <code>:root</code> declares <code>--bg-primary</code>, <code>--text-primary</code>, <code>--accent-color</code>, <code>--code-bg</code> and friends. Every downstream rule (<code>body</code>, <code>h1</code>, <code>pre</code>, <code>blockquote</code>, <code>table</code>) references those variables rather than hard-coded hex. Change the six colour tokens, render again, and the entire document retypes itself in the new palette.</p>
+  <p>This is the same pattern <code>atlas/tokens/tokens.css</code> uses for this very course — <code>--gold-300</code>, <code>--navy-050</code>, <code>--surface-0</code>, swapped under a <code>[data-theme="parchment"]</code> selector. CSS variables are a runtime indirection: the browser (or in BARQUE's case, WeasyPrint) resolves the token at paint time, so two themes never mean two stylesheets. They mean one stylesheet, two inputs.</p>
+  <blockquote class="pullquote">Dual themes are not two stylesheets — they are one stylesheet and two palettes, wired together through <code>:root</code> custom properties.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 540 280" role="img" aria-label="A single CSS stylesheet in the centre, with two arrows branching to two rendered PDF pages: one on parchment-white with dark text, one on obsidian-dark with light text. Each PDF is annotated with the CSS variable values flowing into it." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#94A3B8}
+          .lblb{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#E9B949;font-weight:600}
+          .head{font-family:'Playfair Display',serif;font-size:12px;font-weight:700}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
+        </style>
+        <marker id="a2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+      </defs>
+      <!-- Center stylesheet -->
+      <rect x="210" y="100" width="120" height="90" rx="4" fill="#111D33" stroke="#E9B949" stroke-opacity="0.5"/>
+      <text class="head" fill="#E9B949" x="270" y="120" text-anchor="middle">themes.py</text>
+      <text class="lbl" x="220" y="138">generate_css(theme)</text>
+      <text class="lbl" x="220" y="152">→ :root { ... }</text>
+      <text class="lblb" x="220" y="170">--bg-primary</text>
+      <text class="lblb" x="220" y="182">--accent-color</text>
+
+      <!-- Arrows -->
+      <path class="arrow" d="M210 140 L 90 80" marker-end="url(#a2)"/>
+      <path class="arrow" d="M330 140 L 450 80" marker-end="url(#a2)"/>
+
+      <!-- Light PDF card -->
+      <rect x="20" y="30" width="140" height="110" rx="4" fill="#FAF6F0" stroke="#9E6A3C"/>
+      <text class="head" fill="#1A1A2E" x="30" y="48">Light PDF</text>
+      <line x1="30" y1="52" x2="150" y2="52" stroke="#9E6A3C" stroke-width="1.5"/>
+      <text class="lbl" fill="#2C2C3A" x="30" y="68">bg=#FAF6F0</text>
+      <text class="lbl" fill="#2C2C3A" x="30" y="82">text=#1A1A2E</text>
+      <text class="lbl" fill="#9E6A3C" x="30" y="96">accent=#9E6A3C</text>
+      <rect x="30" y="104" width="120" height="22" fill="#F0EBE3" stroke="#E0DAD0"/>
+      <text class="lbl" fill="#2C2C3A" x="36" y="119">code block</text>
+
+      <!-- Dark PDF card -->
+      <rect x="380" y="30" width="140" height="110" rx="4" fill="#1A1A1A" stroke="#60A5FA"/>
+      <text class="head" fill="#E8E8E8" x="390" y="48">Dark PDF</text>
+      <line x1="390" y1="52" x2="510" y2="52" stroke="#60A5FA" stroke-width="1.5"/>
+      <text class="lbl" fill="#E8E8E8" x="390" y="68">bg=#1A1A1A</text>
+      <text class="lbl" fill="#E8E8E8" x="390" y="82">text=#E8E8E8</text>
+      <text class="lbl" fill="#60A5FA" x="390" y="96">accent=#60A5FA</text>
+      <rect x="390" y="104" width="120" height="22" fill="#2D2D2D" stroke="#3D3D3D"/>
+      <text class="lbl" fill="#E8E8E8" x="396" y="119">code block</text>
+
+      <text class="lbl" x="270" y="240" text-anchor="middle">one stylesheet · two palettes · resolved at paint time</text>
+    </svg>
+    <p class="visual-caption">Fallback: side-by-side preview. No animation required; the diagram is the point.</p>
+  </div>
+
+  <!-- Live CSS-only theme preview -->
+  <div class="theme-demo" aria-label="Side-by-side rendered preview of light and dark themes using BARQUE's default palette">
+    <div class="theme-card light">
+      <span class="badge">light theme · default</span>
+      <h3>Dual-Theme PDF</h3>
+      <p>Same stylesheet. Same rules. Only the <code style="background:#E8E2D8;color:#6B5C47;padding:0 0.3em;border-radius:2px">:root</code> palette differs.</p>
+      <pre>body { color: var(--text); }</pre>
+    </div>
+    <div class="theme-card dark">
+      <span class="badge">dark theme · default</span>
+      <h3>Dual-Theme PDF</h3>
+      <p>Same stylesheet. Same rules. Only the <code style="background:#3D3D3D;color:#94A3B8;padding:0 0.3em;border-radius:2px">:root</code> palette differs.</p>
+      <pre>body { color: var(--text); }</pre>
+    </div>
+  </div>
+
+  <div class="var-legend" role="table" aria-label="Variable values per theme">
+    <span class="head">variable</span><span class="head">light</span><span class="head">dark</span>
+    <span class="name">--bg-primary</span><span class="light"><span class="swatch" style="background:#FFFFFF"></span>#FFFFFF</span><span class="dark"><span class="swatch" style="background:#1A1A1A"></span>#1A1A1A</span>
+    <span class="name">--text-primary</span><span class="light"><span class="swatch" style="background:#1A1A1A"></span>#1A1A1A</span><span class="dark"><span class="swatch" style="background:#E8E8E8"></span>#E8E8E8</span>
+    <span class="name">--accent-color</span><span class="light"><span class="swatch" style="background:#2563EB"></span>#2563EB</span><span class="dark"><span class="swatch" style="background:#60A5FA"></span>#60A5FA</span>
+    <span class="name">--code-bg</span><span class="light"><span class="swatch" style="background:#F0F0F0"></span>#F0F0F0</span><span class="dark"><span class="swatch" style="background:#2D2D2D"></span>#2D2D2D</span>
+    <span class="name">--border-color</span><span class="light"><span class="swatch" style="background:#E0E0E0"></span>#E0E0E0</span><span class="dark"><span class="swatch" style="background:#3D3D3D"></span>#3D3D3D</span>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Annotated Source</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Static-readable in Phase 1. Read the actual lines BARQUE emits for <code>:root</code>. The six colour tokens below are the entire difference between a light PDF and a dark PDF — every other rule in the file says <code>var(--...)</code>.</p>
+  <div class="artifact" style="margin-bottom:0">
+    <div class="artifact-head">
+      <span class="path">barque/core/themes.py · generate_css() · lines 54–73</span>
+      <a href="https://github.com/manutej/luxor-barque/blob/main/barque/core/themes.py#L54-L73" target="_blank" rel="noopener noreferrer">view on github →</a>
+    </div>
+<pre><code>:root {{
+    /* Theme Colors */
+    --bg-primary: {bg_color};
+    --bg-secondary: {self._lighten_darken(bg_color, 0.05 if theme == "dark" else -0.03)};
+    --text-primary: {theme_data.get('text', '#000000')};
+    --text-secondary: {self._lighten_darken(theme_data.get('text', '#000000'), -0.2 if theme == "light" else 0.15)};
+    --border-color: {theme_data.get('border', '#e0e0e0')};
+    --accent-color: {theme_data.get('accent', '#2563eb')};
+    --code-bg: {code_bg_enhanced};
+    --code-border: {code_border};
+    --code-text: {theme_data.get('code_text', theme_data.get('text', '#000000'))};
+    --link-color: {theme_data.get('accent', '#2563eb')};
+    --link-hover: {self._lighten_darken(theme_data.get('accent', '#2563eb'), -0.1)};
+
+    /* Typography - Enhanced for readability */
+    --font-family: {self.config.font_family};
+    --base-font-size: {base_font};
+    --line-height: {self.config.line_height};
+    --max-width: {self.config.max_width};
+}}</code></pre>
+  </div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">barque/core/themes.py · lines 54–73</span>
+      <a href="https://github.com/manutej/luxor-barque/blob/main/barque/core/themes.py#L54-L73" target="_blank" rel="noopener noreferrer">view on github →</a>
+    </div>
+<pre><code>:root {{
+    /* Theme Colors */
+    --bg-primary: {bg_color};
+    --bg-secondary: {self._lighten_darken(bg_color, 0.05 if theme == "dark" else -0.03)};
+    --text-primary: {theme_data.get('text', '#000000')};
+    --text-secondary: {self._lighten_darken(theme_data.get('text', '#000000'), -0.2 if theme == "light" else 0.15)};
+    --border-color: {theme_data.get('border', '#e0e0e0')};
+    --accent-color: {theme_data.get('accent', '#2563eb')};
+    --code-bg: {code_bg_enhanced};
+    --code-border: {code_border};
+    --code-text: {theme_data.get('code_text', theme_data.get('text', '#000000'))};
+    --link-color: {theme_data.get('accent', '#2563eb')};
+    --link-hover: {self._lighten_darken(theme_data.get('accent', '#2563eb'), -0.1)};
+
+    /* Typography - Enhanced for readability */
+    --font-family: {self.config.font_family};
+    --base-font-size: {base_font};
+    --line-height: {self.config.line_height};
+    --max-width: {self.config.max_width};
+}}</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — In <code>barque/core/themes.py</code>, where does <code>ThemeProcessor.generate_css</code> look up the colour values for the chosen theme?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>It reads an external YAML file named <code>themes/&lt;theme&gt;.yaml</code> at generation time.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>_get_theme_data(theme)</code> returns <code>self.config.light_theme</code> or <code>self.config.dark_theme</code> — both <code>Dict[str, str]</code> defined on <code>BarqueConfig</code>.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>It pulls them from environment variables like <code>BARQUE_LIGHT_BG</code>.</span></button>
+    </div>
+    <div class="explanation"><code>_get_theme_data(theme)</code> (themes.py lines 354–361) returns <code>self.config.light_theme</code> or <code>self.config.dark_theme</code> — both <code>Dict[str, str]</code> defined on <code>BarqueConfig</code> (config.py lines 29–45). The CSS template interpolates those values into <code>:root</code>.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — Per <code>barque/core/config.py</code>, what is the default <code>accent</code> colour for the <code>light_theme</code> dict?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>#E9B949</code> (Luxor gold)</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>#60A5FA</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>#2563EB</code></span></button>
+    </div>
+    <div class="explanation">config.py line 33: <code>"accent": "#2563eb"</code>. The dark theme's accent (line 42) is <code>"#60a5fa"</code>. Those two hex values are the only thing distinguishing light from dark at the accent-colour level — everything downstream is just <code>var(--accent-color)</code>.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q3">
+    <div class="q">3 — A <code>body</code> rule inside the generated CSS references <code>background-color: var(--bg-primary);</code>. Why does this one rule produce two different backgrounds in the two PDFs?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>var(--bg-primary)</code> is resolved at paint time against the <code>:root</code> declaration, which was emitted with a different hex per theme. The rule is identical in both stylesheets; the palette is not.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>WeasyPrint runs two separate rendering passes with different arguments.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>The <code>body</code> selector is rewritten to <code>body[data-theme]</code> at build time.</span></button>
+    </div>
+    <div class="explanation"><code>var(--bg-primary)</code> is resolved at paint time against the <code>:root</code> declaration, which was emitted with a different hex value per theme (themes.py line 56). The rule is identical in both stylesheets. The palette is not.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="01-venv-shebang-trap.html">
+      <span class="label">← previous module</span>
+      <span class="title">01 · The venv-Shebang Trap</span>
+    </a>
+    <a href="03-ship-it-resend.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">03 · Ship It with Resend</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) { c.classList.add('correct'); } else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+  try { localStorage.setItem('luxor.academy.visited.forge-barque.02', '1'); } catch(e){}
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 04 — Ship Your Own · Forge BARQUE · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--background:#0A1628;--surface-1:#111D33;--surface-2:#162440;--surface-3:#1C2B47;--primary:#E9B949;--primary-soft:#F5D06B;--accent:#00F5FF;--text:#FFFFFF;--text-dim:#94A3B8;--text-muted:#64748B;--border:rgba(233,185,73,0.22);--border-strong:rgba(233,185,73,0.6);--danger:#FF3B3B;--success:#22C55E;--glow-gold:0 0 16px rgba(233,185,73,0.45);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:var(--background);background-image:linear-gradient(rgba(233,185,73,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(233,185,73,0.025) 1px,transparent 1px);background-size:32px 32px;color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-gold)}
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+.primer p{margin-bottom:1rem}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code,section code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-gold)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+/* Forge form */
+.forge{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.4rem 1.5rem}
+.forge label{display:block;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.4rem}
+.forge input[type="url"]{width:100%;padding:0.7rem 0.85rem;background:#050B18;border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-mono);font-size:0.9rem;transition:all 150ms}
+.forge input[type="url"]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,245,255,0.2)}
+.forge .hint{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem}
+.forge .actions{margin-top:1.2rem;display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap}
+.forge-btn{position:relative;background:var(--primary);color:var(--background);border:1px solid var(--primary);padding:0.65rem 1.2rem;font-family:var(--font-mono);font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all 150ms}
+.forge-btn:hover,.forge-btn:focus-visible{background:var(--primary-soft);box-shadow:var(--glow-gold)}
+.forge-btn[disabled]{opacity:0.6;cursor:not-allowed}
+.phase-stub{font-family:var(--font-mono);font-size:0.7rem;color:var(--accent);padding:0.3rem 0.6rem;background:rgba(0,245,255,0.1);border:1px dashed var(--accent);border-radius:3px;letter-spacing:0.08em;text-transform:uppercase}
+.tooltip{position:relative;display:inline-block}
+.tooltip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--surface-3);color:var(--text);padding:0.5rem 0.8rem;border-radius:4px;font-family:var(--font-body);font-size:0.78rem;letter-spacing:0;text-transform:none;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 150ms;border:1px solid var(--border);font-weight:400}
+.tooltip:hover::after,.tooltip:focus-within::after{opacity:1}
+.preview{margin-top:1.4rem;background:#050B18;border:1px solid var(--border);border-radius:4px;padding:1rem 1.15rem;font-family:var(--font-mono);font-size:0.78rem;color:#D4E4F7;line-height:1.6;display:none}
+.preview.visible{display:block}
+.preview .slot{color:var(--primary)}
+.preview .val{color:var(--accent)}
+.preview .dim{color:var(--text-muted)}
+@media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Cuboctahedron Track glyph">
+    <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29"/>
+      <polygon points="50,32 68,50 32,50"/>
+      <polygon points="50,68 32,50 68,50"/>
+      <line x1="50" y1="8" x2="50" y2="32"/><line x1="86" y1="29" x2="68" y2="50"/>
+      <line x1="86" y1="71" x2="68" y2="50"/><line x1="50" y1="92" x2="50" y2="68"/>
+      <line x1="14" y1="71" x2="32" y2="50"/><line x1="14" y1="29" x2="32" y2="50"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Build &amp; Ship · Forge BARQUE · Module 04 of 04 · Canonical Last Module</div>
+    <div class="qname">Ship Your Own</div>
+  </div>
+  <div class="stats">
+    <span><strong>+500</strong> XP</span>
+    <span><strong>18</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Ship Your Own</h1>
+<div class="module-subtitle">// Tier: Initiate · Pattern: MERCURIO canonical-last-module</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Run the pipeline on your own repo</h1>
+  <p>You have just read how BARQUE activates its venv, themes its CSS, and wires its email. That pattern generalises. Any repo that converts Markdown (or YAML, or JSON) into a rendered artifact and ships it somewhere is fair game for the same treatment.</p>
+  <p>This module is the <strong>canonical last module</strong> of every LUXOR Academy Quest. You paste a URL to your own repo — your report generator, your invoice renderer, your daily-digest bot, your static-site builder — and the Academy's codebase-to-course pipeline extracts the same six slots from <em>your</em> code: a primer anchored in your README, a visual traced from your architecture, an interactive sandbox pointed at your real CLI, an artifact deep-link into your canonical file, a self-check derived from your tests, and a next-step that routes a future learner through <em>your</em> codebase.</p>
+  <p>What you get back is a permalink. Not a certificate. Not a badge. A URL that teaches someone else the thing you just built, with your name on the attribution line. The economy inverts: by completing this Quest you have not only learned BARQUE's shape, you have produced a teachable specimen of your own. That is the sovereignty clause — you own your progress, and you own the Quest your progress generated.</p>
+  <p>Phase 1 of LUXOR Academy captures your repo URL and queues it for the pipeline. In Phase 3 the pipeline runs live and returns a draft <code>.module.json</code> that you can review, edit, and publish.</p>
+  <blockquote class="pullquote">Every Quest ends the same way — you put your own repo through the same contract and walk away with a permalink quest that teaches what you built.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 240" role="img" aria-label="A flow diagram: a repo URL icon enters a pipeline of gears labelled extract, validate, render, which emits a permalink ribbon stamped with the learner's handle and a six-slot module card." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;fill:#E9B949}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .gear{fill:none;stroke:#E9B949;stroke-width:1.3}
+          .slot{fill:#111D33;stroke:#E9B949;stroke-opacity:0.4}
+          .slotlbl{font-family:'JetBrains Mono',monospace;font-size:8px;fill:#E9B949}
+        </style>
+        <marker id="a4" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+      </defs>
+
+      <!-- Repo input -->
+      <rect x="10" y="90" width="100" height="50" rx="4" fill="#111D33" stroke="#E9B949" stroke-opacity="0.5"/>
+      <text class="head" x="60" y="108" text-anchor="middle">your repo</text>
+      <text class="lbl" x="60" y="124" text-anchor="middle">github.com/you/...</text>
+
+      <path class="arrow" d="M110 115 L 145 115" marker-end="url(#a4)"/>
+
+      <!-- Gear 1: extract -->
+      <circle class="gear" cx="170" cy="115" r="20"/>
+      <text class="head" x="170" y="118" text-anchor="middle" font-size="8">extract</text>
+
+      <path class="arrow" d="M195 115 L 225 115" marker-end="url(#a4)"/>
+
+      <!-- Gear 2: validate -->
+      <circle class="gear" cx="250" cy="115" r="20"/>
+      <text class="head" x="250" y="118" text-anchor="middle" font-size="8">validate</text>
+
+      <path class="arrow" d="M275 115 L 305 115" marker-end="url(#a4)"/>
+
+      <!-- Gear 3: render -->
+      <circle class="gear" cx="330" cy="115" r="20"/>
+      <text class="head" x="330" y="118" text-anchor="middle" font-size="8">render</text>
+
+      <path class="arrow" d="M355 115 L 385 115" marker-end="url(#a4)"/>
+
+      <!-- Six-slot module card -->
+      <rect x="385" y="35" width="165" height="160" rx="4" fill="#111D33" stroke="#E9B949"/>
+      <text class="head" x="467" y="54" text-anchor="middle">your.module.json</text>
+      <line x1="395" y1="60" x2="540" y2="60" stroke="#E9B949" stroke-opacity="0.4"/>
+      <rect class="slot" x="395" y="68" width="70" height="18" rx="2"/>
+      <text class="slotlbl" x="400" y="80">primer</text>
+      <rect class="slot" x="471" y="68" width="70" height="18" rx="2"/>
+      <text class="slotlbl" x="476" y="80">visual</text>
+      <rect class="slot" x="395" y="90" width="70" height="18" rx="2"/>
+      <text class="slotlbl" x="400" y="102">interactive</text>
+      <rect class="slot" x="471" y="90" width="70" height="18" rx="2"/>
+      <text class="slotlbl" x="476" y="102">artifact</text>
+      <rect class="slot" x="395" y="112" width="70" height="18" rx="2"/>
+      <text class="slotlbl" x="400" y="124">self_check</text>
+      <rect class="slot" x="471" y="112" width="70" height="18" rx="2"/>
+      <text class="slotlbl" x="476" y="124">next</text>
+
+      <!-- Permalink ribbon -->
+      <rect x="395" y="145" width="145" height="40" rx="3" fill="#1C2B47" stroke="#00F5FF"/>
+      <text class="lbl" x="467" y="160" text-anchor="middle" fill="#00F5FF">permalink:</text>
+      <text class="lbl" x="467" y="174" text-anchor="middle">luxor.academy/q/you/...</text>
+
+      <text class="lbl" x="280" y="220" text-anchor="middle">extract → validate against slots.schema.json → render HTML → emit permalink</text>
+    </svg>
+    <p class="visual-caption">Fallback: static flow diagram. No animation required; the six-slot card is the deliverable.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Forge Your Quest</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Phase 1 captures your repo URL locally and shows a preview of what the pipeline <em>would</em> extract. Phase 3 will activate the live pipeline; the submit button is a visual stub for now — hover to see the note.</p>
+  <form class="forge" id="forgeForm" onsubmit="return submitForge(event)">
+    <label for="repoUrl">Paste your repo URL</label>
+    <input type="url" id="repoUrl" name="repoUrl" placeholder="https://github.com/your-handle/your-repo" autocomplete="off" required>
+    <div class="hint">Must be a public HTTPS URL. The pipeline will clone read-only and run the extractor.</div>
+    <div class="actions">
+      <span class="tooltip" data-tip="Phase 3 activates the live pipeline. Phase 1 stores your URL locally in the browser.">
+        <button type="submit" class="forge-btn" id="forgeBtn">Forge Quest</button>
+      </span>
+      <span class="phase-stub">Phase 1 stub · activates in Phase 3</span>
+    </div>
+    <div class="preview" id="forgePreview" role="status" aria-live="polite"></div>
+  </form>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">README.md · Basic Usage · lines 65–85</span>
+      <a href="https://github.com/manutej/luxor-barque/blob/main/README.md#L65-L85" target="_blank" rel="noopener noreferrer">view on github →</a>
+    </div>
+<pre><code>### Basic Usage
+
+```bash
+# Initialize BARQUE in your project
+barque init
+
+# Generate PDF from single markdown file
+barque generate document.md
+
+# Generate both light and dark themes
+barque generate document.md --theme both
+
+# Generate and send via email
+barque send report.md --to boss@company.com
+
+# Process entire directory
+barque batch docs/ --output pdfs/
+
+# Send existing PDF file
+barque email report.pdf --to client@example.com --subject "Monthly Report"
+```</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — Why is the canonical last module of every LUXOR Academy Quest a "Ship Your Own" step rather than a summary quiz?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Because summary quizzes are impossible to grade fairly.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Sovereignty. Per §13 of the Academy meta-prompt, learners must end every Quest holding a permalink to their own work, not a score.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Because tests are easier to cheat than projects.</span></button>
+    </div>
+    <div class="explanation">Sovereignty. Per §13 of the Academy meta-prompt and MERCURIO's canonical-last-module pattern, learners must end every Quest holding a permalink to their own work, not a score. Summary quizzes train for the Quest. Ship-Your-Own trains for the next repo.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — BARQUE's README.md §Basic Usage lists six one-line commands that, together, describe the full shape of the tool. Which one maps most directly to the skill you just learned in Module 03 (Ship It with Resend)?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>barque generate document.md</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>barque batch docs/ --output pdfs/</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>barque send report.md --to boss@company.com</code></span></button>
+    </div>
+    <div class="explanation"><code>barque send report.md --to boss@company.com</code> (README.md line 78) is the one-liner that runs Markdown → dual-theme PDF → email-through-Pop-Resend in a single command. It is the end state of the Quest: Markdown goes in, a delivered email comes out.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q3">
+    <div class="q">3 — You paste your own repo URL into the form above. What does the Academy pipeline do with it?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>It runs the codebase-to-course pipeline: extract canonical artifacts, validate against <code>validators/slots.schema.json</code>, render a draft <code>.module.json</code> plus HTML, and return a permalink.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>It forks your repo into the LUXOR org.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>It opens a pull request on your repo with Academy-branded README edits.</span></button>
+    </div>
+    <div class="explanation">It runs the same codebase-to-course pipeline that produced the three modules you just completed: extract canonical artifacts, validate against <code>validators/slots.schema.json</code>, render a draft <code>.module.json</code> plus HTML, and return a permalink. In Phase 1 the submission is captured for the Phase 3 live pipeline.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="03-ship-it-resend.html">
+      <span class="label">← previous module</span>
+      <span class="title">03 · Ship It with Resend</span>
+    </a>
+    <a href="../../../atlas/index.html" class="next">
+      <span class="label">quest complete · return to atlas ↗</span>
+      <span class="title">Atlas</span>
+    </a>
+  </nav>
+  <p style="margin-top:1.5rem;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim);text-align:center">You have reached the canonical last module. No <code>next_module_id</code>. Your permalink quest is queued.</p>
+</section>
+
+</div>
+
+<script>
+/* Forge form — Phase 1 stub, captures URL to localStorage only, no network */
+function submitForge(ev){
+  ev.preventDefault();
+  const input = document.getElementById('repoUrl');
+  const url = (input.value || '').trim();
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    if (u.protocol !== 'https:') throw new Error('http-required');
+    const record = { url, submitted_at: new Date().toISOString(), phase: 1, status: 'queued-for-phase-3' };
+    localStorage.setItem('luxor.academy.ship-your-own.forge-barque', JSON.stringify(record));
+    localStorage.setItem('luxor.academy.completed.forge-barque.04', '1');
+    const preview = document.getElementById('forgePreview');
+    preview.innerHTML =
+      '<div class="dim">// phase-1 preview · no network activity · stored locally</div>' +
+      '<div><span class="slot">repo:</span> <span class="val">' + escapeHtml(url) + '</span></div>' +
+      '<div><span class="slot">status:</span> <span class="val">queued-for-phase-3</span></div>' +
+      '<div><span class="slot">next:</span> <span class="val">Phase 3 pipeline will extract slots and return a permalink.</span></div>' +
+      '<div style="margin-top:0.6rem;color:var(--primary)">✓ Your Quest is queued. Your progress: 675 XP · Forge BARQUE complete.</div>';
+    preview.classList.add('visible');
+    document.getElementById('forgeBtn').disabled = true;
+    document.getElementById('forgeBtn').textContent = 'Queued ✓';
+  } catch (e) {
+    const preview = document.getElementById('forgePreview');
+    preview.innerHTML = '<div style="color:var(--danger)">Please enter a valid HTTPS URL.</div>';
+    preview.classList.add('visible');
+  }
+  return false;
+}
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) { c.classList.add('correct'); } else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

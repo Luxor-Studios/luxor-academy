@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "01-venv-shebang-trap",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "forge-barque",
+    "title": "The venv-Shebang Trap",
+    "xp_reward": 75,
+    "estimated_minutes": 15,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-barque"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Why BARQUE insists on `source venv/bin/activate`\n\nBARQUE's first instruction is not `pip install` — it is `source venv/bin/activate`. That line is not a suggestion. It is load-bearing.\n\nMany Python CLIs you install through Homebrew (including `weasyprint`, which BARQUE shells out to for PDF rendering) ship with an **absolute shebang** pointing at a specific Python interpreter path. When macOS upgrades Python underneath you — say 3.12 to 3.13 — the binary at that path disappears, and the CLI errors out with `bad interpreter: no such file or directory`. The tool is not broken. Its pointer moved.\n\nA virtual environment sidesteps this entirely. `source venv/bin/activate` prepends `venv/bin` to your `PATH`, so every call to `python` and `weasyprint` resolves to the venv-local binary first. The venv writes shebangs that resolve *relative* to the activated shell, not to a Homebrew path that may have already vanished.\n\nBARQUE's `QUICK-START.md` enshrines this in two lines: `cd` into the repo, then `source venv/bin/activate`, then `pip install -e .`. Skip the middle line and nothing works. Run the middle line and everything does.",
+      "word_count": 187,
+      "key_insight": "An absolute shebang is a fragile pointer. `source venv/bin/activate` replaces it with a relocatable one by editing PATH."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Diagram of two PATH stacks side by side: the system PATH resolving `python3` to /opt/homebrew/bin/python3 (which points to a missing 3.13 binary) versus the activated venv PATH resolving `python3` to venv/bin/python3 (which points to a working interpreter).",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "01-venv-shebang-trap.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner activates the simulated venv (clicks the `source venv/bin/activate` button), then types `which python3` in the fake prompt and sees the path resolve to `./venv/bin/python3` instead of `/opt/homebrew/bin/python3`.",
+      "interactive_kind_is_static_readable_in_phase_1": false
+    },
+    "artifact": {
+      "source_path": "QUICK-START.md",
+      "permalink": "https://github.com/manutej/luxor-barque/blob/main/QUICK-START.md#L8-L14",
+      "excerpt": "## Installation\n\n```bash\ncd /Users/manu/Documents/LUXOR/PROJECTS/BARQUE\nsource venv/bin/activate\npip install -e .\n```",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "BARQUE's QUICK-START.md lists three installation steps in order. What is the second step, right before `pip install -e .`?",
+          "correct": 1,
+          "explanation": "QUICK-START.md §Installation (lines 10-14) shows the exact order: `cd` into the repo, then `source venv/bin/activate`, then `pip install -e .`. The venv activation is non-negotiable — it is what makes the editable install resolve interpreter paths correctly."
+        },
+        {
+          "prompt": "Why does activating the venv change where `python3` resolves?",
+          "correct": 0,
+          "explanation": "The `activate` script prepends `venv/bin` to the `PATH` environment variable. Shell lookup walks `PATH` left-to-right and returns the first match, so `venv/bin/python3` is found before any Homebrew or system Python."
+        },
+        {
+          "prompt": "BARQUE's QUICK-START.md Troubleshooting section tells you to run `source venv/bin/activate` before which check?",
+          "correct": 2,
+          "explanation": "QUICK-START.md lines 202-206: before `python -c \"import weasyprint\"`. The import only succeeds if the venv is active, because weasyprint was pip-installed into the venv, not globally."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "02-dual-theme-css",
+      "siblings": ["02-dual-theme-css", "03-ship-it-resend", "04-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

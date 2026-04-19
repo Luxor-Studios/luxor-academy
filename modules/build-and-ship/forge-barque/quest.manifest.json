@@ -1,0 +1,34 @@
+{
+  "id": "forge-barque",
+  "version": "v0.1.0",
+  "track": "build-and-ship",
+  "title": "Forge BARQUE",
+  "subtitle": "Ship Markdown as emailed PDFs — the way BARQUE does it.",
+  "tier": "Initiate",
+  "glyph": "octahedron",
+  "glyph_src": "atlas/icons/synergetics/octahedron.svg",
+  "description": "Four modules drawn from the vendored BARQUE source. You will trace a real failure mode (venv shebangs), read the real CSS that generates both light and dark PDFs, see how BARQUE actually delivers mail through Charm Pop + Resend, then ship your own repo through the pipeline.",
+  "source_repo": {
+    "vendored_path": "content/sources/barque",
+    "upstream_url": "https://github.com/manutej/luxor-barque",
+    "upstream_ref": "main",
+    "license": "MIT",
+    "readme_permalink": "https://github.com/manutej/luxor-barque/blob/main/README.md"
+  },
+  "modules": [
+    "01-venv-shebang-trap",
+    "02-dual-theme-css",
+    "03-ship-it-resend",
+    "04-ship-your-own"
+  ],
+  "module_count": 4,
+  "total_xp": 675,
+  "estimated_minutes": 57,
+  "live_interactive_module": "01-venv-shebang-trap",
+  "canonical_last_module": "04-ship-your-own",
+  "acceptance": {
+    "complete_when": "All four modules unlocked, XP ledger shows 675 total, learner has submitted a repo URL in Module 04.",
+    "exportable_progress": true
+  },
+  "license": "CC-BY-SA-4.0"
+}
