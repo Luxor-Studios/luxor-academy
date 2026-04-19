@@ -46,7 +46,7 @@
         {
           "prompt": "Per `barque/core/email.py`, where does `RESEND_API_KEY` live at the moment BARQUE invokes the `pop` subprocess?",
           "correct": 2,
-          "explanation": "email.py lines 231-232: `env[\"RESEND_API_KEY\"] = self.config.resend_api_key`. The key is injected into the subprocess environment via the `env=` argument of `subprocess.run` (line 121). It is never passed as a command-line flag, where it would appear in process listings."
+          "explanation": "email.py lines 231-232: `env[\"RESEND_API_KEY\"] = self.config.resend_api_key`. The key is injected into the subprocess environment via the `env=` argument of `subprocess.run(...)` — the call begins at line 115 and the `env=` kwarg is on line 121. It is never passed as a command-line flag, where it would appear in process listings."
         },
         {
           "prompt": "BARQUE's `README.md` Email Setup section warns that free Resend accounts have a specific delivery constraint. What is it?",

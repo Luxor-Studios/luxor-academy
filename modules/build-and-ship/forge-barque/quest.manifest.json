@@ -22,12 +22,14 @@
     "04-ship-your-own"
   ],
   "module_count": 4,
-  "total_xp": 675,
+  "total_xp": 325,
+  "total_xp_deferred": 350,
+  "total_xp_deferred_unlocks_at": "phase-3-pipeline-live-permalink-minted",
   "estimated_minutes": 57,
   "live_interactive_module": "01-venv-shebang-trap",
   "canonical_last_module": "04-ship-your-own",
   "acceptance": {
-    "complete_when": "All four modules unlocked, XP ledger shows 675 total, learner has submitted a repo URL in Module 04.",
+    "complete_when": "All four modules unlocked, XP ledger shows 325 vested (150/325 for module 04 until Phase 3 mints the permalink unlocking the remaining 350), learner has submitted a repo URL in Module 04.",
     "exportable_progress": true
   },
   "license": "CC-BY-SA-4.0"
