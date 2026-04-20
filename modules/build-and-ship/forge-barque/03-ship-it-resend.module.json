@@ -36,7 +36,7 @@
     },
     "artifact": {
       "source_path": "barque/core/email.py",
-      "permalink": "https://github.com/manutej/luxor-barque/blob/main/barque/core/email.py#L225-L253",
+      "permalink": "https://github.com/manutej/luxor-barque/blob/3caace22fe3f12f708edcc65ab2aee81a3d61365/barque/core/email.py#L225-L253",
       "excerpt": "    def _get_env_vars(self) -> Dict[str, str]:\n        \"\"\"Get environment variables for Pop\"\"\"\n        import os\n        env = os.environ.copy()\n\n        # Resend API key\n        if self.config.provider == EmailProvider.RESEND and self.config.resend_api_key:\n            env[\"RESEND_API_KEY\"] = self.config.resend_api_key\n\n        # SMTP configuration\n        if self.config.provider == EmailProvider.SMTP:\n            if self.config.smtp_host:\n                env[\"POP_SMTP_HOST\"] = self.config.smtp_host\n            if self.config.smtp_port:\n                env[\"POP_SMTP_PORT\"] = str(self.config.smtp_port)\n            if self.config.smtp_username:\n                env[\"POP_SMTP_USERNAME\"] = self.config.smtp_username\n            if self.config.smtp_password:\n                env[\"POP_SMTP_PASSWORD\"] = self.config.smtp_password\n\n        # From email\n        if self.config.from_email:\n            env[\"POP_FROM\"] = self.config.from_email\n\n        # Signature\n        if self.config.signature:\n            env[\"POP_SIGNATURE\"] = self.config.signature\n\n        return env",
       "language": "python"
     },

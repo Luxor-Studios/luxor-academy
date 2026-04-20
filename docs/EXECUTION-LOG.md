@@ -123,6 +123,60 @@ Append-only build log. Every milestone = one entry. Every entry cites its commit
 
 ---
 
+## 2026-04-20
+
+### 11:XX — MARS integration gap closed + refresh-sources pipeline shipped (wave 6)
+
+**Context:** Resuming from `83051cb`. HANDOFF §8 next-session items #11 (dynamic quest route + module HTML sync) and #12 (refresh-sources pipeline + real SHA pin) are the blockers between Phase 1 content-validated and the Phase 1 human gate.
+
+**Milestone:** End-user can navigate to `/novice/build-and-ship/forge-barque` and reach each of the 4 module HTMLs; every module permalink now cites a real commit SHA instead of the `main` placeholder. This closes the MARS integration-coherence PARTIAL PASS (91% confidence) and the MERCURIO Physical-plane LOW on `sha_is_placeholder`.
+
+**Files shipped:**
+
+*Dynamic quest route (MARS integration gap):*
+- `web/app/novice/[track]/[quest]/page.tsx` — reads `modules/<track>/<quest>/quest.manifest.json` + per-module manifests at build time; `generateStaticParams()` walks `modules/` so any quest with a manifest prerenders automatically. Renders module cards linking to `/modules/<track>/<quest>/<id>.html`.
+- `web/scripts/sync-modules.mjs` — wipe-then-copy mirror of `modules/**/*.html` into `web/public/modules/`. Idempotent.
+- `web/package.json` — `prebuild:modules` script + `prebuild` hook (npm auto-runs before `build`, no manual chaining).
+- `web/.gitignore` — excludes the derived `/public/modules/` mirror.
+
+*Refresh-sources pipeline (MERCURIO LOW):*
+- `scripts/refresh-sources.sh` — `git clone --depth 1` → `git rev-parse HEAD` → `git archive | tar -x` into `content/sources/<name>/` → atomic `jq` rewrite of `VENDOR.json` → `perl -i` SHA-rewrite of every `.json` file that cites the upstream → `jq` rewrite of `source_repo.upstream_ref` in matching quest manifests.
+- `content/sources/VENDOR.json` — barque pinned to `3caace22fe3f12f708edcc65ab2aee81a3d61365`, `sha_is_placeholder: false`.
+- `modules/build-and-ship/forge-barque/*.module.json` (4 files) — all `/blob/main/` permalinks rewritten to `/blob/3caace22…/`.
+- `modules/build-and-ship/forge-barque/quest.manifest.json` — `source_repo.upstream_ref: "main"` → `"3caace22…"`.
+
+**Citation spot-checks at the pinned SHA (MERCURIO Physical plane):**
+- `QUICK-START.md#L8-L14` → `## Installation` + venv-activate block ✅
+- `README.md#L65-L85` → `### Basic Usage` + BARQUE command palette ✅
+- `barque/core/email.py#L225-L253` → `_get_env_vars` method with RESEND/SMTP branches ✅
+- `barque/core/email.py` line 115 (`subprocess.run(...)`) + line 121 (`env=...`) — MERCURIO-corrected self-check citations hold ✅
+- `README.md#L48` → Resend verified-email note ✅
+- `barque/core/themes.py#L54-L73` → `:root { --bg-primary … --max-width }` CSS-variable block ✅
+
+**Commit SHA:** (pending this commit) → pushed to `origin/main`
+
+**Verification:**
+- `cd web && npm run build` → Compiled successfully; 6 routes including `● /novice/[track]/[quest]` with `/novice/build-and-ship/forge-barque` prerendered; `public/modules/build-and-ship/forge-barque/*.html` (4 files) mirrored.
+- `out/novice/build-and-ship/forge-barque/index.html` contains the quest title, all 4 module titles, and the 325-XP total — quest page is actually rendering the manifest data.
+- `for f in modules/…/*.module.json; do node validators/six-slots.js "$f"; done` → 4/4 PASS (post-permalink-rewrite)
+- `npm run validate:fixtures` → 6/6 PASS (no regression in the contract itself)
+
+**Deliberate non-change:**
+- `content/sources/barque/` had 35 tracked files before the refresh; the fresh `git archive` dumped 86 files onto disk. The 51 new files are status reports, planning docs, `.claude/` artifacts, test outputs — not cited by any module, not part of the "minimal source bundle" the vendor README describes. Left untracked; the commit stages only `-u` (already-tracked files, which were already at this SHA so show no diff). A future curator can opt-in specific additions; `scripts/refresh-sources.sh` could grow a `.vendorignore` in a later pass if we want pruning to be reproducible.
+- `web/lib/tiers.ts` `forge-barque.xpReward: 675` is stale after MERCURIO's XP split (325 + 350 deferred). Not touched in this commit — the quest overview page reads the manifest directly and shows the correct numbers; the `/novice` tier page card still shows the pre-fix total. Flagging here; one-line fix in a later UX pass.
+
+**Next milestone:** Phase 1 human gate.
+1. Write `.planning/human-gate-phase-1.md` with the 4 permalinks, browser screenshots, MERCURIO + MARS verdicts.
+2. Manu reviews each module HTML in a browser; confirms keyboard traversal + XP round-trip + Module 04 form stub.
+3. Manu sets `autonomy/loop-state.json.human_approval["phase-1"] = true`.
+4. After human-gate passes: Experienced tier's `mercurio-for-decisions` (5 modules) and Expert tier's `cmp-foundations` (6 modules) via the same codebase-to-course pattern that shipped forge-barque.
+
+**Context snapshot:**
+- Window: approximately 45% used at this point
+- Tasks this session: 6/6 completed
+
+---
+
 ## Operator notes
 
 - The existing `.planning/launch-plan-v1.1.md` remains authoritative for pedagogical decisions, slot contract, and brand invariants. v2 does not supersede it; v2 extends it with the shadcn/ui shell architecture.

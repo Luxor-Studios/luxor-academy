@@ -3,11 +3,11 @@
   "vendored": {
     "barque": {
       "upstream": "https://github.com/manutej/luxor-barque",
-      "sha": "main",
-      "sha_is_placeholder": true,
-      "reason": "No .git dir or VENDOR-SHA marker was present when the source was first copied into content/sources/. Record the actual commit SHA on next refresh.",
+      "sha": "3caace22fe3f12f708edcc65ab2aee81a3d61365",
+      "sha_is_placeholder": false,
+      "reason": "Pinned by scripts/refresh-sources.sh",
       "used_by_quest": "build-and-ship/forge-barque",
-      "last_updated": "2026-04-19"
+      "last_updated": "2026-04-20"
     },
     "halcon": {
       "upstream": null,

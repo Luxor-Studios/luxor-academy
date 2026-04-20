@@ -36,7 +36,7 @@
     },
     "artifact": {
       "source_path": "README.md",
-      "permalink": "https://github.com/manutej/luxor-barque/blob/main/README.md#L65-L85",
+      "permalink": "https://github.com/manutej/luxor-barque/blob/3caace22fe3f12f708edcc65ab2aee81a3d61365/README.md#L65-L85",
       "excerpt": "### Basic Usage\n\n```bash\n# Initialize BARQUE in your project\nbarque init\n\n# Generate PDF from single markdown file\nbarque generate document.md\n\n# Generate both light and dark themes\nbarque generate document.md --theme both\n\n# Generate and send via email\nbarque send report.md --to boss@company.com\n\n# Process entire directory\nbarque batch docs/ --output pdfs/\n\n# Send existing PDF file\nbarque email report.pdf --to client@example.com --subject \"Monthly Report\"\n```",
       "language": "bash"
     },

@@ -36,7 +36,7 @@
     },
     "artifact": {
       "source_path": "barque/core/themes.py",
-      "permalink": "https://github.com/manutej/luxor-barque/blob/main/barque/core/themes.py#L54-L73",
+      "permalink": "https://github.com/manutej/luxor-barque/blob/3caace22fe3f12f708edcc65ab2aee81a3d61365/barque/core/themes.py#L54-L73",
       "excerpt": ":root {{\n    /* Theme Colors */\n    --bg-primary: {bg_color};\n    --bg-secondary: {self._lighten_darken(bg_color, 0.05 if theme == \"dark\" else -0.03)};\n    --text-primary: {theme_data.get('text', '#000000')};\n    --text-secondary: {self._lighten_darken(theme_data.get('text', '#000000'), -0.2 if theme == \"light\" else 0.15)};\n    --border-color: {theme_data.get('border', '#e0e0e0')};\n    --accent-color: {theme_data.get('accent', '#2563eb')};\n    --code-bg: {code_bg_enhanced};\n    --code-border: {code_border};\n    --code-text: {theme_data.get('code_text', theme_data.get('text', '#000000'))};\n    --link-color: {theme_data.get('accent', '#2563eb')};\n    --link-hover: {self._lighten_darken(theme_data.get('accent', '#2563eb'), -0.1)};\n\n    /* Typography - Enhanced for readability */\n    --font-family: {self.config.font_family};\n    --base-font-size: {base_font};\n    --line-height: {self.config.line_height};\n    --max-width: {self.config.max_width};\n}}",
       "language": "python"
     },

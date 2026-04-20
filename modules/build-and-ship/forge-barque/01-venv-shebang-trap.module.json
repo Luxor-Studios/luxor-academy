@@ -36,7 +36,7 @@
     },
     "artifact": {
       "source_path": "QUICK-START.md",
-      "permalink": "https://github.com/manutej/luxor-barque/blob/main/QUICK-START.md#L8-L14",
+      "permalink": "https://github.com/manutej/luxor-barque/blob/3caace22fe3f12f708edcc65ab2aee81a3d61365/QUICK-START.md#L8-L14",
       "excerpt": "## Installation\n\n```bash\ncd /Users/manu/Documents/LUXOR/PROJECTS/BARQUE\nsource venv/bin/activate\npip install -e .\n```",
       "language": "markdown"
     },

@@ -8,13 +8,13 @@
 
 | Field | Value |
 |-------|-------|
-| **Last updated** | 2026-04-19 |
+| **Last updated** | 2026-04-20 |
 | **Current session** | v2 — autonomous local build, tier curriculum pivot |
 | **Mode** | Autonomous execution, regular commits + push to `main` |
-| **Current milestone** | Phase 1 forge-barque Quest validated: MERCURIO 8.93/10 + MARS 91%, both CONDITIONAL-GO, no CRITICAL findings. MERCURIO fixes applied. |
-| **Next milestone** | Close the shell integration gap — add `/novice/[track]/[quest]` dynamic route + module HTML static-serve pipeline (MARS biggest flag, non-blocking for content, blocking for end-user rendering). |
+| **Current milestone** | Phase 1 integration wave complete: dynamic quest route live, module HTML build-time sync wired, barque pinned to real SHA `3caace22…`, all 4 forge-barque modules re-validate PASS. MARS integration-coherence gap and MERCURIO `sha_is_placeholder` LOW are both closed. |
+| **Next milestone** | Phase 1 human gate — Manu reviews forge-barque in a browser, confirms keyboard/XP/form-stub behavior, flips `autonomy/loop-state.json.human_approval["phase-1"] = true`. Then Experienced (mercurio-for-decisions) + Expert (cmp-foundations) first quests. |
 | **Blockers** | None |
-| **Human gate pending** | None |
+| **Human gate pending** | `phase-1` (awaiting Manu review of 4 forge-barque modules rendered in browser) |
 
 ## Resume command
 
@@ -143,25 +143,28 @@ Completed:
 10b. ✅ MERCURIO MEDIUM fixes applied: Module 03 line-ref corrected (subprocess.run at 115, env= at 121 — both cited); Module 04 XP split 500 → 150 now + 350 deferred (with primer explanation); quest total updated 675 → 325 with deferred note. All 4 modules re-validate PASS. Fixtures still 6/6.
 10c. ✅ Consolidated validation report written at `.planning/validation-round-phase-1.md`.
 
-Next session — three ordered items:
+Completed this session (2026-04-20):
 
-11. **MARS integration gap close** (blocks end-user rendering of the Quest):
-    - Create `web/app/novice/[track]/[quest]/page.tsx` — dynamic route reading the `*.module.json` + rendering a module-list overview with links out to each module's `.html`
-    - Add npm script `prebuild:modules` that syncs `modules/**/*.html` into `web/public/modules/` before `next build`
-    - Verify `/novice/build-and-ship/forge-barque` renders 4 clickable module cards
-    - Re-run `npm run build` — expect 5 static routes + 4 module HTMLs served
-12. **Refresh-sources pipeline** (unblocks publication, closes MERCURIO LOW):
-    - Write `scripts/refresh-sources.sh <repo-name> <upstream-url>` that clones, captures HEAD SHA, archives to `content/sources/<name>/`, and updates `content/sources/VENDOR.json`
-    - Run it for barque; re-generate all 4 module permalinks to use the pinned SHA
-    - Re-validate
-13. **Human gate `phase-1`** (only after #11 + #12):
-    - Write `.planning/human-gate-phase-1.md` with the 4 permalinks, browser screenshots, and the MERCURIO+MARS verdicts consolidated
-    - Manu reviews each module HTML in a browser; confirms keyboard traversal + XP round-trip + Module 04 form stub
+11. ✅ **MARS integration gap closed** — `web/app/novice/[track]/[quest]/page.tsx` is a static-exported dynamic route. `generateStaticParams()` walks `modules/**/quest.manifest.json` so any quest with a manifest prerenders automatically. `web/scripts/sync-modules.mjs` mirrors `modules/**/*.html` into `web/public/modules/` via the `prebuild` hook. `npm run build` now emits 6 routes incl. `/novice/build-and-ship/forge-barque` + 4 module HTMLs served at `/modules/build-and-ship/forge-barque/*.html`.
+12. ✅ **Refresh-sources pipeline shipped** — `scripts/refresh-sources.sh <name> <url>`: clone → HEAD SHA → `git archive | tar -x` → atomic `jq` VENDOR.json rewrite → `perl -i` SHA-rewrite of every JSON citing the upstream. Run for barque; pinned to `3caace22fe3f12f708edcc65ab2aee81a3d61365`. All 4 forge-barque permalinks + `source_repo.upstream_ref` now cite the real SHA. Citation spot-checks at that SHA: all 5 line-range references verify (QUICK-START.md#L8-14, README.md#L65-85, email.py#L225-253, email.py L115+L121, themes.py#L54-73, README.md#L48). Validator: 4/4 PASS. Fixtures: 6/6 PASS.
+
+Next session — two ordered items:
+
+13. **Human gate `phase-1`** (ready now):
+    - Write `.planning/human-gate-phase-1.md` with the 4 module permalinks (now SHA-pinned), browser screenshots, and the MERCURIO+MARS verdicts consolidated
+    - Manu: `cd web && npm run dev` → navigate `/novice/build-and-ship/forge-barque`, click each module, confirm keyboard traversal + XP round-trip + Module 04 form stub
     - Manu sets `autonomy/loop-state.json.human_approval["phase-1"] = true`
 14. **Experienced + Expert tier first quests** (after `phase-1` gate passes):
-    - Experienced: `orchestration/mercurio-for-decisions` (5 modules)
-    - Expert: `categorical-meta-prompting/cmp-foundations` (6 modules)
-    - Both via the same codebase-to-course agent pattern that shipped forge-barque
+    - Experienced: `orchestration/mercurio-for-decisions` (5 modules). Update `web/lib/tiers.ts` to set `status: "drafted"` once modules exist — at that point `lib/tiers.ts` XP should also be derived-from-manifest rather than hardcoded (forge-barque's 675 there is stale vs. the 325/325+350-deferred manifest).
+    - Expert: `categorical-meta-prompting/cmp-foundations` (6 modules). Mirror the pattern.
+    - Both via the same codebase-to-course agent pattern that shipped forge-barque.
+    - The experienced + expert tiers will need their own `/experienced/[track]/[quest]` and `/expert/[track]/[quest]` routes — the novice route is a template; copy-and-parameterize.
+
+Known small items (non-blocking, capture before they rot):
+
+- `web/lib/tiers.ts` `forge-barque.xpReward: 675` is stale (correct is 325 + 350 deferred). Quest-overview page already reads the manifest directly, so this only affects the `/novice` tier page card. One-line fix or refactor to read-from-manifest.
+- `modules/build-and-ship/track.manifest.json` also has `total_xp: 675` for forge-barque (stale). Derived stat, same fix class.
+- `content/sources/barque/` has 51 files on disk that are not tracked — the fresh `git archive` pulls in everything (status reports, `.claude/` folder, test_output/, etc.) but the vendored snapshot was originally curated to 35 files. Decide: either add a `.vendorignore` to `refresh-sources.sh` for reproducible pruning, or explicitly track the additions we actually want. Not urgent.
 
 ## 9 · If you are resuming
 

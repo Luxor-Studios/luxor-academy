@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild:modules": "node scripts/sync-modules.mjs",
+    "prebuild": "npm run prebuild:modules",
     "build": "next build",
     "start": "next start"
   },

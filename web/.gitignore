@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# build-generated module HTML mirror (populated by prebuild:modules)
+/public/modules/
+
 # production
 /build
 

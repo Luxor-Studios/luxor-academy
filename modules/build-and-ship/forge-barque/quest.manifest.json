@@ -11,9 +11,9 @@
   "source_repo": {
     "vendored_path": "content/sources/barque",
     "upstream_url": "https://github.com/manutej/luxor-barque",
-    "upstream_ref": "main",
+    "upstream_ref": "3caace22fe3f12f708edcc65ab2aee81a3d61365",
     "license": "MIT",
-    "readme_permalink": "https://github.com/manutej/luxor-barque/blob/main/README.md"
+    "readme_permalink": "https://github.com/manutej/luxor-barque/blob/3caace22fe3f12f708edcc65ab2aee81a3d61365/README.md"
   },
   "modules": [
     "01-venv-shebang-trap",
