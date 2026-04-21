@@ -174,7 +174,286 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
           .arrow{stroke:#00F5FF;fill:#00F5FF;stroke-width:1.2}
           .mono{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#D4E4F7}
           .intersect{fill:#162440;stroke:#22C55E;stroke-opacity:0.65;stroke-dasharray:4 3}
-        </style>
+        
+/* LUXOR-DIAGRAM-KIT-INJECTED */
+/* ============================================================
+   LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
+   Inject once per page or @import into module stylesheets.
+   Target: ≤3KB. All class names prefixed .lkd- to avoid
+   collision with module-level .label / .head / .box styles.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. ROOT TOKENS — override per track at the parent SVG level
+      e.g.  <svg style="--lkd-accent:#39FF14" class="lkd">
+   ---------------------------------------------------------- */
+.lkd {
+  --lkd-accent:   #E9B949;   /* default: tetra-gold; override per track */
+  --lkd-bg:       #0A1628;
+  --lkd-surface:  #111D33;
+  --lkd-surface2: #162440;
+  --lkd-text:     #FFFFFF;
+  --lkd-dim:      #94A3B8;
+  --lkd-halo:     #0A1628;
+  --lkd-ok:       #22C55E;
+  --lkd-err:      #FF3B3B;
+
+  /* Typography scale */
+  --lkd-fs-head:  16px;
+  --lkd-fs-label: 14px;
+  --lkd-fs-op:    12px;
+  --lkd-fs-note:  11px;
+}
+
+/* ----------------------------------------------------------
+   2. TRACK-ACCENT MODIFIERS — add class to svg element
+   ---------------------------------------------------------- */
+.lkd-accent-coral   { --lkd-accent: #FF7E6B; }
+.lkd-accent-cyan    { --lkd-accent: #00F5FF; }
+.lkd-accent-magenta { --lkd-accent: #FF4DD8; }
+.lkd-accent-violet  { --lkd-accent: #A78BFA; }
+.lkd-accent-arcade  { --lkd-accent: #39FF14; }
+.lkd-accent-gold    { --lkd-accent: #E9B949; }
+
+/* ----------------------------------------------------------
+   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
+      Works in all modern browsers + Chromium SVG renderers.
+   ---------------------------------------------------------- */
+.lkd text {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+  paint-order: stroke fill;
+  stroke: var(--lkd-halo);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* Display heading — Playfair for visual weight */
+.lkd text.lkd-head {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: var(--lkd-fs-head);
+  font-weight: 700;
+  fill: var(--lkd-accent);
+  stroke-width: 5px;
+}
+
+/* Standard body label */
+.lkd text.lkd-label {
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+}
+
+/* Operator / accent inline label */
+.lkd text.lkd-op {
+  font-size: var(--lkd-fs-op);
+  fill: var(--lkd-accent);
+  stroke-width: 3px;
+}
+
+/* Muted footnote / sublabel */
+.lkd text.lkd-note {
+  font-size: var(--lkd-fs-note);
+  fill: var(--lkd-dim);
+  stroke-width: 3px;
+}
+
+/* Monospace code fragment inside diagram */
+.lkd text.lkd-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--lkd-fs-note);
+  fill: #D4E4F7;
+  stroke-width: 3px;
+}
+
+/* Status glyphs — ✓ / ✗ */
+.lkd text.lkd-ok   { fill: var(--lkd-ok);  stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+.lkd text.lkd-err  { fill: var(--lkd-err); stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+
+/* ----------------------------------------------------------
+   4. NODE SHAPES
+   ---------------------------------------------------------- */
+
+/* Primary node rect — accented border */
+.lkd .lkd-node {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
+/* Secondary / dim node */
+.lkd .lkd-node-dim {
+  fill: var(--lkd-surface);
+  stroke: #3B4A6B;
+  stroke-width: 1;
+}
+
+/* Pill variant (rx="999" on rect) */
+.lkd .lkd-node-pill {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.7;
+  stroke-width: 1.5;
+}
+
+/* Hex container — apply to polygon */
+.lkd .lkd-node-hex {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+}
+
+/* Diamond decision node */
+.lkd .lkd-node-diamond {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Terminal / end-state */
+.lkd .lkd-node-terminal {
+  fill: var(--lkd-bg);
+  stroke: var(--lkd-ok);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Chip / tag inside a node */
+.lkd .lkd-chip {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* ----------------------------------------------------------
+   5. PANELS — card behind diagram content
+   ---------------------------------------------------------- */
+.lkd .lkd-panel {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  rx: 6;
+}
+
+/* Glow panel variants — stronger accent border */
+.lkd .lkd-glow-coral   { stroke: #FF7E6B; stroke-opacity: 0.65; fill: #130E10; }
+.lkd .lkd-glow-cyan    { stroke: #00F5FF; stroke-opacity: 0.65; fill: #0B1D20; }
+.lkd .lkd-glow-magenta { stroke: #FF4DD8; stroke-opacity: 0.65; fill: #150B18; }
+.lkd .lkd-glow-violet  { stroke: #A78BFA; stroke-opacity: 0.65; fill: #10101F; }
+.lkd .lkd-glow-arcade  { stroke: #39FF14; stroke-opacity: 0.65; fill: #0A1A0C; }
+.lkd .lkd-glow-gold    { stroke: #E9B949; stroke-opacity: 0.65; fill: #15120A; }
+
+/* ----------------------------------------------------------
+   6. ARROWS
+   Usage: add class to path, set marker-end="url(#lkd-arrow)"
+   Each SVG must include <defs> with the marker (see below).
+   ---------------------------------------------------------- */
+
+/* Primary arrow — accent colored */
+.lkd .lkd-arr {
+  stroke: var(--lkd-accent);
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow);
+}
+
+/* Dim / dashed secondary arrow */
+.lkd .lkd-arr-dim {
+  stroke: #4A5A7A;
+  fill: none;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-dim);
+}
+
+/* Cyan highlight arrow */
+.lkd .lkd-arr-cyan {
+  stroke: #00F5FF;
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow-cyan);
+}
+
+/* Success / return arrow */
+.lkd .lkd-arr-ok {
+  stroke: var(--lkd-ok);
+  fill: none;
+  stroke-width: 1.5;
+  marker-end: url(#lkd-arrow-ok);
+}
+
+/* Error / reject arrow */
+.lkd .lkd-arr-err {
+  stroke: var(--lkd-err);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-err);
+}
+
+/* ----------------------------------------------------------
+   7. STANDARD MARKER DEFS BLOCK
+   Copy this <defs> verbatim into every rewritten SVG.
+   ---------------------------------------------------------- */
+/*
+<defs>
+  <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="var(--lkd-accent)"/>
+  </marker>
+  <marker id="lkd-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+  </marker>
+  <marker id="lkd-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+  </marker>
+  <marker id="lkd-arrow-ok" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
+  </marker>
+  <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
+  </marker>
+</defs>
+*/
+
+/* ----------------------------------------------------------
+   8. ACCESSIBILITY
+   ---------------------------------------------------------- */
+
+/* Keyboard focus ring on SVG container (when tabIndex set) */
+.lkd:focus-visible {
+  outline: 2px solid var(--lkd-accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion — disable any CSS animations if added */
+@media (prefers-reduced-motion: reduce) {
+  .lkd * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High-contrast override — reinforce fills for forced-colors mode */
+@media (forced-colors: active) {
+  .lkd .lkd-node,
+  .lkd .lkd-panel,
+  .lkd .lkd-chip {
+    forced-color-adjust: none;
+  }
+}
+/* END-LUXOR-DIAGRAM-KIT */
+</style>
         <marker id="a2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
           <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
         </marker>

@@ -150,6 +150,285 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
 }
+
+/* LUXOR-DIAGRAM-KIT-INJECTED */
+/* ============================================================
+   LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
+   Inject once per page or @import into module stylesheets.
+   Target: ≤3KB. All class names prefixed .lkd- to avoid
+   collision with module-level .label / .head / .box styles.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. ROOT TOKENS — override per track at the parent SVG level
+      e.g.  <svg style="--lkd-accent:#39FF14" class="lkd">
+   ---------------------------------------------------------- */
+.lkd {
+  --lkd-accent:   #E9B949;   /* default: tetra-gold; override per track */
+  --lkd-bg:       #0A1628;
+  --lkd-surface:  #111D33;
+  --lkd-surface2: #162440;
+  --lkd-text:     #FFFFFF;
+  --lkd-dim:      #94A3B8;
+  --lkd-halo:     #0A1628;
+  --lkd-ok:       #22C55E;
+  --lkd-err:      #FF3B3B;
+
+  /* Typography scale */
+  --lkd-fs-head:  16px;
+  --lkd-fs-label: 14px;
+  --lkd-fs-op:    12px;
+  --lkd-fs-note:  11px;
+}
+
+/* ----------------------------------------------------------
+   2. TRACK-ACCENT MODIFIERS — add class to svg element
+   ---------------------------------------------------------- */
+.lkd-accent-coral   { --lkd-accent: #FF7E6B; }
+.lkd-accent-cyan    { --lkd-accent: #00F5FF; }
+.lkd-accent-magenta { --lkd-accent: #FF4DD8; }
+.lkd-accent-violet  { --lkd-accent: #A78BFA; }
+.lkd-accent-arcade  { --lkd-accent: #39FF14; }
+.lkd-accent-gold    { --lkd-accent: #E9B949; }
+
+/* ----------------------------------------------------------
+   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
+      Works in all modern browsers + Chromium SVG renderers.
+   ---------------------------------------------------------- */
+.lkd text {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+  paint-order: stroke fill;
+  stroke: var(--lkd-halo);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* Display heading — Playfair for visual weight */
+.lkd text.lkd-head {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: var(--lkd-fs-head);
+  font-weight: 700;
+  fill: var(--lkd-accent);
+  stroke-width: 5px;
+}
+
+/* Standard body label */
+.lkd text.lkd-label {
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+}
+
+/* Operator / accent inline label */
+.lkd text.lkd-op {
+  font-size: var(--lkd-fs-op);
+  fill: var(--lkd-accent);
+  stroke-width: 3px;
+}
+
+/* Muted footnote / sublabel */
+.lkd text.lkd-note {
+  font-size: var(--lkd-fs-note);
+  fill: var(--lkd-dim);
+  stroke-width: 3px;
+}
+
+/* Monospace code fragment inside diagram */
+.lkd text.lkd-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--lkd-fs-note);
+  fill: #D4E4F7;
+  stroke-width: 3px;
+}
+
+/* Status glyphs — ✓ / ✗ */
+.lkd text.lkd-ok   { fill: var(--lkd-ok);  stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+.lkd text.lkd-err  { fill: var(--lkd-err); stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+
+/* ----------------------------------------------------------
+   4. NODE SHAPES
+   ---------------------------------------------------------- */
+
+/* Primary node rect — accented border */
+.lkd .lkd-node {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
+/* Secondary / dim node */
+.lkd .lkd-node-dim {
+  fill: var(--lkd-surface);
+  stroke: #3B4A6B;
+  stroke-width: 1;
+}
+
+/* Pill variant (rx="999" on rect) */
+.lkd .lkd-node-pill {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.7;
+  stroke-width: 1.5;
+}
+
+/* Hex container — apply to polygon */
+.lkd .lkd-node-hex {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+}
+
+/* Diamond decision node */
+.lkd .lkd-node-diamond {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Terminal / end-state */
+.lkd .lkd-node-terminal {
+  fill: var(--lkd-bg);
+  stroke: var(--lkd-ok);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Chip / tag inside a node */
+.lkd .lkd-chip {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* ----------------------------------------------------------
+   5. PANELS — card behind diagram content
+   ---------------------------------------------------------- */
+.lkd .lkd-panel {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  rx: 6;
+}
+
+/* Glow panel variants — stronger accent border */
+.lkd .lkd-glow-coral   { stroke: #FF7E6B; stroke-opacity: 0.65; fill: #130E10; }
+.lkd .lkd-glow-cyan    { stroke: #00F5FF; stroke-opacity: 0.65; fill: #0B1D20; }
+.lkd .lkd-glow-magenta { stroke: #FF4DD8; stroke-opacity: 0.65; fill: #150B18; }
+.lkd .lkd-glow-violet  { stroke: #A78BFA; stroke-opacity: 0.65; fill: #10101F; }
+.lkd .lkd-glow-arcade  { stroke: #39FF14; stroke-opacity: 0.65; fill: #0A1A0C; }
+.lkd .lkd-glow-gold    { stroke: #E9B949; stroke-opacity: 0.65; fill: #15120A; }
+
+/* ----------------------------------------------------------
+   6. ARROWS
+   Usage: add class to path, set marker-end="url(#lkd-arrow)"
+   Each SVG must include <defs> with the marker (see below).
+   ---------------------------------------------------------- */
+
+/* Primary arrow — accent colored */
+.lkd .lkd-arr {
+  stroke: var(--lkd-accent);
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow);
+}
+
+/* Dim / dashed secondary arrow */
+.lkd .lkd-arr-dim {
+  stroke: #4A5A7A;
+  fill: none;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-dim);
+}
+
+/* Cyan highlight arrow */
+.lkd .lkd-arr-cyan {
+  stroke: #00F5FF;
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow-cyan);
+}
+
+/* Success / return arrow */
+.lkd .lkd-arr-ok {
+  stroke: var(--lkd-ok);
+  fill: none;
+  stroke-width: 1.5;
+  marker-end: url(#lkd-arrow-ok);
+}
+
+/* Error / reject arrow */
+.lkd .lkd-arr-err {
+  stroke: var(--lkd-err);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-err);
+}
+
+/* ----------------------------------------------------------
+   7. STANDARD MARKER DEFS BLOCK
+   Copy this <defs> verbatim into every rewritten SVG.
+   ---------------------------------------------------------- */
+/*
+<defs>
+  <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="var(--lkd-accent)"/>
+  </marker>
+  <marker id="lkd-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+  </marker>
+  <marker id="lkd-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+  </marker>
+  <marker id="lkd-arrow-ok" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
+  </marker>
+  <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
+  </marker>
+</defs>
+*/
+
+/* ----------------------------------------------------------
+   8. ACCESSIBILITY
+   ---------------------------------------------------------- */
+
+/* Keyboard focus ring on SVG container (when tabIndex set) */
+.lkd:focus-visible {
+  outline: 2px solid var(--lkd-accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion — disable any CSS animations if added */
+@media (prefers-reduced-motion: reduce) {
+  .lkd * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High-contrast override — reinforce fills for forced-colors mode */
+@media (forced-colors: active) {
+  .lkd .lkd-node,
+  .lkd .lkd-panel,
+  .lkd .lkd-chip {
+    forced-color-adjust: none;
+  }
+}
+/* END-LUXOR-DIAGRAM-KIT */
 </style>
 </head>
 <body>
@@ -203,45 +482,52 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
     
-    <svg viewBox="0 0 540 280" role="img" aria-label="Three-branch proof tree for clamp." xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 310" role="img" aria-label="Three-branch proof tree for clamp." class="lkd" style="--lkd-accent:#39FF14" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <style>
-          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#39FF14}
-          .box{fill:#111D33;stroke:#39FF14;stroke-opacity:0.4}
-          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
-          .check{fill:#39FF14;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
-        </style>
-        <marker id="a2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
         </marker>
       </defs>
-      <text class="head" x="170" y="20">goal: y:int{y &gt;= min &amp;&amp; y &lt;= max}</text>
-      <rect class="box" x="160" y="30" width="220" height="28" rx="3"/>
-      <text class="label" x="170" y="48">pre: max &gt;= min</text>
 
-      <rect class="box" x="10" y="100" width="170" height="56" rx="3"/>
-      <text class="label" x="20" y="118">branch 1: if x &lt; min</text>
-      <text class="label" x="20" y="134">return min</text>
-      <text class="check" x="20" y="150">✓ from pre</text>
+      <!-- Root goal node -->
+      <text x="300" y="22" text-anchor="middle" font-family="'Playfair Display',serif" font-size="16" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">PROOF GOAL</text>
+      <rect x="130" y="32" width="340" height="52" rx="5" fill="#111D33" stroke="#39FF14" stroke-opacity="0.6" stroke-width="1.5"/>
+      <text x="300" y="54" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">goal: y:int{y &gt;= min &amp;&amp; y &lt;= max}</text>
+      <text x="300" y="74" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">pre: max &gt;= min</text>
 
-      <rect class="box" x="185" y="100" width="170" height="56" rx="3"/>
-      <text class="label" x="195" y="118">branch 2: else if x &gt; max</text>
-      <text class="label" x="195" y="134">return max</text>
-      <text class="check" x="195" y="150">✓ from pre</text>
+      <!-- Fan-out lines from root to 3 branches -->
+      <path d="M300 85 L95 130"  stroke="#00F5FF" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow)"/>
+      <path d="M300 85 L300 130" stroke="#00F5FF" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow)"/>
+      <path d="M300 85 L505 130" stroke="#00F5FF" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow)"/>
 
-      <rect class="box" x="360" y="100" width="170" height="56" rx="3"/>
-      <text class="label" x="370" y="118">branch 3: else x</text>
-      <text class="label" x="370" y="134">return x</text>
-      <text class="check" x="370" y="150">✓ from !guards</text>
+      <!-- Branch labels above each node -->
+      <text x="95"  y="126" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">branch 1</text>
+      <text x="300" y="126" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">branch 2</text>
+      <text x="505" y="126" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">branch 3</text>
 
-      <path class="arrow" d="M270 58 L95 100" marker-end="url(#a2)"/>
-      <path class="arrow" d="M270 58 L270 100" marker-end="url(#a2)"/>
-      <path class="arrow" d="M270 58 L445 100" marker-end="url(#a2)"/>
+      <!-- Branch 1 node -->
+      <rect x="14" y="136" width="162" height="72" rx="5" fill="#111D33" stroke="#39FF14" stroke-opacity="0.45" stroke-width="1.5"/>
+      <text x="95" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">if x &lt; min</text>
+      <text x="95" y="176" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">return min</text>
+      <text x="95" y="198" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">checkmark from pre</text>
 
-      <text class="label" x="20" y="200">Remove pre max &gt;= min:</text>
-      <text class="label" x="20" y="216">branch 1 fails — cannot prove min &lt;= max</text>
-      <text class="label" x="20" y="240">Control flow is what makes the proof compose.</text>
+      <!-- Branch 2 node -->
+      <rect x="219" y="136" width="162" height="72" rx="5" fill="#111D33" stroke="#39FF14" stroke-opacity="0.45" stroke-width="1.5"/>
+      <text x="300" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">else if x &gt; max</text>
+      <text x="300" y="176" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">return max</text>
+      <text x="300" y="198" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">checkmark from pre</text>
+
+      <!-- Branch 3 node -->
+      <rect x="424" y="136" width="162" height="72" rx="5" fill="#111D33" stroke="#39FF14" stroke-opacity="0.45" stroke-width="1.5"/>
+      <text x="505" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">else</text>
+      <text x="505" y="176" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">return x</text>
+      <text x="505" y="198" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">checkmark from guards</text>
+
+      <!-- Insight panel at bottom -->
+      <rect x="14" y="228" width="572" height="72" rx="5" fill="#0B1D0B" stroke="#39FF14" stroke-opacity="0.3" stroke-width="1.5"/>
+      <text x="300" y="248" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">What happens without the precondition?</text>
+      <text x="300" y="268" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FF3B3B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Remove pre max &gt;= min: branch 1 fails — cannot prove min &lt;= max</text>
+      <text x="300" y="288" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Control flow is what makes the proof compose.</text>
     </svg>
     <p class="visual-caption">A three-branch decision tree for clamp(min, max, x). The root is labeled with the signature <code>y:int{y &gt;= min &amp;&amp; y &lt;= max}</code>. Branch 1 <code>if x &lt; min</code> returns <code>min</code> and the annotation reads <code>context: x &lt; min; goal: min &gt;= min &amp;&amp; min &lt;= max; discharged by precondition max &gt;= min</code>. Branch 2 <code>else if x &gt; max</code> returns <code>max</code> with a symmetric annotation. Branch 3 <code>else x</code> returns <code>x</code> with <code>context: x &gt;= min &amp;&amp; x &lt;= max (from negated guards); goal holds directly</code>. A side note shows that removing the precondition collapses branch 1 into a compile error.</p>
   </div>

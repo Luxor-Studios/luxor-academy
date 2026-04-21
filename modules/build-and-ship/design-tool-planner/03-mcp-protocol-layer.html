@@ -126,6 +126,285 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
 }
+
+/* LUXOR-DIAGRAM-KIT-INJECTED */
+/* ============================================================
+   LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
+   Inject once per page or @import into module stylesheets.
+   Target: ≤3KB. All class names prefixed .lkd- to avoid
+   collision with module-level .label / .head / .box styles.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. ROOT TOKENS — override per track at the parent SVG level
+      e.g.  <svg style="--lkd-accent:#39FF14" class="lkd">
+   ---------------------------------------------------------- */
+.lkd {
+  --lkd-accent:   #E9B949;   /* default: tetra-gold; override per track */
+  --lkd-bg:       #0A1628;
+  --lkd-surface:  #111D33;
+  --lkd-surface2: #162440;
+  --lkd-text:     #FFFFFF;
+  --lkd-dim:      #94A3B8;
+  --lkd-halo:     #0A1628;
+  --lkd-ok:       #22C55E;
+  --lkd-err:      #FF3B3B;
+
+  /* Typography scale */
+  --lkd-fs-head:  16px;
+  --lkd-fs-label: 14px;
+  --lkd-fs-op:    12px;
+  --lkd-fs-note:  11px;
+}
+
+/* ----------------------------------------------------------
+   2. TRACK-ACCENT MODIFIERS — add class to svg element
+   ---------------------------------------------------------- */
+.lkd-accent-coral   { --lkd-accent: #FF7E6B; }
+.lkd-accent-cyan    { --lkd-accent: #00F5FF; }
+.lkd-accent-magenta { --lkd-accent: #FF4DD8; }
+.lkd-accent-violet  { --lkd-accent: #A78BFA; }
+.lkd-accent-arcade  { --lkd-accent: #39FF14; }
+.lkd-accent-gold    { --lkd-accent: #E9B949; }
+
+/* ----------------------------------------------------------
+   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
+      Works in all modern browsers + Chromium SVG renderers.
+   ---------------------------------------------------------- */
+.lkd text {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+  paint-order: stroke fill;
+  stroke: var(--lkd-halo);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* Display heading — Playfair for visual weight */
+.lkd text.lkd-head {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: var(--lkd-fs-head);
+  font-weight: 700;
+  fill: var(--lkd-accent);
+  stroke-width: 5px;
+}
+
+/* Standard body label */
+.lkd text.lkd-label {
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+}
+
+/* Operator / accent inline label */
+.lkd text.lkd-op {
+  font-size: var(--lkd-fs-op);
+  fill: var(--lkd-accent);
+  stroke-width: 3px;
+}
+
+/* Muted footnote / sublabel */
+.lkd text.lkd-note {
+  font-size: var(--lkd-fs-note);
+  fill: var(--lkd-dim);
+  stroke-width: 3px;
+}
+
+/* Monospace code fragment inside diagram */
+.lkd text.lkd-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--lkd-fs-note);
+  fill: #D4E4F7;
+  stroke-width: 3px;
+}
+
+/* Status glyphs — ✓ / ✗ */
+.lkd text.lkd-ok   { fill: var(--lkd-ok);  stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+.lkd text.lkd-err  { fill: var(--lkd-err); stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+
+/* ----------------------------------------------------------
+   4. NODE SHAPES
+   ---------------------------------------------------------- */
+
+/* Primary node rect — accented border */
+.lkd .lkd-node {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
+/* Secondary / dim node */
+.lkd .lkd-node-dim {
+  fill: var(--lkd-surface);
+  stroke: #3B4A6B;
+  stroke-width: 1;
+}
+
+/* Pill variant (rx="999" on rect) */
+.lkd .lkd-node-pill {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.7;
+  stroke-width: 1.5;
+}
+
+/* Hex container — apply to polygon */
+.lkd .lkd-node-hex {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+}
+
+/* Diamond decision node */
+.lkd .lkd-node-diamond {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Terminal / end-state */
+.lkd .lkd-node-terminal {
+  fill: var(--lkd-bg);
+  stroke: var(--lkd-ok);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Chip / tag inside a node */
+.lkd .lkd-chip {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* ----------------------------------------------------------
+   5. PANELS — card behind diagram content
+   ---------------------------------------------------------- */
+.lkd .lkd-panel {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  rx: 6;
+}
+
+/* Glow panel variants — stronger accent border */
+.lkd .lkd-glow-coral   { stroke: #FF7E6B; stroke-opacity: 0.65; fill: #130E10; }
+.lkd .lkd-glow-cyan    { stroke: #00F5FF; stroke-opacity: 0.65; fill: #0B1D20; }
+.lkd .lkd-glow-magenta { stroke: #FF4DD8; stroke-opacity: 0.65; fill: #150B18; }
+.lkd .lkd-glow-violet  { stroke: #A78BFA; stroke-opacity: 0.65; fill: #10101F; }
+.lkd .lkd-glow-arcade  { stroke: #39FF14; stroke-opacity: 0.65; fill: #0A1A0C; }
+.lkd .lkd-glow-gold    { stroke: #E9B949; stroke-opacity: 0.65; fill: #15120A; }
+
+/* ----------------------------------------------------------
+   6. ARROWS
+   Usage: add class to path, set marker-end="url(#lkd-arrow)"
+   Each SVG must include <defs> with the marker (see below).
+   ---------------------------------------------------------- */
+
+/* Primary arrow — accent colored */
+.lkd .lkd-arr {
+  stroke: var(--lkd-accent);
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow);
+}
+
+/* Dim / dashed secondary arrow */
+.lkd .lkd-arr-dim {
+  stroke: #4A5A7A;
+  fill: none;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-dim);
+}
+
+/* Cyan highlight arrow */
+.lkd .lkd-arr-cyan {
+  stroke: #00F5FF;
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow-cyan);
+}
+
+/* Success / return arrow */
+.lkd .lkd-arr-ok {
+  stroke: var(--lkd-ok);
+  fill: none;
+  stroke-width: 1.5;
+  marker-end: url(#lkd-arrow-ok);
+}
+
+/* Error / reject arrow */
+.lkd .lkd-arr-err {
+  stroke: var(--lkd-err);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-err);
+}
+
+/* ----------------------------------------------------------
+   7. STANDARD MARKER DEFS BLOCK
+   Copy this <defs> verbatim into every rewritten SVG.
+   ---------------------------------------------------------- */
+/*
+<defs>
+  <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="var(--lkd-accent)"/>
+  </marker>
+  <marker id="lkd-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+  </marker>
+  <marker id="lkd-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+  </marker>
+  <marker id="lkd-arrow-ok" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
+  </marker>
+  <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
+  </marker>
+</defs>
+*/
+
+/* ----------------------------------------------------------
+   8. ACCESSIBILITY
+   ---------------------------------------------------------- */
+
+/* Keyboard focus ring on SVG container (when tabIndex set) */
+.lkd:focus-visible {
+  outline: 2px solid var(--lkd-accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion — disable any CSS animations if added */
+@media (prefers-reduced-motion: reduce) {
+  .lkd * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High-contrast override — reinforce fills for forced-colors mode */
+@media (forced-colors: active) {
+  .lkd .lkd-node,
+  .lkd .lkd-panel,
+  .lkd .lkd-chip {
+    forced-color-adjust: none;
+  }
+}
+/* END-LUXOR-DIAGRAM-KIT */
 </style>
 </head>
 <body>
@@ -171,66 +450,86 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 560 340" role="img" aria-label="Three-tier diagram: agents on top, an MCP Tool Layer rectangle in the middle with four tool chips, and four concrete API swimlanes (Canva, Figma, Adobe, Sketch) at the bottom connected by dashed lines to the tool chips. Caption: Swap the lane, keep the layer." xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 360" role="img" aria-label="Three-tier diagram: agents on top, an MCP Tool Layer rectangle in the middle with four tool chips, and four concrete API swimlanes (Canva, Figma, Adobe, Sketch) at the bottom connected by dashed lines to the tool chips. Caption: Swap the lane, keep the layer." class="lkd" style="--lkd-accent:#FF7E6B" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <style>
-          .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#94A3B8}
-          .hd{font-family:'Playfair Display',serif;font-size:12px;fill:#FF7E6B}
-          .ag{fill:#111D33;stroke:#FF7E6B;stroke-opacity:0.55}
-          .layer{fill:#1C2B47;stroke:#FF7E6B;stroke-opacity:0.7}
-          .chip{fill:#162440;stroke:#00F5FF;stroke-opacity:0.5}
-          .api{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.35}
-          .ln{stroke:#00F5FF;stroke-opacity:0.5;stroke-dasharray:3 3;fill:none}
-          .kw{fill:#FFA595;font-family:'JetBrains Mono',monospace;font-size:9px}
-        </style>
+        <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#FF7E6B"/>
+        </marker>
+        <marker id="lkd-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+        </marker>
       </defs>
 
-      <rect class="ag" x="90" y="20" width="150" height="48" rx="5"/>
-      <text class="hd" x="100" y="40">Planning Agent</text>
-      <text class="lbl" x="100" y="58">strategic · 2048 tokens</text>
-      <rect class="ag" x="320" y="20" width="150" height="48" rx="5"/>
-      <text class="hd" x="330" y="40">Execution Agent</text>
-      <text class="lbl" x="330" y="58">tactical · 8192 tokens</text>
+      <!-- TIER 1: AGENTS -->
+      <text x="300" y="20" text-anchor="middle" font-family="'Playfair Display',serif" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">TIER 1 · AGENTS</text>
 
-      <rect class="layer" x="40" y="110" width="480" height="100" rx="6"/>
-      <text class="hd" x="50" y="128">MCP TOOL LAYER · invariant shape for every tool</text>
-      <text class="lbl" x="50" y="144">{ name · description · input_schema · execute(params) → ToolResult }</text>
-      <rect class="chip" x="55" y="158" width="110" height="40" rx="3"/>
-      <text class="kw" x="60" y="174">canva_create</text>
-      <text class="lbl" x="60" y="188">name/desc/schema</text>
-      <rect class="chip" x="175" y="158" width="110" height="40" rx="3"/>
-      <text class="kw" x="180" y="174">figma_frame</text>
-      <text class="lbl" x="180" y="188">name/desc/schema</text>
-      <rect class="chip" x="295" y="158" width="110" height="40" rx="3"/>
-      <text class="kw" x="300" y="174">adobe_xd_doc</text>
-      <text class="lbl" x="300" y="188">name/desc/schema</text>
-      <rect class="chip" x="415" y="158" width="100" height="40" rx="3"/>
-      <text class="kw" x="420" y="174">sketch_page</text>
-      <text class="lbl" x="420" y="188">name/desc/schema</text>
+      <rect x="80" y="28" width="185" height="60" rx="6" fill="#111D33" stroke="#FF7E6B" stroke-opacity="0.6" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(0,0,0,0.5))"/>
+      <text x="172" y="50" text-anchor="middle" font-family="'Playfair Display',serif" font-size="15" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">Planning Agent</text>
+      <text x="172" y="68" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">strategic · 2048 tokens</text>
+      <text x="172" y="82" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">task_decomposition · brand_analysis</text>
 
-      <path class="ln" d="M 163 70 L 110 110"/>
-      <path class="ln" d="M 395 70 L 450 110"/>
+      <rect x="335" y="28" width="185" height="60" rx="6" fill="#111D33" stroke="#FF7E6B" stroke-opacity="0.6" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(0,0,0,0.5))"/>
+      <text x="427" y="50" text-anchor="middle" font-family="'Playfair Display',serif" font-size="15" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">Execution Agent</text>
+      <text x="427" y="68" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">tactical · 8192 tokens</text>
+      <text x="427" y="82" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">calls MCP tools · state_manager</text>
 
-      <text class="hd" x="20" y="240">CONCRETE APIs (swappable lanes)</text>
-      <rect class="api" x="55" y="250" width="110" height="50" rx="3"/>
-      <text class="lbl" x="60" y="268">Canva Connect API</text>
-      <text class="lbl" x="60" y="282">api.canva.com/rest</text>
-      <rect class="api" x="175" y="250" width="110" height="50" rx="3"/>
-      <text class="lbl" x="180" y="268">Figma REST API</text>
-      <text class="lbl" x="180" y="282">api.figma.com/v1</text>
-      <rect class="api" x="295" y="250" width="110" height="50" rx="3"/>
-      <text class="lbl" x="300" y="268">Adobe Express API</text>
-      <text class="lbl" x="300" y="282">developer.adobe.com</text>
-      <rect class="api" x="415" y="250" width="100" height="50" rx="3"/>
-      <text class="lbl" x="420" y="268">Sketch API</text>
-      <text class="lbl" x="420" y="282">developer.sketch.com</text>
+      <!-- Agent → layer arrows -->
+      <path d="M172 90 L172 128" stroke="#FF7E6B" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#lkd-arrow)"/>
+      <path d="M427 90 L427 128" stroke="#FF7E6B" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#lkd-arrow)"/>
 
-      <path class="ln" d="M 110 198 L 110 250"/>
-      <path class="ln" d="M 230 198 L 230 250"/>
-      <path class="ln" d="M 350 198 L 350 250"/>
-      <path class="ln" d="M 465 198 L 465 250"/>
+      <!-- TIER 2: MCP TOOL LAYER -->
+      <rect x="20" y="128" width="560" height="108" rx="6" fill="#1C2B47" stroke="#FF7E6B" stroke-opacity="0.7" stroke-width="2"/>
+      <text x="300" y="148" text-anchor="middle" font-family="'Playfair Display',serif" font-size="15" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">MCP TOOL LAYER</text>
+      <text x="300" y="165" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">invariant shape: { name · description · input_schema · execute(params) → ToolResult }</text>
 
-      <text class="lbl" x="280" y="322" text-anchor="middle">Swap the lane, keep the layer. The agents never changed shape.</text>
+      <!-- Tool chips -->
+      <rect x="32" y="175" width="125" height="48" rx="4" fill="#162440" stroke="#00F5FF" stroke-opacity="0.55" stroke-width="1.5"/>
+      <text x="94" y="196" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">canva_create</text>
+      <text x="94" y="214" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">name/desc/schema</text>
+
+      <rect x="167" y="175" width="125" height="48" rx="4" fill="#162440" stroke="#00F5FF" stroke-opacity="0.55" stroke-width="1.5"/>
+      <text x="229" y="196" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">figma_frame</text>
+      <text x="229" y="214" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">name/desc/schema</text>
+
+      <rect x="302" y="175" width="125" height="48" rx="4" fill="#162440" stroke="#00F5FF" stroke-opacity="0.55" stroke-width="1.5"/>
+      <text x="364" y="196" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">adobe_xd_doc</text>
+      <text x="364" y="214" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">name/desc/schema</text>
+
+      <rect x="437" y="175" width="125" height="48" rx="4" fill="#162440" stroke="#00F5FF" stroke-opacity="0.55" stroke-width="1.5"/>
+      <text x="499" y="196" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">sketch_page</text>
+      <text x="499" y="214" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">name/desc/schema</text>
+
+      <!-- Chip → API arrows -->
+      <path d="M94 224 L94 262" stroke="#00F5FF" stroke-width="1.25" fill="none" stroke-dasharray="4 3" marker-end="url(#lkd-arrow-dim)"/>
+      <path d="M229 224 L229 262" stroke="#00F5FF" stroke-width="1.25" fill="none" stroke-dasharray="4 3" marker-end="url(#lkd-arrow-dim)"/>
+      <path d="M364 224 L364 262" stroke="#00F5FF" stroke-width="1.25" fill="none" stroke-dasharray="4 3" marker-end="url(#lkd-arrow-dim)"/>
+      <path d="M499 224 L499 262" stroke="#00F5FF" stroke-width="1.25" fill="none" stroke-dasharray="4 3" marker-end="url(#lkd-arrow-dim)"/>
+
+      <!-- TIER 3: CONCRETE APIs -->
+      <text x="300" y="256" text-anchor="middle" font-family="'Playfair Display',serif" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">TIER 3 · CONCRETE APIs (swappable — agents never change)</text>
+
+      <rect x="32" y="264" width="125" height="54" rx="4" fill="#111D33" stroke="#00F5FF" stroke-opacity="0.35" stroke-width="1"/>
+      <text x="94" y="282" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Canva Connect</text>
+      <text x="94" y="298" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">api.canva.com/rest</text>
+      <text x="94" y="312" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#00F5FF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">swappable</text>
+
+      <rect x="167" y="264" width="125" height="54" rx="4" fill="#111D33" stroke="#00F5FF" stroke-opacity="0.35" stroke-width="1"/>
+      <text x="229" y="282" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Figma REST</text>
+      <text x="229" y="298" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">api.figma.com/v1</text>
+      <text x="229" y="312" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#00F5FF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">swappable</text>
+
+      <rect x="302" y="264" width="125" height="54" rx="4" fill="#111D33" stroke="#00F5FF" stroke-opacity="0.35" stroke-width="1"/>
+      <text x="364" y="282" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Adobe Express</text>
+      <text x="364" y="298" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">developer.adobe.com</text>
+      <text x="364" y="312" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#00F5FF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">swappable</text>
+
+      <rect x="437" y="264" width="125" height="54" rx="4" fill="#111D33" stroke="#00F5FF" stroke-opacity="0.35" stroke-width="1"/>
+      <text x="499" y="282" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Sketch API</text>
+      <text x="499" y="298" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">developer.sketch.com</text>
+      <text x="499" y="312" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#00F5FF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">swappable</text>
+
+      <!-- Caption -->
+      <text x="300" y="344" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Swap the lane, keep the layer. The agents never changed shape.</text>
     </svg>
     <p class="visual-caption">Fallback: static three-tier diagram. The MCP layer is the seam; APIs below are interchangeable.</p>
   </div>

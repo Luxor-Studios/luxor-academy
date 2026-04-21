@@ -87,6 +87,285 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--prima
 .next-nav .next{text-align:right;align-items:flex-end}
 @media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+
+/* LUXOR-DIAGRAM-KIT-INJECTED */
+/* ============================================================
+   LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
+   Inject once per page or @import into module stylesheets.
+   Target: ≤3KB. All class names prefixed .lkd- to avoid
+   collision with module-level .label / .head / .box styles.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. ROOT TOKENS — override per track at the parent SVG level
+      e.g.  <svg style="--lkd-accent:#39FF14" class="lkd">
+   ---------------------------------------------------------- */
+.lkd {
+  --lkd-accent:   #E9B949;   /* default: tetra-gold; override per track */
+  --lkd-bg:       #0A1628;
+  --lkd-surface:  #111D33;
+  --lkd-surface2: #162440;
+  --lkd-text:     #FFFFFF;
+  --lkd-dim:      #94A3B8;
+  --lkd-halo:     #0A1628;
+  --lkd-ok:       #22C55E;
+  --lkd-err:      #FF3B3B;
+
+  /* Typography scale */
+  --lkd-fs-head:  16px;
+  --lkd-fs-label: 14px;
+  --lkd-fs-op:    12px;
+  --lkd-fs-note:  11px;
+}
+
+/* ----------------------------------------------------------
+   2. TRACK-ACCENT MODIFIERS — add class to svg element
+   ---------------------------------------------------------- */
+.lkd-accent-coral   { --lkd-accent: #FF7E6B; }
+.lkd-accent-cyan    { --lkd-accent: #00F5FF; }
+.lkd-accent-magenta { --lkd-accent: #FF4DD8; }
+.lkd-accent-violet  { --lkd-accent: #A78BFA; }
+.lkd-accent-arcade  { --lkd-accent: #39FF14; }
+.lkd-accent-gold    { --lkd-accent: #E9B949; }
+
+/* ----------------------------------------------------------
+   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
+      Works in all modern browsers + Chromium SVG renderers.
+   ---------------------------------------------------------- */
+.lkd text {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+  paint-order: stroke fill;
+  stroke: var(--lkd-halo);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* Display heading — Playfair for visual weight */
+.lkd text.lkd-head {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: var(--lkd-fs-head);
+  font-weight: 700;
+  fill: var(--lkd-accent);
+  stroke-width: 5px;
+}
+
+/* Standard body label */
+.lkd text.lkd-label {
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+}
+
+/* Operator / accent inline label */
+.lkd text.lkd-op {
+  font-size: var(--lkd-fs-op);
+  fill: var(--lkd-accent);
+  stroke-width: 3px;
+}
+
+/* Muted footnote / sublabel */
+.lkd text.lkd-note {
+  font-size: var(--lkd-fs-note);
+  fill: var(--lkd-dim);
+  stroke-width: 3px;
+}
+
+/* Monospace code fragment inside diagram */
+.lkd text.lkd-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--lkd-fs-note);
+  fill: #D4E4F7;
+  stroke-width: 3px;
+}
+
+/* Status glyphs — ✓ / ✗ */
+.lkd text.lkd-ok   { fill: var(--lkd-ok);  stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+.lkd text.lkd-err  { fill: var(--lkd-err); stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+
+/* ----------------------------------------------------------
+   4. NODE SHAPES
+   ---------------------------------------------------------- */
+
+/* Primary node rect — accented border */
+.lkd .lkd-node {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
+/* Secondary / dim node */
+.lkd .lkd-node-dim {
+  fill: var(--lkd-surface);
+  stroke: #3B4A6B;
+  stroke-width: 1;
+}
+
+/* Pill variant (rx="999" on rect) */
+.lkd .lkd-node-pill {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.7;
+  stroke-width: 1.5;
+}
+
+/* Hex container — apply to polygon */
+.lkd .lkd-node-hex {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+}
+
+/* Diamond decision node */
+.lkd .lkd-node-diamond {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Terminal / end-state */
+.lkd .lkd-node-terminal {
+  fill: var(--lkd-bg);
+  stroke: var(--lkd-ok);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Chip / tag inside a node */
+.lkd .lkd-chip {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* ----------------------------------------------------------
+   5. PANELS — card behind diagram content
+   ---------------------------------------------------------- */
+.lkd .lkd-panel {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  rx: 6;
+}
+
+/* Glow panel variants — stronger accent border */
+.lkd .lkd-glow-coral   { stroke: #FF7E6B; stroke-opacity: 0.65; fill: #130E10; }
+.lkd .lkd-glow-cyan    { stroke: #00F5FF; stroke-opacity: 0.65; fill: #0B1D20; }
+.lkd .lkd-glow-magenta { stroke: #FF4DD8; stroke-opacity: 0.65; fill: #150B18; }
+.lkd .lkd-glow-violet  { stroke: #A78BFA; stroke-opacity: 0.65; fill: #10101F; }
+.lkd .lkd-glow-arcade  { stroke: #39FF14; stroke-opacity: 0.65; fill: #0A1A0C; }
+.lkd .lkd-glow-gold    { stroke: #E9B949; stroke-opacity: 0.65; fill: #15120A; }
+
+/* ----------------------------------------------------------
+   6. ARROWS
+   Usage: add class to path, set marker-end="url(#lkd-arrow)"
+   Each SVG must include <defs> with the marker (see below).
+   ---------------------------------------------------------- */
+
+/* Primary arrow — accent colored */
+.lkd .lkd-arr {
+  stroke: var(--lkd-accent);
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow);
+}
+
+/* Dim / dashed secondary arrow */
+.lkd .lkd-arr-dim {
+  stroke: #4A5A7A;
+  fill: none;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-dim);
+}
+
+/* Cyan highlight arrow */
+.lkd .lkd-arr-cyan {
+  stroke: #00F5FF;
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow-cyan);
+}
+
+/* Success / return arrow */
+.lkd .lkd-arr-ok {
+  stroke: var(--lkd-ok);
+  fill: none;
+  stroke-width: 1.5;
+  marker-end: url(#lkd-arrow-ok);
+}
+
+/* Error / reject arrow */
+.lkd .lkd-arr-err {
+  stroke: var(--lkd-err);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-err);
+}
+
+/* ----------------------------------------------------------
+   7. STANDARD MARKER DEFS BLOCK
+   Copy this <defs> verbatim into every rewritten SVG.
+   ---------------------------------------------------------- */
+/*
+<defs>
+  <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="var(--lkd-accent)"/>
+  </marker>
+  <marker id="lkd-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+  </marker>
+  <marker id="lkd-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+  </marker>
+  <marker id="lkd-arrow-ok" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
+  </marker>
+  <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
+  </marker>
+</defs>
+*/
+
+/* ----------------------------------------------------------
+   8. ACCESSIBILITY
+   ---------------------------------------------------------- */
+
+/* Keyboard focus ring on SVG container (when tabIndex set) */
+.lkd:focus-visible {
+  outline: 2px solid var(--lkd-accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion — disable any CSS animations if added */
+@media (prefers-reduced-motion: reduce) {
+  .lkd * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High-contrast override — reinforce fills for forced-colors mode */
+@media (forced-colors: active) {
+  .lkd .lkd-node,
+  .lkd .lkd-panel,
+  .lkd .lkd-chip {
+    forced-color-adjust: none;
+  }
+}
+/* END-LUXOR-DIAGRAM-KIT */
 </style>
 </head>
 <body>
@@ -128,67 +407,74 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--prima
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 560 280" role="img" aria-label="Five numbered gates arranged vertically, each representing one of the architect's QA checks. A blueprint card on the left moves rightward past each gate. Any single red gate routes the blueprint back with a self-correct arrow." xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 640 310" role="img" aria-label="Five numbered gates arranged vertically, each representing one of the architect's QA checks. A blueprint card on the left moves rightward past each gate. Any single red gate routes the blueprint back with a self-correct arrow." class="lkd" style="--lkd-accent:#00F5FF" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <style>
-          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-          .labelacc{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#00F5FF}
-          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#00F5FF}
-          .gpass{fill:#0B2030;stroke:#22C55E;stroke-width:1.5}
-          .gfail{fill:#2A0D10;stroke:#FF3B3B;stroke-width:1.5}
-          .gneutral{fill:#111D33;stroke:#00F5FF;stroke-width:1.2;stroke-opacity:0.5}
-          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2;stroke-opacity:0.7}
-          .arrowback{stroke:#FF3B3B;fill:none;stroke-width:1.2;stroke-dasharray:4 3}
-        </style>
-        <marker id="a1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
         </marker>
-        <marker id="a2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#FF3B3B"/>
+        <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
         </marker>
       </defs>
 
-      <rect class="gneutral" x="20" y="100" width="80" height="60" rx="4"/>
-      <text class="labelacc" x="60" y="128" text-anchor="middle">blueprint</text>
-      <text class="label" x="60" y="144" text-anchor="middle">(in)</text>
+      <!-- Blueprint IN -->
+      <rect x="16" y="114" width="88" height="60" rx="5" fill="#111D33" stroke="#00F5FF" stroke-width="1.5" stroke-opacity="0.5"/>
+      <text x="60" y="140" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" font-weight="700" fill="#00F5FF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">blueprint</text>
+      <text x="60" y="160" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">(in)</text>
 
-      <rect class="gpass" x="120" y="30" width="90" height="48" rx="4"/>
-      <text class="head" x="165" y="48" text-anchor="middle">1 · capability</text>
-      <text class="label" x="165" y="66" text-anchor="middle">enables stated caps</text>
+      <!-- Arrow blueprint → gates -->
+      <path d="M105 144 L125 144" stroke="#00F5FF" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow)"/>
 
-      <rect class="gpass" x="120" y="92" width="90" height="48" rx="4"/>
-      <text class="head" x="165" y="110" text-anchor="middle">2 · coherence</text>
-      <text class="label" x="165" y="128" text-anchor="middle">stays as complexity grows</text>
+      <!-- HORIZONTAL LANE: 5 sequential gates -->
 
-      <rect class="gfail" x="120" y="154" width="90" height="48" rx="4"/>
-      <text class="head" x="165" y="172" text-anchor="middle" style="fill:#FF3B3B">3 · alignment</text>
-      <text class="label" x="165" y="190" text-anchor="middle">serves transformation</text>
+      <!-- Gate 1 -->
+      <rect x="126" y="86" width="90" height="114" rx="5" fill="#0B2030" stroke="#22C55E" stroke-width="1.5"/>
+      <text x="171" y="110" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">1</text>
+      <text x="171" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">capability</text>
+      <text x="171" y="150" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">enables stated</text>
+      <text x="171" y="166" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">capabilities</text>
+      <text x="171" y="190" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">PASS</text>
 
-      <rect class="gpass" x="230" y="30" width="90" height="48" rx="4"/>
-      <text class="head" x="275" y="48" text-anchor="middle">4 · brittleness</text>
-      <text class="label" x="275" y="66" text-anchor="middle">no single points of failure</text>
+      <path d="M217 144 L231 144" stroke="#22C55E" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow)"/>
 
-      <rect class="gpass" x="230" y="92" width="90" height="48" rx="4"/>
-      <text class="head" x="275" y="110" text-anchor="middle">5 · self-correct</text>
-      <text class="label" x="275" y="128" text-anchor="middle">names &amp; repairs drift</text>
+      <!-- Gate 2 -->
+      <rect x="232" y="86" width="90" height="114" rx="5" fill="#0B2030" stroke="#22C55E" stroke-width="1.5"/>
+      <text x="277" y="110" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">2</text>
+      <text x="277" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">coherence</text>
+      <text x="277" y="150" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">stays as</text>
+      <text x="277" y="166" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">complexity grows</text>
+      <text x="277" y="190" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">PASS</text>
 
-      <path class="arrow" d="M100 130 L120 55" marker-end="url(#a1)"/>
-      <path class="arrow" d="M100 130 L120 116" marker-end="url(#a1)"/>
-      <path class="arrow" d="M100 130 L120 178" marker-end="url(#a1)"/>
-      <path class="arrow" d="M210 54 L230 55"  marker-end="url(#a1)"/>
-      <path class="arrow" d="M210 116 L230 116" marker-end="url(#a1)"/>
+      <path d="M323 144 L337 144" stroke="#22C55E" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow)"/>
 
-      <rect class="gfail" x="340" y="60" width="80" height="54" rx="4"/>
-      <text class="head" x="380" y="80" text-anchor="middle" style="fill:#FF3B3B">return</text>
-      <text class="label" x="380" y="96" text-anchor="middle">re-run gate 3</text>
-      <text class="label" x="380" y="108" text-anchor="middle">(self-correct)</text>
-      <path class="arrowback" d="M320 178 Q370 180 380 114" marker-end="url(#a2)"/>
+      <!-- Gate 3 (FAIL) -->
+      <rect x="338" y="86" width="90" height="114" rx="5" fill="#2A0D10" stroke="#FF3B3B" stroke-width="2"/>
+      <text x="383" y="110" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" font-weight="700" fill="#FF3B3B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">3</text>
+      <text x="383" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="#FF3B3B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">alignment</text>
+      <text x="383" y="150" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">serves stated</text>
+      <text x="383" y="166" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">transformation</text>
+      <text x="383" y="190" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#FF3B3B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">FAIL</text>
 
-      <rect class="gneutral" x="450" y="100" width="90" height="60" rx="4"/>
-      <text class="labelacc" x="495" y="128" text-anchor="middle">ship</text>
-      <text class="label" x="495" y="144" text-anchor="middle">only if all 5 pass</text>
+      <!-- Gate 4 (dimmed — not reached) -->
+      <rect x="444" y="86" width="90" height="114" rx="5" fill="#111D33" stroke="#3B4A6B" stroke-width="1"/>
+      <text x="489" y="110" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" font-weight="700" fill="#3B4A6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">4</text>
+      <text x="489" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="#3B4A6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">brittleness</text>
+      <text x="489" y="150" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#3B4A6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">no single point</text>
+      <text x="489" y="166" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#3B4A6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">of failure</text>
 
-      <text class="label" x="20" y="268">source: mars-architect.md §Quality assurance (lines 87-92)</text>
+      <!-- Gate 5 (dimmed) -->
+      <rect x="550" y="86" width="72" height="114" rx="5" fill="#111D33" stroke="#3B4A6B" stroke-width="1"/>
+      <text x="586" y="110" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" font-weight="700" fill="#3B4A6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">5</text>
+      <text x="586" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="#3B4A6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">self-correct</text>
+      <text x="586" y="150" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#3B4A6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">names &amp;</text>
+      <text x="586" y="166" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#3B4A6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">repairs drift</text>
+
+      <!-- FAIL feedback arrow — clearly routed back from gate 3 to blueprint -->
+      <path d="M383 200 L383 240 L60 240 L60 176" stroke="#FF3B3B" stroke-width="1.75" fill="none" stroke-dasharray="5 3" marker-end="url(#lkd-arrow-err)"/>
+      <text x="222" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FF3B3B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">self-correct: re-run architect, resubmit blueprint</text>
+
+      <!-- Source citation -->
+      <text x="16" y="290" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">source: mars-architect.md §Quality assurance (lines 87-92)</text>
     </svg>
     <p class="visual-caption">Five gates. Any single red gate routes the blueprint back to the architect for self-correction, not forward to ship.</p>
   </div>

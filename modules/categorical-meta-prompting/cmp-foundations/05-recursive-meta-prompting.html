@@ -82,6 +82,285 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .next-nav .next{text-align:right;align-items:flex-end}
 @media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+
+/* LUXOR-DIAGRAM-KIT-INJECTED */
+/* ============================================================
+   LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
+   Inject once per page or @import into module stylesheets.
+   Target: ≤3KB. All class names prefixed .lkd- to avoid
+   collision with module-level .label / .head / .box styles.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. ROOT TOKENS — override per track at the parent SVG level
+      e.g.  <svg style="--lkd-accent:#39FF14" class="lkd">
+   ---------------------------------------------------------- */
+.lkd {
+  --lkd-accent:   #E9B949;   /* default: tetra-gold; override per track */
+  --lkd-bg:       #0A1628;
+  --lkd-surface:  #111D33;
+  --lkd-surface2: #162440;
+  --lkd-text:     #FFFFFF;
+  --lkd-dim:      #94A3B8;
+  --lkd-halo:     #0A1628;
+  --lkd-ok:       #22C55E;
+  --lkd-err:      #FF3B3B;
+
+  /* Typography scale */
+  --lkd-fs-head:  16px;
+  --lkd-fs-label: 14px;
+  --lkd-fs-op:    12px;
+  --lkd-fs-note:  11px;
+}
+
+/* ----------------------------------------------------------
+   2. TRACK-ACCENT MODIFIERS — add class to svg element
+   ---------------------------------------------------------- */
+.lkd-accent-coral   { --lkd-accent: #FF7E6B; }
+.lkd-accent-cyan    { --lkd-accent: #00F5FF; }
+.lkd-accent-magenta { --lkd-accent: #FF4DD8; }
+.lkd-accent-violet  { --lkd-accent: #A78BFA; }
+.lkd-accent-arcade  { --lkd-accent: #39FF14; }
+.lkd-accent-gold    { --lkd-accent: #E9B949; }
+
+/* ----------------------------------------------------------
+   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
+      Works in all modern browsers + Chromium SVG renderers.
+   ---------------------------------------------------------- */
+.lkd text {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+  paint-order: stroke fill;
+  stroke: var(--lkd-halo);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* Display heading — Playfair for visual weight */
+.lkd text.lkd-head {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: var(--lkd-fs-head);
+  font-weight: 700;
+  fill: var(--lkd-accent);
+  stroke-width: 5px;
+}
+
+/* Standard body label */
+.lkd text.lkd-label {
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+}
+
+/* Operator / accent inline label */
+.lkd text.lkd-op {
+  font-size: var(--lkd-fs-op);
+  fill: var(--lkd-accent);
+  stroke-width: 3px;
+}
+
+/* Muted footnote / sublabel */
+.lkd text.lkd-note {
+  font-size: var(--lkd-fs-note);
+  fill: var(--lkd-dim);
+  stroke-width: 3px;
+}
+
+/* Monospace code fragment inside diagram */
+.lkd text.lkd-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--lkd-fs-note);
+  fill: #D4E4F7;
+  stroke-width: 3px;
+}
+
+/* Status glyphs — ✓ / ✗ */
+.lkd text.lkd-ok   { fill: var(--lkd-ok);  stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+.lkd text.lkd-err  { fill: var(--lkd-err); stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+
+/* ----------------------------------------------------------
+   4. NODE SHAPES
+   ---------------------------------------------------------- */
+
+/* Primary node rect — accented border */
+.lkd .lkd-node {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
+/* Secondary / dim node */
+.lkd .lkd-node-dim {
+  fill: var(--lkd-surface);
+  stroke: #3B4A6B;
+  stroke-width: 1;
+}
+
+/* Pill variant (rx="999" on rect) */
+.lkd .lkd-node-pill {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.7;
+  stroke-width: 1.5;
+}
+
+/* Hex container — apply to polygon */
+.lkd .lkd-node-hex {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+}
+
+/* Diamond decision node */
+.lkd .lkd-node-diamond {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Terminal / end-state */
+.lkd .lkd-node-terminal {
+  fill: var(--lkd-bg);
+  stroke: var(--lkd-ok);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Chip / tag inside a node */
+.lkd .lkd-chip {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* ----------------------------------------------------------
+   5. PANELS — card behind diagram content
+   ---------------------------------------------------------- */
+.lkd .lkd-panel {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  rx: 6;
+}
+
+/* Glow panel variants — stronger accent border */
+.lkd .lkd-glow-coral   { stroke: #FF7E6B; stroke-opacity: 0.65; fill: #130E10; }
+.lkd .lkd-glow-cyan    { stroke: #00F5FF; stroke-opacity: 0.65; fill: #0B1D20; }
+.lkd .lkd-glow-magenta { stroke: #FF4DD8; stroke-opacity: 0.65; fill: #150B18; }
+.lkd .lkd-glow-violet  { stroke: #A78BFA; stroke-opacity: 0.65; fill: #10101F; }
+.lkd .lkd-glow-arcade  { stroke: #39FF14; stroke-opacity: 0.65; fill: #0A1A0C; }
+.lkd .lkd-glow-gold    { stroke: #E9B949; stroke-opacity: 0.65; fill: #15120A; }
+
+/* ----------------------------------------------------------
+   6. ARROWS
+   Usage: add class to path, set marker-end="url(#lkd-arrow)"
+   Each SVG must include <defs> with the marker (see below).
+   ---------------------------------------------------------- */
+
+/* Primary arrow — accent colored */
+.lkd .lkd-arr {
+  stroke: var(--lkd-accent);
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow);
+}
+
+/* Dim / dashed secondary arrow */
+.lkd .lkd-arr-dim {
+  stroke: #4A5A7A;
+  fill: none;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-dim);
+}
+
+/* Cyan highlight arrow */
+.lkd .lkd-arr-cyan {
+  stroke: #00F5FF;
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow-cyan);
+}
+
+/* Success / return arrow */
+.lkd .lkd-arr-ok {
+  stroke: var(--lkd-ok);
+  fill: none;
+  stroke-width: 1.5;
+  marker-end: url(#lkd-arrow-ok);
+}
+
+/* Error / reject arrow */
+.lkd .lkd-arr-err {
+  stroke: var(--lkd-err);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-err);
+}
+
+/* ----------------------------------------------------------
+   7. STANDARD MARKER DEFS BLOCK
+   Copy this <defs> verbatim into every rewritten SVG.
+   ---------------------------------------------------------- */
+/*
+<defs>
+  <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="var(--lkd-accent)"/>
+  </marker>
+  <marker id="lkd-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+  </marker>
+  <marker id="lkd-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+  </marker>
+  <marker id="lkd-arrow-ok" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
+  </marker>
+  <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
+  </marker>
+</defs>
+*/
+
+/* ----------------------------------------------------------
+   8. ACCESSIBILITY
+   ---------------------------------------------------------- */
+
+/* Keyboard focus ring on SVG container (when tabIndex set) */
+.lkd:focus-visible {
+  outline: 2px solid var(--lkd-accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion — disable any CSS animations if added */
+@media (prefers-reduced-motion: reduce) {
+  .lkd * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High-contrast override — reinforce fills for forced-colors mode */
+@media (forced-colors: active) {
+  .lkd .lkd-node,
+  .lkd .lkd-panel,
+  .lkd .lkd-chip {
+    forced-color-adjust: none;
+  }
+}
+/* END-LUXOR-DIAGRAM-KIT */
 </style>
 </head>
 <body>
@@ -124,76 +403,87 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 560 320" role="img" aria-label="RMP loop: p₀ → evaluate q₀ → (q ≥ θ?) → YES converged / NO improve → p₁ → loop. Quality trajectory graph to the right." xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 340" role="img" aria-label="RMP loop: p₀ → evaluate q₀ → (q ≥ θ?) → YES converged / NO improve → p₁ → loop. Quality trajectory graph to the right." class="lkd" style="--lkd-accent:#A78BFA" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <style>
-          .node{fill:#111D33;stroke:#A78BFA;stroke-opacity:0.6;stroke-width:1.5}
-          .nlabel{font-family:'JetBrains Mono',monospace;font-size:12px;fill:#FFFFFF;font-weight:700}
-          .diamond{fill:#162440;stroke:#A78BFA;stroke-opacity:0.6;stroke-width:1.5}
-          .arr{stroke:#00F5FF;fill:none;stroke-width:1.5}
-          .arr-ok{stroke:#22C55E;fill:none;stroke-width:1.5}
-          .arr-bad{stroke:#FF3B3B;fill:none;stroke-width:1.5}
-          .op{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#C4B5FD}
-          .law{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-          .head{font-family:'Playfair Display',serif;font-size:12px;fill:#C4B5FD;font-weight:700}
-          .axis{stroke:#94A3B8;fill:none;stroke-width:1}
-          .point{fill:#A78BFA}
-        </style>
-        <marker id="arrV" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
         </marker>
-        <marker id="arrG" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#22C55E"/>
+        <marker id="lkd-arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
         </marker>
-        <marker id="arrR" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#FF3B3B"/>
+        <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
         </marker>
       </defs>
 
-      <text class="head" x="20" y="22">RMP loop — fixed-point search</text>
+      <!-- Section heading -->
+      <text x="20" y="24" font-family="'Playfair Display',serif" font-size="16" font-weight="700" fill="#C4B5FD" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">RMP loop — fixed-point search</text>
 
-      <rect class="node" x="20" y="40" width="80" height="40" rx="6"/>
-      <text class="nlabel" x="60" y="64" text-anchor="middle">p₀</text>
+      <!-- p₀ node -->
+      <rect x="20" y="40" width="80" height="44" rx="6" fill="#111D33" stroke="#A78BFA" stroke-opacity="0.6" stroke-width="1.5"/>
+      <text x="60" y="67" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="18" font-weight="700" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">p₀</text>
 
-      <path class="arr" d="M100 60 L145 60" marker-end="url(#arrV)"/>
+      <path d="M101 62 L148 62" stroke="#00F5FF" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow)"/>
 
-      <rect class="node" x="145" y="40" width="90" height="40" rx="6"/>
-      <text class="nlabel" x="190" y="64" text-anchor="middle">evaluate q</text>
+      <!-- evaluate q node -->
+      <rect x="149" y="40" width="110" height="44" rx="6" fill="#111D33" stroke="#A78BFA" stroke-opacity="0.6" stroke-width="1.5"/>
+      <text x="204" y="67" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">evaluate q</text>
 
-      <path class="arr" d="M235 60 L275 60" marker-end="url(#arrV)"/>
+      <path d="M260 62 L298 62" stroke="#00F5FF" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow)"/>
 
-      <polygon class="diamond" points="320,60 275,80 230,60 275,40"/>
-      <text class="nlabel" x="275" y="63" text-anchor="middle">q ≥ θ?</text>
+      <!-- q ≥ θ? diamond -->
+      <polygon points="345,62 298,85 251,62 298,39" fill="#162440" stroke="#A78BFA" stroke-opacity="0.85" stroke-width="1.5"/>
+      <text x="298" y="66" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">q ≥ θ?</text>
 
-      <path class="arr-ok" d="M320 60 L370 60" marker-end="url(#arrG)"/>
-      <text class="op" x="345" y="54" text-anchor="middle">YES</text>
+      <!-- YES path -->
+      <path d="M346 62 L395 62" stroke="#22C55E" stroke-width="1.75" fill="none" marker-end="url(#lkd-arrow-ok)"/>
+      <text x="370" y="55" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">YES</text>
 
-      <rect class="node" x="370" y="40" width="100" height="40" rx="6"/>
-      <text class="nlabel" x="420" y="64" text-anchor="middle">CONVERGED</text>
+      <!-- CONVERGED node -->
+      <rect x="396" y="40" width="120" height="44" rx="6" fill="#0A1628" stroke="#22C55E" stroke-opacity="0.85" stroke-width="1.5"/>
+      <text x="456" y="67" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">CONVERGED</text>
 
-      <path class="arr-bad" d="M275 80 L275 130 L145 130 L145 80" marker-end="url(#arrR)"/>
-      <text class="op" x="210" y="124" text-anchor="middle">NO — improve(pₙ) → pₙ₊₁</text>
+      <!-- NO path: loop back -->
+      <path d="M298 86 L298 140 L149 140 L149 85" stroke="#FF3B3B" stroke-width="1.5" fill="none" stroke-dasharray="5 3" marker-end="url(#lkd-arrow-err)"/>
+      <text x="224" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FF3B3B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">NO — improve(pₙ) → pₙ₊₁</text>
 
-      <text class="head" x="20" y="180">Quality trajectory</text>
-      <path class="axis" d="M40 280 L200 280"/>
-      <path class="axis" d="M40 200 L40 280"/>
-      <text class="law" x="20" y="204">1.0</text>
-      <text class="law" x="20" y="284">0.0</text>
-      <text class="law" x="44" y="292">iter 0</text>
-      <text class="law" x="180" y="292">n</text>
-      <path class="arr" d="M40 260 L80 240 L120 220 L160 212" fill="none"/>
-      <circle class="point" cx="40" cy="260" r="3"/>
-      <circle class="point" cx="80" cy="240" r="3"/>
-      <circle class="point" cx="120" cy="220" r="3"/>
-      <circle class="point" cx="160" cy="212" r="3"/>
-      <text class="op" x="164" y="208">q* ≥ θ  ✓</text>
+      <!-- Quality Trajectory section (bottom left) -->
+      <text x="20" y="196" font-family="'Playfair Display',serif" font-size="15" font-weight="700" fill="#C4B5FD" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">Quality trajectory</text>
 
-      <text class="head" x="250" y="180">Monad laws (all 3 hold)</text>
-      <text class="law" x="250" y="204">left identity:   return &gt;=&gt; f = f</text>
-      <text class="law" x="250" y="222">right identity:  f &gt;=&gt; return = f</text>
-      <text class="law" x="250" y="240">associativity:   (f &gt;=&gt; g) &gt;=&gt; h = f &gt;=&gt; (g &gt;=&gt; h)</text>
-      <text class="law" x="250" y="268">comonad W provides history:</text>
-      <text class="law" x="250" y="286">extract · duplicate · extend</text>
+      <!-- Axes -->
+      <line x1="44" y1="300" x2="220" y2="300" stroke="#94A3B8" stroke-width="1"/>
+      <line x1="44" y1="215" x2="44" y2="300" stroke="#94A3B8" stroke-width="1"/>
+
+      <!-- Axis labels -->
+      <text x="38" y="220" text-anchor="end" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">1.0</text>
+      <text x="38" y="304" text-anchor="end" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">0.0</text>
+      <text x="48" y="315" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">iter 0</text>
+      <text x="198" y="315" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">n</text>
+
+      <!-- Trajectory curve -->
+      <polyline points="44,280 88,258 132,238 176,228 210,222" stroke="#A78BFA" stroke-width="2" fill="none"/>
+      <circle cx="44"  cy="280" r="5" fill="#A78BFA"/>
+      <circle cx="88"  cy="258" r="5" fill="#A78BFA"/>
+      <circle cx="132" cy="238" r="5" fill="#A78BFA"/>
+      <circle cx="176" cy="228" r="5" fill="#A78BFA"/>
+      <circle cx="210" cy="222" r="6" fill="#22C55E"/>
+
+      <!-- Threshold line -->
+      <line x1="44" y1="224" x2="220" y2="224" stroke="#22C55E" stroke-opacity="0.4" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="216" y="221" font-family="'JetBrains Mono',monospace" font-size="12" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">θ</text>
+      <text x="215" y="237" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">q* ≥ θ ✓</text>
+
+      <!-- Monad laws panel (bottom right) -->
+      <rect x="246" y="190" width="338" height="132" rx="5" fill="#111D33" stroke="#A78BFA" stroke-opacity="0.35" stroke-width="1"/>
+      <text x="264" y="212" font-family="'Playfair Display',serif" font-size="15" font-weight="700" fill="#C4B5FD" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">Monad laws (all 3 hold)</text>
+
+      <text x="264" y="234" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">left identity:   return &gt;=&gt; f = f</text>
+      <text x="264" y="252" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">right identity:  f &gt;=&gt; return = f</text>
+      <text x="264" y="270" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">associativity:   (f &gt;=&gt; g) &gt;=&gt; h = f &gt;=&gt; (g &gt;=&gt; h)</text>
+
+      <line x1="264" y1="282" x2="572" y2="282" stroke="#A78BFA" stroke-opacity="0.2" stroke-width="1"/>
+      <text x="264" y="299" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">comonad W:  extract · duplicate · extend</text>
+      <text x="264" y="316" font-family="'JetBrains Mono',monospace" font-size="11" fill="#A78BFA" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">history context for each improve() call</text>
     </svg>
     <p class="visual-caption">Fallback: static diagram. Loop converges when q ≥ θ. Monad M iterates forward, Comonad W reads backward across history.</p>
   </div>

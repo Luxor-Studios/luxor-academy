@@ -150,6 +150,285 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
 }
+
+/* LUXOR-DIAGRAM-KIT-INJECTED */
+/* ============================================================
+   LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
+   Inject once per page or @import into module stylesheets.
+   Target: ≤3KB. All class names prefixed .lkd- to avoid
+   collision with module-level .label / .head / .box styles.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. ROOT TOKENS — override per track at the parent SVG level
+      e.g.  <svg style="--lkd-accent:#39FF14" class="lkd">
+   ---------------------------------------------------------- */
+.lkd {
+  --lkd-accent:   #E9B949;   /* default: tetra-gold; override per track */
+  --lkd-bg:       #0A1628;
+  --lkd-surface:  #111D33;
+  --lkd-surface2: #162440;
+  --lkd-text:     #FFFFFF;
+  --lkd-dim:      #94A3B8;
+  --lkd-halo:     #0A1628;
+  --lkd-ok:       #22C55E;
+  --lkd-err:      #FF3B3B;
+
+  /* Typography scale */
+  --lkd-fs-head:  16px;
+  --lkd-fs-label: 14px;
+  --lkd-fs-op:    12px;
+  --lkd-fs-note:  11px;
+}
+
+/* ----------------------------------------------------------
+   2. TRACK-ACCENT MODIFIERS — add class to svg element
+   ---------------------------------------------------------- */
+.lkd-accent-coral   { --lkd-accent: #FF7E6B; }
+.lkd-accent-cyan    { --lkd-accent: #00F5FF; }
+.lkd-accent-magenta { --lkd-accent: #FF4DD8; }
+.lkd-accent-violet  { --lkd-accent: #A78BFA; }
+.lkd-accent-arcade  { --lkd-accent: #39FF14; }
+.lkd-accent-gold    { --lkd-accent: #E9B949; }
+
+/* ----------------------------------------------------------
+   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
+      Works in all modern browsers + Chromium SVG renderers.
+   ---------------------------------------------------------- */
+.lkd text {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+  paint-order: stroke fill;
+  stroke: var(--lkd-halo);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* Display heading — Playfair for visual weight */
+.lkd text.lkd-head {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: var(--lkd-fs-head);
+  font-weight: 700;
+  fill: var(--lkd-accent);
+  stroke-width: 5px;
+}
+
+/* Standard body label */
+.lkd text.lkd-label {
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+}
+
+/* Operator / accent inline label */
+.lkd text.lkd-op {
+  font-size: var(--lkd-fs-op);
+  fill: var(--lkd-accent);
+  stroke-width: 3px;
+}
+
+/* Muted footnote / sublabel */
+.lkd text.lkd-note {
+  font-size: var(--lkd-fs-note);
+  fill: var(--lkd-dim);
+  stroke-width: 3px;
+}
+
+/* Monospace code fragment inside diagram */
+.lkd text.lkd-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--lkd-fs-note);
+  fill: #D4E4F7;
+  stroke-width: 3px;
+}
+
+/* Status glyphs — ✓ / ✗ */
+.lkd text.lkd-ok   { fill: var(--lkd-ok);  stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+.lkd text.lkd-err  { fill: var(--lkd-err); stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+
+/* ----------------------------------------------------------
+   4. NODE SHAPES
+   ---------------------------------------------------------- */
+
+/* Primary node rect — accented border */
+.lkd .lkd-node {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
+/* Secondary / dim node */
+.lkd .lkd-node-dim {
+  fill: var(--lkd-surface);
+  stroke: #3B4A6B;
+  stroke-width: 1;
+}
+
+/* Pill variant (rx="999" on rect) */
+.lkd .lkd-node-pill {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.7;
+  stroke-width: 1.5;
+}
+
+/* Hex container — apply to polygon */
+.lkd .lkd-node-hex {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+}
+
+/* Diamond decision node */
+.lkd .lkd-node-diamond {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Terminal / end-state */
+.lkd .lkd-node-terminal {
+  fill: var(--lkd-bg);
+  stroke: var(--lkd-ok);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Chip / tag inside a node */
+.lkd .lkd-chip {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* ----------------------------------------------------------
+   5. PANELS — card behind diagram content
+   ---------------------------------------------------------- */
+.lkd .lkd-panel {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  rx: 6;
+}
+
+/* Glow panel variants — stronger accent border */
+.lkd .lkd-glow-coral   { stroke: #FF7E6B; stroke-opacity: 0.65; fill: #130E10; }
+.lkd .lkd-glow-cyan    { stroke: #00F5FF; stroke-opacity: 0.65; fill: #0B1D20; }
+.lkd .lkd-glow-magenta { stroke: #FF4DD8; stroke-opacity: 0.65; fill: #150B18; }
+.lkd .lkd-glow-violet  { stroke: #A78BFA; stroke-opacity: 0.65; fill: #10101F; }
+.lkd .lkd-glow-arcade  { stroke: #39FF14; stroke-opacity: 0.65; fill: #0A1A0C; }
+.lkd .lkd-glow-gold    { stroke: #E9B949; stroke-opacity: 0.65; fill: #15120A; }
+
+/* ----------------------------------------------------------
+   6. ARROWS
+   Usage: add class to path, set marker-end="url(#lkd-arrow)"
+   Each SVG must include <defs> with the marker (see below).
+   ---------------------------------------------------------- */
+
+/* Primary arrow — accent colored */
+.lkd .lkd-arr {
+  stroke: var(--lkd-accent);
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow);
+}
+
+/* Dim / dashed secondary arrow */
+.lkd .lkd-arr-dim {
+  stroke: #4A5A7A;
+  fill: none;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-dim);
+}
+
+/* Cyan highlight arrow */
+.lkd .lkd-arr-cyan {
+  stroke: #00F5FF;
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow-cyan);
+}
+
+/* Success / return arrow */
+.lkd .lkd-arr-ok {
+  stroke: var(--lkd-ok);
+  fill: none;
+  stroke-width: 1.5;
+  marker-end: url(#lkd-arrow-ok);
+}
+
+/* Error / reject arrow */
+.lkd .lkd-arr-err {
+  stroke: var(--lkd-err);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-err);
+}
+
+/* ----------------------------------------------------------
+   7. STANDARD MARKER DEFS BLOCK
+   Copy this <defs> verbatim into every rewritten SVG.
+   ---------------------------------------------------------- */
+/*
+<defs>
+  <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="var(--lkd-accent)"/>
+  </marker>
+  <marker id="lkd-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+  </marker>
+  <marker id="lkd-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+  </marker>
+  <marker id="lkd-arrow-ok" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
+  </marker>
+  <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
+  </marker>
+</defs>
+*/
+
+/* ----------------------------------------------------------
+   8. ACCESSIBILITY
+   ---------------------------------------------------------- */
+
+/* Keyboard focus ring on SVG container (when tabIndex set) */
+.lkd:focus-visible {
+  outline: 2px solid var(--lkd-accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion — disable any CSS animations if added */
+@media (prefers-reduced-motion: reduce) {
+  .lkd * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High-contrast override — reinforce fills for forced-colors mode */
+@media (forced-colors: active) {
+  .lkd .lkd-node,
+  .lkd .lkd-panel,
+  .lkd .lkd-chip {
+    forced-color-adjust: none;
+  }
+}
+/* END-LUXOR-DIAGRAM-KIT */
 </style>
 </head>
 <body>
@@ -201,48 +480,53 @@ let safe_divide (a:int) (b:nonzero) : int = a / b</code></pre>
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
     
-    <svg viewBox="0 0 540 260" role="img" aria-label="F* to Z3 verification pipeline for safe_divide." xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 300" role="img" aria-label="F* to Z3 verification pipeline for safe_divide." class="lkd" style="--lkd-accent:#39FF14" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <style>
-          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#39FF14}
-          .box{fill:#111D33;stroke:#39FF14;stroke-opacity:0.35}
-          .boxfail{stroke:#FF3B3B;stroke-opacity:0.6}
-          .boxok{stroke:#39FF14;stroke-opacity:0.8}
-          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
-          .xmark{fill:#FF3B3B;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
-          .check{fill:#39FF14;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
-        </style>
-        <marker id="a1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
         </marker>
       </defs>
-      <text class="head" x="20" y="20">F* SOURCE</text>
-      <rect class="box" x="20" y="30" width="220" height="64" rx="3"/>
-      <text class="label" x="32" y="48">type nonzero = x:int{x &lt;&gt; 0}</text>
-      <text class="label" x="32" y="66">let safe_divide (a:int)</text>
-      <text class="label" x="32" y="82">  (b:nonzero) : int = a / b</text>
 
-      <text class="head" x="300" y="20">Z3 SMT QUERY</text>
-      <rect class="box" x="300" y="30" width="220" height="64" rx="3"/>
-      <text class="label" x="312" y="48">(assert (not (&lt;&gt; 0 0)))</text>
-      <text class="label" x="312" y="66">(check-sat)</text>
-      <text class="label" x="312" y="82">=&gt; sat, model x=0</text>
+      <!-- TOP ROW: Source → Z3 pipeline -->
+      <text x="20" y="24" font-family="'Playfair Display',serif" font-size="16" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">F* SOURCE</text>
 
-      <path class="arrow" d="M240 62 L300 62" marker-end="url(#a1)"/>
+      <rect x="20" y="32" width="250" height="82" rx="5" fill="#111D33" stroke="#39FF14" stroke-opacity="0.4" stroke-width="1.5"/>
+      <text x="32" y="54" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">type nonzero = x:int{x &lt;&gt; 0}</text>
+      <text x="32" y="74" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">let safe_divide (a:int)</text>
+      <text x="32" y="94" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">  (b:nonzero) : int = a / b</text>
+      <text x="32" y="108" font-family="'JetBrains Mono',monospace" font-size="11" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">refinement type as proof obligation</text>
 
-      <rect class="box boxfail" x="20" y="120" width="220" height="44" rx="3"/>
-      <text class="label" x="32" y="138">safe_divide 10 0</text>
-      <text class="xmark" x="32" y="158">✗ Could not prove 0 &lt;&gt; 0</text>
+      <!-- Arrow: F* → Z3 -->
+      <path d="M272 73 L318 73" stroke="#00F5FF" stroke-width="2" fill="none" marker-end="url(#lkd-arrow)"/>
+      <text x="295" y="68" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#00F5FF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">typecheck</text>
 
-      <rect class="box boxok" x="300" y="120" width="220" height="44" rx="3"/>
-      <text class="label" x="312" y="138">safe_divide 10 2</text>
-      <text class="check" x="312" y="158">✓ verified, erased on extraction</text>
+      <text x="330" y="24" font-family="'Playfair Display',serif" font-size="16" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">Z3 SMT QUERY</text>
 
-      <text class="label" x="20" y="200">Type check time: compile</text>
-      <text class="label" x="20" y="216">Runtime cost: zero</text>
-      <text class="label" x="300" y="200">Extracted OCaml:</text>
-      <text class="label" x="300" y="216">let safe_divide a b = a / b</text>
+      <rect x="320" y="32" width="262" height="82" rx="5" fill="#111D33" stroke="#39FF14" stroke-opacity="0.4" stroke-width="1.5"/>
+      <text x="332" y="54" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">(assert (not (&lt;&gt; 0 0)))</text>
+      <text x="332" y="74" font-family="'JetBrains Mono',monospace" font-size="13" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">(check-sat)</text>
+      <text x="332" y="94" font-family="'JetBrains Mono',monospace" font-size="13" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">→ sat, model x=0</text>
+      <text x="332" y="108" font-family="'JetBrains Mono',monospace" font-size="11" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">unsat = proof closes, sat = error found</text>
+
+      <!-- MIDDLE ROW: FAIL and OK examples -->
+      <rect x="20" y="138" width="250" height="60" rx="5" fill="#2A0D10" stroke="#FF3B3B" stroke-opacity="0.7" stroke-width="1.5"/>
+      <text x="32" y="160" font-family="'JetBrains Mono',monospace" font-size="13" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">safe_divide 10 0</text>
+      <text x="32" y="188" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#FF3B3B" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">✗ Could not prove 0 &lt;&gt; 0</text>
+
+      <rect x="320" y="138" width="262" height="60" rx="5" fill="#0B2030" stroke="#39FF14" stroke-opacity="0.8" stroke-width="1.5"/>
+      <text x="332" y="160" font-family="'JetBrains Mono',monospace" font-size="13" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">safe_divide 10 2</text>
+      <text x="332" y="188" font-family="'JetBrains Mono',monospace" font-size="14" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">✓ verified, erased on extraction</text>
+
+      <!-- BOTTOM ROW: cost annotations -->
+      <rect x="20" y="218" width="250" height="64" rx="4" fill="#111D33" stroke="#39FF14" stroke-opacity="0.2" stroke-width="1"/>
+      <text x="32" y="238" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Proof cost</text>
+      <text x="32" y="256" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Type-check time: compile</text>
+      <text x="32" y="274" font-family="'JetBrains Mono',monospace" font-size="12" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Runtime cost: zero</text>
+
+      <rect x="320" y="218" width="262" height="64" rx="4" fill="#111D33" stroke="#39FF14" stroke-opacity="0.2" stroke-width="1"/>
+      <text x="332" y="238" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#39FF14" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">Extracted OCaml</text>
+      <text x="332" y="256" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">let safe_divide a b = a / b</text>
+      <text x="332" y="274" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">refinement types erased at runtime</text>
     </svg>
     <p class="visual-caption">A diagram of the F* -&gt; Z3 -&gt; verdict pipeline: on the left, F* source defines <code>type nonzero = x:int{x &lt;&gt; 0}</code> and a call site <code>safe_divide 10 0</code>. An arrow labeled <code>SMT query</code> flows to a Z3 box that asserts <code>(&gt; 0 &lt;&gt; 0)</code> is unsat. Z3 returns <code>sat</code> with model <code>x = 0</code>, and the compiler emits <code>Could not prove refinement: 0 &lt;&gt; 0</code>. Below, a second path shows the well-typed call <code>safe_divide 10 2</code> passing cleanly through to extracted OCaml code <code>let safe_divide a b = a / b</code> with the refinement erased.</p>
   </div>

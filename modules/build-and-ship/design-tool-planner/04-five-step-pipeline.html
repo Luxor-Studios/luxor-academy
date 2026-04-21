@@ -127,6 +127,285 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
 }
+
+/* LUXOR-DIAGRAM-KIT-INJECTED */
+/* ============================================================
+   LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
+   Inject once per page or @import into module stylesheets.
+   Target: ≤3KB. All class names prefixed .lkd- to avoid
+   collision with module-level .label / .head / .box styles.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. ROOT TOKENS — override per track at the parent SVG level
+      e.g.  <svg style="--lkd-accent:#39FF14" class="lkd">
+   ---------------------------------------------------------- */
+.lkd {
+  --lkd-accent:   #E9B949;   /* default: tetra-gold; override per track */
+  --lkd-bg:       #0A1628;
+  --lkd-surface:  #111D33;
+  --lkd-surface2: #162440;
+  --lkd-text:     #FFFFFF;
+  --lkd-dim:      #94A3B8;
+  --lkd-halo:     #0A1628;
+  --lkd-ok:       #22C55E;
+  --lkd-err:      #FF3B3B;
+
+  /* Typography scale */
+  --lkd-fs-head:  16px;
+  --lkd-fs-label: 14px;
+  --lkd-fs-op:    12px;
+  --lkd-fs-note:  11px;
+}
+
+/* ----------------------------------------------------------
+   2. TRACK-ACCENT MODIFIERS — add class to svg element
+   ---------------------------------------------------------- */
+.lkd-accent-coral   { --lkd-accent: #FF7E6B; }
+.lkd-accent-cyan    { --lkd-accent: #00F5FF; }
+.lkd-accent-magenta { --lkd-accent: #FF4DD8; }
+.lkd-accent-violet  { --lkd-accent: #A78BFA; }
+.lkd-accent-arcade  { --lkd-accent: #39FF14; }
+.lkd-accent-gold    { --lkd-accent: #E9B949; }
+
+/* ----------------------------------------------------------
+   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
+      Works in all modern browsers + Chromium SVG renderers.
+   ---------------------------------------------------------- */
+.lkd text {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+  paint-order: stroke fill;
+  stroke: var(--lkd-halo);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* Display heading — Playfair for visual weight */
+.lkd text.lkd-head {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: var(--lkd-fs-head);
+  font-weight: 700;
+  fill: var(--lkd-accent);
+  stroke-width: 5px;
+}
+
+/* Standard body label */
+.lkd text.lkd-label {
+  font-size: var(--lkd-fs-label);
+  fill: var(--lkd-text);
+}
+
+/* Operator / accent inline label */
+.lkd text.lkd-op {
+  font-size: var(--lkd-fs-op);
+  fill: var(--lkd-accent);
+  stroke-width: 3px;
+}
+
+/* Muted footnote / sublabel */
+.lkd text.lkd-note {
+  font-size: var(--lkd-fs-note);
+  fill: var(--lkd-dim);
+  stroke-width: 3px;
+}
+
+/* Monospace code fragment inside diagram */
+.lkd text.lkd-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--lkd-fs-note);
+  fill: #D4E4F7;
+  stroke-width: 3px;
+}
+
+/* Status glyphs — ✓ / ✗ */
+.lkd text.lkd-ok   { fill: var(--lkd-ok);  stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+.lkd text.lkd-err  { fill: var(--lkd-err); stroke-width: 3px; font-size: var(--lkd-fs-label); font-weight: 700; }
+
+/* ----------------------------------------------------------
+   4. NODE SHAPES
+   ---------------------------------------------------------- */
+
+/* Primary node rect — accented border */
+.lkd .lkd-node {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
+/* Secondary / dim node */
+.lkd .lkd-node-dim {
+  fill: var(--lkd-surface);
+  stroke: #3B4A6B;
+  stroke-width: 1;
+}
+
+/* Pill variant (rx="999" on rect) */
+.lkd .lkd-node-pill {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.7;
+  stroke-width: 1.5;
+}
+
+/* Hex container — apply to polygon */
+.lkd .lkd-node-hex {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.6;
+  stroke-width: 1.5;
+}
+
+/* Diamond decision node */
+.lkd .lkd-node-diamond {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Terminal / end-state */
+.lkd .lkd-node-terminal {
+  fill: var(--lkd-bg);
+  stroke: var(--lkd-ok);
+  stroke-opacity: 0.85;
+  stroke-width: 1.4;
+}
+
+/* Chip / tag inside a node */
+.lkd .lkd-chip {
+  fill: var(--lkd-surface2);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.4;
+  stroke-width: 1;
+}
+
+/* ----------------------------------------------------------
+   5. PANELS — card behind diagram content
+   ---------------------------------------------------------- */
+.lkd .lkd-panel {
+  fill: var(--lkd-surface);
+  stroke: var(--lkd-accent);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  rx: 6;
+}
+
+/* Glow panel variants — stronger accent border */
+.lkd .lkd-glow-coral   { stroke: #FF7E6B; stroke-opacity: 0.65; fill: #130E10; }
+.lkd .lkd-glow-cyan    { stroke: #00F5FF; stroke-opacity: 0.65; fill: #0B1D20; }
+.lkd .lkd-glow-magenta { stroke: #FF4DD8; stroke-opacity: 0.65; fill: #150B18; }
+.lkd .lkd-glow-violet  { stroke: #A78BFA; stroke-opacity: 0.65; fill: #10101F; }
+.lkd .lkd-glow-arcade  { stroke: #39FF14; stroke-opacity: 0.65; fill: #0A1A0C; }
+.lkd .lkd-glow-gold    { stroke: #E9B949; stroke-opacity: 0.65; fill: #15120A; }
+
+/* ----------------------------------------------------------
+   6. ARROWS
+   Usage: add class to path, set marker-end="url(#lkd-arrow)"
+   Each SVG must include <defs> with the marker (see below).
+   ---------------------------------------------------------- */
+
+/* Primary arrow — accent colored */
+.lkd .lkd-arr {
+  stroke: var(--lkd-accent);
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow);
+}
+
+/* Dim / dashed secondary arrow */
+.lkd .lkd-arr-dim {
+  stroke: #4A5A7A;
+  fill: none;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-dim);
+}
+
+/* Cyan highlight arrow */
+.lkd .lkd-arr-cyan {
+  stroke: #00F5FF;
+  fill: none;
+  stroke-width: 1.75;
+  marker-end: url(#lkd-arrow-cyan);
+}
+
+/* Success / return arrow */
+.lkd .lkd-arr-ok {
+  stroke: var(--lkd-ok);
+  fill: none;
+  stroke-width: 1.5;
+  marker-end: url(#lkd-arrow-ok);
+}
+
+/* Error / reject arrow */
+.lkd .lkd-arr-err {
+  stroke: var(--lkd-err);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  marker-end: url(#lkd-arrow-err);
+}
+
+/* ----------------------------------------------------------
+   7. STANDARD MARKER DEFS BLOCK
+   Copy this <defs> verbatim into every rewritten SVG.
+   ---------------------------------------------------------- */
+/*
+<defs>
+  <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="var(--lkd-accent)"/>
+  </marker>
+  <marker id="lkd-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+  </marker>
+  <marker id="lkd-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+  </marker>
+  <marker id="lkd-arrow-ok" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
+  </marker>
+  <marker id="lkd-arrow-err" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
+  </marker>
+</defs>
+*/
+
+/* ----------------------------------------------------------
+   8. ACCESSIBILITY
+   ---------------------------------------------------------- */
+
+/* Keyboard focus ring on SVG container (when tabIndex set) */
+.lkd:focus-visible {
+  outline: 2px solid var(--lkd-accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion — disable any CSS animations if added */
+@media (prefers-reduced-motion: reduce) {
+  .lkd * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High-contrast override — reinforce fills for forced-colors mode */
+@media (forced-colors: active) {
+  .lkd .lkd-node,
+  .lkd .lkd-panel,
+  .lkd .lkd-chip {
+    forced-color-adjust: none;
+  }
+}
+/* END-LUXOR-DIAGRAM-KIT */
 </style>
 </head>
 <body>
@@ -172,75 +451,94 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 560 200" role="img" aria-label="A horizontal pipeline bar broken into five labeled stations with time, tokens, quality score, and agent for each. A running total below reads 22 min, 56k tokens, 9.18/10 avg, 3822 lines out." xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 300" role="img" aria-label="A horizontal pipeline bar broken into five labeled stations with time, tokens, quality score, and agent for each. A running total below reads 22 min, 56k tokens, 9.18/10 avg, 3822 lines out." class="lkd lkd-accent-coral" style="--lkd-accent:#FF7E6B" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <style>
-          .lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:#94A3B8}
-          .hd{font-family:'Playfair Display',serif;font-size:13px;fill:#FF7E6B}
-          .sta{fill:#162440;stroke:#FF7E6B;stroke-opacity:0.55}
-          .dot{fill:#FF7E6B}
-          .ok{fill:#22C55E;font-family:'JetBrains Mono',monospace;font-size:9px}
-          .big{fill:#FFA595;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600}
-        </style>
+        <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#FF7E6B"/>
+        </marker>
+        <marker id="lkd-arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+        </marker>
       </defs>
 
-      <text class="hd" x="20" y="20">5-STEP PIPELINE · validated on CANVA-CODE</text>
+      <!-- Title -->
+      <text class="lkd-head" x="20" y="26" font-family="'Playfair Display',serif" font-size="16" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">5-STEP PIPELINE · validated on CANVA-CODE</text>
 
-      <circle class="dot" cx="70" cy="40" r="3"/>
-      <circle class="dot" cx="176" cy="40" r="3"/>
-      <circle class="dot" cx="282" cy="40" r="3"/>
-      <circle class="dot" cx="388" cy="40" r="3"/>
-      <circle class="dot" cx="494" cy="40" r="3"/>
+      <!-- Timeline spine -->
+      <line x1="30" y1="58" x2="575" y2="58" stroke="#FF7E6B" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="4 3"/>
 
-      <rect class="sta" x="20" y="50" width="100" height="80" rx="3"/>
-      <text class="lbl" x="30" y="65">01 · Analyze</text>
-      <text class="lbl" x="30" y="80">3min · 4.5k tok</text>
-      <text class="ok" x="30" y="96">9.2/10</text>
-      <text class="lbl" x="30" y="112">mercurio-</text>
-      <text class="lbl" x="30" y="124">orchestrator</text>
+      <!-- Step connector arrows -->
+      <path d="M130 58 L146 58" stroke="#00F5FF" stroke-width="1.5" fill="none" marker-end="url(#lkd-arrow-cyan)"/>
+      <path d="M242 58 L258 58" stroke="#00F5FF" stroke-width="1.5" fill="none" marker-end="url(#lkd-arrow-cyan)"/>
+      <path d="M354 58 L370 58" stroke="#00F5FF" stroke-width="1.5" fill="none" marker-end="url(#lkd-arrow-cyan)"/>
+      <path d="M466 58 L482 58" stroke="#00F5FF" stroke-width="1.5" fill="none" marker-end="url(#lkd-arrow-cyan)"/>
 
-      <rect class="sta" x="126" y="50" width="100" height="80" rx="3"/>
-      <text class="lbl" x="136" y="65">02 · Research</text>
-      <text class="lbl" x="136" y="80">2min · 8k tok</text>
-      <text class="ok" x="136" y="96">8.9/10</text>
-      <text class="lbl" x="136" y="112">deep-</text>
-      <text class="lbl" x="136" y="124">researcher</text>
+      <!-- Station 1 -->
+      <circle cx="80" cy="58" r="5" fill="#FF7E6B"/>
+      <rect x="20" y="70" width="110" height="100" rx="5" fill="#162440" stroke="#FF7E6B" stroke-opacity="0.55" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(0,0,0,0.5))"/>
+      <text x="75" y="88" text-anchor="middle" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">01 · Analyze</text>
+      <text x="75" y="106" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">3 min · 4.5k</text>
+      <text x="75" y="124" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">9.2/10</text>
+      <text x="75" y="144" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">mercurio-orch</text>
+      <text x="75" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">tokens</text>
 
-      <rect class="sta" x="232" y="50" width="100" height="80" rx="3"/>
-      <text class="lbl" x="242" y="65">03 · Architect</text>
-      <text class="lbl" x="242" y="80">5min · 18k tok</text>
-      <text class="ok" x="242" y="96">9.5/10 ★</text>
-      <text class="lbl" x="242" y="112">mars-</text>
-      <text class="lbl" x="242" y="124">architect</text>
+      <!-- Station 2 -->
+      <circle cx="192" cy="58" r="5" fill="#FF7E6B"/>
+      <rect x="132" y="70" width="110" height="100" rx="5" fill="#162440" stroke="#FF7E6B" stroke-opacity="0.55" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(0,0,0,0.5))"/>
+      <text x="187" y="88" text-anchor="middle" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">02 · Research</text>
+      <text x="187" y="106" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">2 min · 8k</text>
+      <text x="187" y="124" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">8.9/10</text>
+      <text x="187" y="144" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">deep-</text>
+      <text x="187" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">researcher</text>
 
-      <rect class="sta" x="338" y="50" width="100" height="80" rx="3"/>
-      <text class="lbl" x="348" y="65">04 · Plan</text>
-      <text class="lbl" x="348" y="80">4min · 12k tok</text>
-      <text class="ok" x="348" y="96">9.0/10</text>
-      <text class="lbl" x="348" y="112">mercurio-</text>
-      <text class="lbl" x="348" y="124">orchestrator</text>
+      <!-- Station 3 (star highlight) -->
+      <circle cx="304" cy="58" r="5" fill="#FF7E6B"/>
+      <rect x="244" y="70" width="120" height="100" rx="5" fill="#1C2B47" stroke="#FF7E6B" stroke-opacity="0.9" stroke-width="2" filter="drop-shadow(0 0 8px rgba(255,126,107,0.4))"/>
+      <text x="304" y="88" text-anchor="middle" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">03 · Architect</text>
+      <text x="304" y="106" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">5 min · 18k</text>
+      <text x="304" y="124" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">9.5/10 ★</text>
+      <text x="304" y="144" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">mars-</text>
+      <text x="304" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">architect</text>
 
-      <rect class="sta" x="444" y="50" width="100" height="80" rx="3"/>
-      <text class="lbl" x="454" y="65">05 · Document</text>
-      <text class="lbl" x="454" y="80">8min · 13.5k tok</text>
-      <text class="ok" x="454" y="96">9.3/10</text>
-      <text class="lbl" x="454" y="112">docs-</text>
-      <text class="lbl" x="454" y="124">generator</text>
+      <!-- Station 4 -->
+      <circle cx="418" cy="58" r="5" fill="#FF7E6B"/>
+      <rect x="370" y="70" width="110" height="100" rx="5" fill="#162440" stroke="#FF7E6B" stroke-opacity="0.55" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(0,0,0,0.5))"/>
+      <text x="425" y="88" text-anchor="middle" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">04 · Plan</text>
+      <text x="425" y="106" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">4 min · 12k</text>
+      <text x="425" y="124" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">9.0/10</text>
+      <text x="425" y="144" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">mercurio-</text>
+      <text x="425" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">orchestrator</text>
 
-      <line x1="20" y1="40" x2="544" y2="40" stroke="#FF7E6B" stroke-opacity="0.5" stroke-dasharray="3 3"/>
+      <!-- Station 5 -->
+      <circle cx="530" cy="58" r="5" fill="#FF7E6B"/>
+      <rect x="482" y="70" width="110" height="100" rx="5" fill="#162440" stroke="#FF7E6B" stroke-opacity="0.55" stroke-width="1.5" filter="drop-shadow(0 2px 6px rgba(0,0,0,0.5))"/>
+      <text x="537" y="88" text-anchor="middle" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">05 · Document</text>
+      <text x="537" y="106" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#FFFFFF" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">8 min · 13.5k</text>
+      <text x="537" y="124" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">9.3/10</text>
+      <text x="537" y="144" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">docs-</text>
+      <text x="537" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">generator</text>
 
-      <rect x="20" y="148" width="524" height="36" rx="3" fill="#1C2B47" stroke="#FF7E6B" stroke-opacity="0.4"/>
-      <text class="lbl" x="30" y="163">TOTAL</text>
-      <text class="big" x="80" y="167">22 min</text>
-      <text class="lbl" x="80" y="180">wall time</text>
-      <text class="big" x="180" y="167">~56k</text>
-      <text class="lbl" x="180" y="180">tokens</text>
-      <text class="big" x="270" y="167">9.18/10</text>
-      <text class="lbl" x="270" y="180">avg quality</text>
-      <text class="big" x="380" y="167">3,822</text>
-      <text class="lbl" x="380" y="180">lines out</text>
-      <text class="big" x="470" y="167">91%</text>
-      <text class="lbl" x="470" y="180">token eff.</text>
+      <!-- Totals bar -->
+      <rect x="20" y="188" width="572" height="92" rx="5" fill="#1C2B47" stroke="#FF7E6B" stroke-opacity="0.4" stroke-width="1.5"/>
+      <text x="306" y="210" text-anchor="middle" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">TOTAL · CANVA-CODE VALIDATION RUN</text>
+
+      <text x="85" y="240" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">22 min</text>
+      <text x="85" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">wall time</text>
+
+      <text x="220" y="240" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">~56k</text>
+      <text x="220" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">tokens</text>
+
+      <text x="360" y="240" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">9.18/10</text>
+      <text x="360" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">avg quality</text>
+
+      <text x="490" y="240" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">3,822</text>
+      <text x="490" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">lines out · 91% token eff.</text>
+
+      <!-- Dividers inside totals bar -->
+      <line x1="150" y1="196" x2="150" y2="274" stroke="#FF7E6B" stroke-opacity="0.2" stroke-width="1"/>
+      <line x1="290" y1="196" x2="290" y2="274" stroke="#FF7E6B" stroke-opacity="0.2" stroke-width="1"/>
+      <line x1="430" y1="196" x2="430" y2="274" stroke="#FF7E6B" stroke-opacity="0.2" stroke-width="1"/>
+
     </svg>
     <p class="visual-caption">Fallback: static timeline. Each step is a station with an agent assignment and a validated quality score. Totals are measured, not estimated.</p>
   </div>
