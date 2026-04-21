@@ -1,0 +1,79 @@
+{
+  "id": "design-tool-planner",
+  "version": "v0.1.0-draft",
+  "track": "build-and-ship",
+  "title": "Plan a Design-Automation Tool",
+  "title_es": "Planifica una herramienta de automatizacion de diseno",
+  "subtitle": "Use the universal template to architect a Claude SDK agent that drives a visual API.",
+  "subtitle_es": "Usa la plantilla universal para disenar un agente del SDK de Claude que maneje una API visual.",
+  "tier": "Initiate",
+  "glyph": "cuboctahedron",
+  "glyph_src": "atlas/icons/synergetics/cuboctahedron.svg",
+  "description": "Five modules drawn from the vendored DESIGN-TOOL-PLANNER source. You will learn the validated two-agent pattern (9.5/10 quality, sub-30s), see the MCP protocol layer that standardizes any visual API, walk the 5-step planning pipeline (analyze -> research -> architect -> plan -> document), read the real Claude SDK agent-builder decision matrix, then ship your own design-tool plan.",
+  "description_es": "Cinco modulos extraidos del codigo fuente de DESIGN-TOOL-PLANNER. Aprenderas el patron validado de dos agentes (calidad 9.5/10, menos de 30s), veras la capa de protocolo MCP que estandariza cualquier API visual, recorreras el pipeline de planificacion de 5 pasos (analizar -> investigar -> disenar -> planear -> documentar), leeras la matriz real de decision del constructor de agentes del SDK de Claude, y finalmente lanzaras tu propio plan de herramienta de diseno.",
+  "source_repo": {
+    "vendored_path": "/Users/manu/Documents/LUXOR/DESIGN-TOOL-PLANNER",
+    "upstream_url": null,
+    "upstream_ref": "main",
+    "license": "internal",
+    "readme_permalink": null
+  },
+  "status": "drafted",
+  "modules_planned": [
+    {
+      "id": "01-universal-template",
+      "title": "The Universal Template",
+      "title_es": "La plantilla universal",
+      "teaser": "One template, any visual API, any AI generator: see how the seven variables parameterize every design-automation project.",
+      "teaser_es": "Una plantilla, cualquier API visual, cualquier generador de IA: mira como las siete variables parametrizan todo proyecto de automatizacion de diseno.",
+      "estimated_minutes": 15,
+      "xp_reward": 100,
+      "source_hint": "UNIVERSAL-TEMPLATE-README.md"
+    },
+    {
+      "id": "02-two-agent-pattern",
+      "title": "The Two-Agent Pattern",
+      "title_es": "El patron de dos agentes",
+      "teaser": "Planner plus Executor: the validated architecture that hits 9.5/10 quality in under thirty seconds.",
+      "teaser_es": "Planificador mas Ejecutor: la arquitectura validada que alcanza calidad 9.5/10 en menos de treinta segundos.",
+      "estimated_minutes": 20,
+      "xp_reward": 125,
+      "source_hint": "CLAUDE-SDK-AGENT-BUILDER-GUIDE.md"
+    },
+    {
+      "id": "03-mcp-protocol-layer",
+      "title": "The MCP Protocol Layer",
+      "title_es": "La capa de protocolo MCP",
+      "teaser": "Read the real spec that standardizes Canva, Figma, and Adobe behind one tool interface.",
+      "teaser_es": "Lee la especificacion real que estandariza Canva, Figma y Adobe detras de una sola interfaz de herramientas.",
+      "estimated_minutes": 18,
+      "xp_reward": 125,
+      "source_hint": "canva-sdk-two-agent-spec.yaml"
+    },
+    {
+      "id": "04-five-step-pipeline",
+      "title": "The 5-Step Planning Pipeline",
+      "title_es": "El pipeline de planificacion de 5 pasos",
+      "teaser": "Walk analyze -> research -> architect -> plan -> document through the production architecture doc.",
+      "teaser_es": "Recorre analizar -> investigar -> disenar -> planear -> documentar a traves del documento de arquitectura de produccion.",
+      "estimated_minutes": 20,
+      "xp_reward": 125,
+      "source_hint": "docs/ARCHITECTURE.md"
+    },
+    {
+      "id": "05-ship-your-own",
+      "title": "Ship Your Own Plan",
+      "title_es": "Lanza tu propio plan",
+      "teaser": "Fill in the seven variables, pick an agent pattern, and produce a plan repository worthy of a real project.",
+      "teaser_es": "Completa las siete variables, elige un patron de agentes y produce un repositorio de plan digno de un proyecto real.",
+      "estimated_minutes": 22,
+      "xp_reward": 150,
+      "source_hint": "README.md"
+    }
+  ],
+  "module_count": 5,
+  "total_xp_planned": 625,
+  "estimated_minutes": 95,
+  "canonical_last_module": "05-ship-your-own",
+  "license": "CC-BY-SA-4.0"
+}

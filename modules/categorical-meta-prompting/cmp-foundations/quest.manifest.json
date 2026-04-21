@@ -1,0 +1,89 @@
+{
+  "id": "cmp-foundations",
+  "version": "v0.1.0-draft",
+  "track": "categorical-meta-prompting",
+  "title": "Categorical Meta-Prompting: Foundations",
+  "title_es": "Meta-prompting categórico: fundamentos",
+  "subtitle": "Objects, morphisms, and composition — meta-prompting as a category you can reason about.",
+  "subtitle_es": "Objetos, morfismos y composición — el meta-prompting como una categoría sobre la que se puede razonar.",
+  "tier": "Adept",
+  "glyph": "icosahedron",
+  "glyph_src": "atlas/icons/synergetics/icosahedron.svg",
+  "description": "Six modules drawn from the categorical-meta-prompting project, which treats prompts as morphisms and composition operators as first-class mathematical structure. You will install the vocabulary (objects, morphisms, composition), reframe prompts as morphisms between context types, use natural transformations to swap strategies under the hood, pick up the CMP Query Language DSL, meet recursive meta-prompting as a fixed-point operator, and then ship your own composition.",
+  "description_es": "Seis módulos tomados del proyecto categorical-meta-prompting, que trata a los prompts como morfismos y a los operadores de composición como estructura matemática de primera clase. Vas a instalar el vocabulario (objetos, morfismos, composición), replantear los prompts como morfismos entre tipos de contexto, usar transformaciones naturales para cambiar estrategias por debajo, aprender el DSL CMP Query Language, conocer el meta-prompting recursivo como operador de punto fijo y después publicar tu propia composición.",
+  "source_repo": {
+    "vendored_path": "/Users/manu/Documents/LUXOR/categorical-meta-prompting",
+    "upstream_url": null,
+    "upstream_ref": "main",
+    "license": "internal",
+    "readme_permalink": null
+  },
+  "status": "drafted",
+  "modules_planned": [
+    {
+      "id": "01-objects-morphisms-composition",
+      "title": "Objects, Morphisms, Composition",
+      "title_es": "Objetos, morfismos y composición",
+      "teaser": "The three things every category has — and why that is exactly the vocabulary meta-prompting was missing.",
+      "teaser_es": "Las tres cosas que tiene toda categoría — y por qué ese es justo el vocabulario que le faltaba al meta-prompting.",
+      "estimated_minutes": 25,
+      "xp_reward": 150,
+      "source_hint": "docs/CATEGORICAL-ONTOLOGY.md"
+    },
+    {
+      "id": "02-prompts-as-morphisms",
+      "title": "Prompts as Morphisms",
+      "title_es": "Prompts como morfismos",
+      "teaser": "Stop treating prompts as strings. Start treating them as typed arrows between context objects — and watch composition fall out for free.",
+      "teaser_es": "Deja de tratar los prompts como cadenas. Empieza a tratarlos como flechas tipadas entre objetos de contexto — y verás que la composición aparece sola.",
+      "estimated_minutes": 30,
+      "xp_reward": 170,
+      "source_hint": "docs/CATEGORICAL-META-PROMPTING-COMPLETE-GUIDE.md"
+    },
+    {
+      "id": "03-natural-transformations",
+      "title": "Natural Transformations: Swapping Strategies",
+      "title_es": "Transformaciones naturales: cambiar estrategias",
+      "teaser": "A natural transformation lets you swap a whole prompting strategy without touching the call sites — the categorical version of a plugin.",
+      "teaser_es": "Una transformación natural te permite cambiar toda una estrategia de prompting sin tocar los puntos de llamada — la versión categórica de un plugin.",
+      "estimated_minutes": 30,
+      "xp_reward": 180,
+      "source_hint": "docs/ADJUNCTIONS-IN-META-PROMPTING.md"
+    },
+    {
+      "id": "04-cmp-query-language",
+      "title": "The CMP Query Language (DSL)",
+      "title_es": "El CMP Query Language (DSL)",
+      "teaser": "Meet the DSL that lets you write prompt compositions the way you would write Unix pipes — typed, composable, and re-runnable.",
+      "teaser_es": "Conoce el DSL que te deja escribir composiciones de prompts como si fueran pipes de Unix — tipadas, componibles y reejecutables.",
+      "estimated_minutes": 35,
+      "xp_reward": 200,
+      "source_hint": "docs/COMMAND-SKILL-REFERENCE.md"
+    },
+    {
+      "id": "05-recursive-meta-prompting",
+      "title": "Recursive Meta-Prompting: The Fixed Point",
+      "title_es": "Meta-prompting recursivo: el punto fijo",
+      "teaser": "A prompt that rewrites its own prompt until it stops changing. Meet RMP as a fixed-point operator on the category of prompts.",
+      "teaser_es": "Un prompt que reescribe su propio prompt hasta que deja de cambiar. Conoce a RMP como operador de punto fijo sobre la categoría de prompts.",
+      "estimated_minutes": 35,
+      "xp_reward": 210,
+      "source_hint": "docs/COMONADIC-CONTEXT-PROPAGATION-PATTERNS.md"
+    },
+    {
+      "id": "06-ship-your-own-composition",
+      "title": "Ship Your Own Composition",
+      "title_es": "Publica tu propia composición",
+      "teaser": "Pick a real task, decompose it into typed morphisms, compose them with the DSL, and submit the composition as your quest proof.",
+      "teaser_es": "Elige una tarea real, descomponla en morfismos tipados, compónlos con el DSL y entrega la composición como prueba de la quest.",
+      "estimated_minutes": 40,
+      "xp_reward": 240,
+      "source_hint": "docs/EXAMPLES-LIBRARY.md"
+    }
+  ],
+  "module_count": 6,
+  "total_xp_planned": 1150,
+  "estimated_minutes": 195,
+  "canonical_last_module": "06-ship-your-own-composition",
+  "license": "CC-BY-SA-4.0"
+}

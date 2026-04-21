@@ -1,0 +1,79 @@
+{
+  "id": "mars-systems",
+  "version": "v0.1.0-draft",
+  "track": "orchestration",
+  "title": "MARS for Systems-Level Innovation",
+  "title_es": "MARS para innovacion a nivel de sistemas",
+  "subtitle": "Parallel discovery, research synthesis, and validation gates for SpaceX-level breakthroughs.",
+  "subtitle_es": "Descubrimiento paralelo, sintesis de investigacion y puertas de validacion para avances al nivel de SpaceX.",
+  "tier": "Skilled",
+  "glyph": "octahedron",
+  "glyph_src": "atlas/icons/synergetics/octahedron.svg",
+  "description": "Five modules extracted from the live MARS agent definition, its five dimensional playbooks, and the paper2agent mars-analysis research archive. You will launch parallel discovery across structural and temporal dimensions, synthesize research the way MARS does, apply systems-level optimization, enforce validation gates, then ship your own breakthrough write-up.",
+  "description_es": "Cinco modulos extraidos de la definicion viva del agente MARS, sus cinco manuales dimensionales y el archivo de investigacion mars-analysis de paper2agent. Lanzaras descubrimiento paralelo por las dimensiones estructural y temporal, sintetizaras investigacion como lo hace MARS, aplicaras optimizacion a nivel de sistemas, haras cumplir las puertas de validacion y finalmente publicaras tu propio avance.",
+  "source_repo": {
+    "vendored_path": "/Users/manu/.claude/agents",
+    "upstream_url": null,
+    "upstream_ref": "main",
+    "license": "internal",
+    "readme_permalink": null
+  },
+  "status": "drafted",
+  "modules_planned": [
+    {
+      "id": "01-parallel-discovery",
+      "title": "Parallel Discovery",
+      "title_es": "Descubrimiento paralelo",
+      "teaser": "Fire three specialist agents at once across structural, temporal, and causal dimensions.",
+      "teaser_es": "Lanza tres agentes especialistas en simultaneo por las dimensiones estructural, temporal y causal.",
+      "estimated_minutes": 18,
+      "xp_reward": 125,
+      "source_hint": "MARS_AGENT_DEFINITION.md"
+    },
+    {
+      "id": "02-research-synthesis",
+      "title": "Research Synthesis",
+      "title_es": "Sintesis de investigacion",
+      "teaser": "Read the real paper2agent synthesis doc that distilled five dimensions into one blueprint.",
+      "teaser_es": "Lee el documento real de sintesis de paper2agent que destilo cinco dimensiones en un solo blueprint.",
+      "estimated_minutes": 20,
+      "xp_reward": 125,
+      "source_hint": "mars-agent/docs/EPISTEMIC-DIMENSION-PLAYBOOK.md"
+    },
+    {
+      "id": "03-systems-optimization",
+      "title": "Systems-Level Optimization",
+      "title_es": "Optimizacion a nivel de sistemas",
+      "teaser": "Stop optimizing parts, start optimizing the whole: the SpaceX-level move behind MARS.",
+      "teaser_es": "Deja de optimizar partes, empieza a optimizar el todo: la jugada al nivel SpaceX detras de MARS.",
+      "estimated_minutes": 18,
+      "xp_reward": 125,
+      "source_hint": "mars-agent/docs/INTEGRATIVE-DIMENSION-PLAYBOOK.md"
+    },
+    {
+      "id": "04-validation-gates",
+      "title": "Validation Gates",
+      "title_es": "Puertas de validacion",
+      "teaser": "Ninety-five percent architectural confidence or the build does not ship: see how MARS enforces it.",
+      "teaser_es": "Confianza arquitectonica de noventa y cinco por ciento o el build no se lanza: mira como MARS lo exige.",
+      "estimated_minutes": 17,
+      "xp_reward": 125,
+      "source_hint": "mars-architect.md"
+    },
+    {
+      "id": "05-ship-your-own",
+      "title": "Ship Your Own Breakthrough",
+      "title_es": "Lanza tu propio avance",
+      "teaser": "Pick a stuck system in your world, run MARS end-to-end, publish the analysis with sources cited.",
+      "teaser_es": "Escoge un sistema atascado en tu mundo, ejecuta MARS de principio a fin, publica el analisis con las fuentes citadas.",
+      "estimated_minutes": 25,
+      "xp_reward": 150,
+      "source_hint": "MARS_QUICK_REFERENCE.md"
+    }
+  ],
+  "module_count": 5,
+  "total_xp_planned": 650,
+  "estimated_minutes": 98,
+  "canonical_last_module": "05-ship-your-own",
+  "license": "CC-BY-SA-4.0"
+}

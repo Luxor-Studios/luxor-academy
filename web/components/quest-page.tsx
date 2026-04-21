@@ -19,64 +19,98 @@ import { TIERS, type Tier, type Quest, type Track } from "@/lib/tiers";
 
 const MODULES_ROOT = path.join(process.cwd(), "..", "modules");
 
+// Manifests carry optional _es sibling fields so future language work can light up
+// without a schema migration. UI renders EN only for now.
 interface ModuleManifest {
   meta: {
     id: string;
     title: string;
+    title_es?: string;
     xp_reward: number;
     estimated_minutes: number;
     tier: string;
   };
   slots: {
-    primer: { key_insight: string };
+    primer: { key_insight: string; key_insight_es?: string };
     next: { ship_your_own: boolean };
   };
+}
+
+interface PlannedModule {
+  id: string;
+  title: string;
+  title_es?: string;
+  teaser: string;
+  teaser_es?: string;
+  estimated_minutes: number;
+  xp_reward: number;
+  source_hint: string;
 }
 
 interface QuestManifest {
   id: string;
   title: string;
-  subtitle: string;
+  title_es?: string;
+  subtitle?: string;
+  subtitle_es?: string;
   tier: string;
   glyph: GlyphName;
   description: string;
-  modules: string[];
+  description_es?: string;
+  modules?: string[];
+  modules_planned?: PlannedModule[];
   module_count: number;
-  total_xp: number;
+  total_xp?: number;
+  total_xp_planned?: number;
   total_xp_deferred?: number;
   estimated_minutes: number;
   canonical_last_module: string;
   source_repo: {
     vendored_path: string;
-    upstream_url: string;
+    upstream_url: string | null;
     upstream_ref: string;
-    readme_permalink: string;
+    readme_permalink?: string | null;
   };
 }
 
-/** Build static params for a tier by walking its TIERS entry. */
+type LoadResult =
+  | { kind: "LIVE"; manifest: QuestManifest; modules: ModuleManifest[] }
+  | { kind: "ROADMAP"; manifest: QuestManifest }
+  | { kind: "NONE" };
+
 export function generateQuestParamsFor(tier: Tier): { track: string; quest: string }[] {
   return TIERS[tier].tracks.flatMap((t) =>
     t.quests.map((q) => ({ track: t.id, quest: q.id })),
   );
 }
 
-async function tryLoadModules(track: string, quest: string) {
+async function loadQuest(track: string, quest: string): Promise<LoadResult> {
   const dir = path.join(MODULES_ROOT, track, quest);
   const manifestPath = path.join(dir, "quest.manifest.json");
+  let qm: QuestManifest;
   try {
-    const qm = JSON.parse(await fs.readFile(manifestPath, "utf-8")) as QuestManifest;
-    const modules = await Promise.all(
-      qm.modules.map(async (id) =>
-        JSON.parse(
-          await fs.readFile(path.join(dir, `${id}.module.json`), "utf-8"),
-        ) as ModuleManifest,
-      ),
-    );
-    return { manifest: qm, modules };
+    qm = JSON.parse(await fs.readFile(manifestPath, "utf-8")) as QuestManifest;
   } catch {
-    return null;
+    return { kind: "NONE" };
   }
+  if (qm.modules && qm.modules.length > 0) {
+    try {
+      const modules = await Promise.all(
+        qm.modules.map(async (id) =>
+          JSON.parse(
+            await fs.readFile(path.join(dir, `${id}.module.json`), "utf-8"),
+          ) as ModuleManifest,
+        ),
+      );
+      return { kind: "LIVE", manifest: qm, modules };
+    } catch {
+      // Manifest lists modules but files aren't on disk — fall through to roadmap.
+    }
+  }
+  if (qm.modules_planned && qm.modules_planned.length > 0) {
+    return { kind: "ROADMAP", manifest: qm };
+  }
+  return { kind: "NONE" };
 }
 
 function findQuestInTiers(
@@ -108,7 +142,20 @@ export async function QuestPage({ tier, track, quest }: QuestPageProps) {
   const Glyph = GLYPH_MAP[tk.glyph];
   const tierLabel = TIERS[tier].label;
 
-  const modulesBundle = await tryLoadModules(track, quest);
+  const loaded = await loadQuest(track, quest);
+  const qm = loaded.kind !== "NONE" ? loaded.manifest : null;
+
+  const title = qm?.title ?? q.title;
+  const subtitle = qm?.subtitle ?? null;
+  const description = qm?.description ?? q.description;
+  const totalModules = qm?.module_count ?? q.moduleCount;
+  const totalMinutes = qm?.estimated_minutes ?? q.estimatedMinutes;
+  const totalXp = qm?.total_xp ?? qm?.total_xp_planned ?? q.xpReward;
+  const totalXpDeferred = qm?.total_xp_deferred ?? q.xpReward_deferred;
+  const upstream = qm?.source_repo?.upstream_url ?? q.upstreamRepo ?? null;
+
+  const badgeLabel =
+    loaded.kind === "LIVE" ? "Content live" : loaded.kind === "ROADMAP" ? "Roadmap" : "Preview";
 
   return (
     <>
@@ -117,21 +164,19 @@ export async function QuestPage({ tier, track, quest }: QuestPageProps) {
         <section
           className="relative mb-12 overflow-hidden rounded-3xl border border-border/60 bg-card/40 p-8 md:p-12"
           style={{
-            // Retro sunset gradient tinted by the track's accent — very subtle.
-            background: `linear-gradient(135deg, rgba(10,22,40,0.25) 0%, rgba(${rgb}, 0.08) 55%, rgba(255, 214, 176, 0.06) 100%)`,
+            background: `linear-gradient(135deg, color-mix(in oklab, var(--background) 82%, transparent) 0%, rgba(${rgb}, 0.08) 55%, rgba(255, 214, 176, 0.06) 100%)`,
           }}
         >
-          {/* Horizon stripe — the boardwalk cue */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
             style={{
               background: `linear-gradient(90deg, transparent, ${hex}, #FFD6B0, #00F5FF, transparent)`,
-              opacity: 0.7,
+              opacity: 0.75,
             }}
           />
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Link
               href={`/${tier}`}
               className="font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-primary"
@@ -148,7 +193,7 @@ export async function QuestPage({ tier, track, quest }: QuestPageProps) {
               className="border-border/60 bg-transparent font-mono text-[10px] uppercase tracking-widest"
               style={{ color: hex, borderColor: `rgba(${rgb}, 0.5)` }}
             >
-              {modulesBundle ? "Content live" : "Preview"}
+              {badgeLabel}
             </Badge>
           </div>
 
@@ -159,59 +204,50 @@ export async function QuestPage({ tier, track, quest }: QuestPageProps) {
               style={{ color: hex, filter: `drop-shadow(0 0 14px rgba(${rgb}, 0.55))` }}
             />
             <div className="space-y-3">
-              <h1 className="font-display text-4xl leading-[1.05] sm:text-5xl">
-                {modulesBundle?.manifest.title ?? q.title}
-              </h1>
-              {modulesBundle ? (
-                <p className="max-w-3xl text-lg italic text-muted-foreground">
-                  {modulesBundle.manifest.subtitle}
-                </p>
+              <h1 className="font-display text-4xl leading-[1.05] sm:text-5xl">{title}</h1>
+              {subtitle ? (
+                <p className="max-w-3xl text-lg italic text-muted-foreground">{subtitle}</p>
               ) : null}
             </div>
           </div>
 
-          <p className="mt-6 max-w-3xl leading-relaxed text-muted-foreground">
-            {modulesBundle?.manifest.description ?? q.description}
-          </p>
+          <p className="mt-6 max-w-3xl leading-relaxed text-muted-foreground">{description}</p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border/40 pt-5 font-mono text-xs uppercase tracking-widest text-muted-foreground">
             <span>
-              {modulesBundle?.manifest.module_count ?? q.moduleCount} modules ·{" "}
-              {modulesBundle?.manifest.estimated_minutes ?? q.estimatedMinutes}m
+              {totalModules} modules · {totalMinutes}m
             </span>
             <span style={{ color: hex }}>
-              {modulesBundle?.manifest.total_xp ?? q.xpReward} XP
-              {(modulesBundle?.manifest.total_xp_deferred ?? q.xpReward_deferred) ? (
-                <span className="text-muted-foreground">
-                  {" "}
-                  +{modulesBundle?.manifest.total_xp_deferred ?? q.xpReward_deferred} deferred
-                </span>
+              {totalXp} XP
+              {totalXpDeferred ? (
+                <span className="text-muted-foreground"> +{totalXpDeferred} deferred</span>
               ) : null}
             </span>
-            {q.upstreamRepo ? (
+            {upstream ? (
               <a
-                href={q.upstreamRepo}
+                href={upstream}
                 rel="noopener noreferrer"
                 target="_blank"
                 className="ml-auto text-muted-foreground transition-colors hover:text-primary"
               >
-                ↗ {q.upstreamRepo.replace(/^https?:\/\//, "")}
+                ↗ {upstream.replace(/^https?:\/\//, "")}
               </a>
             ) : null}
           </div>
         </section>
 
-        {modulesBundle ? (
+        {loaded.kind === "LIVE" ? (
           <LiveModuleList
-            tier={tier}
             track={track}
             quest={quest}
-            modules={modulesBundle.modules}
+            modules={loaded.modules}
             hex={hex}
             rgb={rgb}
           />
+        ) : loaded.kind === "ROADMAP" ? (
+          <RoadmapList modules={loaded.manifest.modules_planned!} hex={hex} rgb={rgb} />
         ) : (
-          <DraftPreview quest={q} track={tk} hex={hex} rgb={rgb} />
+          <DraftFallback hex={hex} />
         )}
       </main>
     </>
@@ -219,14 +255,12 @@ export async function QuestPage({ tier, track, quest }: QuestPageProps) {
 }
 
 function LiveModuleList({
-  tier,
   track,
   quest,
   modules,
   hex,
   rgb,
 }: {
-  tier: Tier;
   track: string;
   quest: string;
   modules: ModuleManifest[];
@@ -247,11 +281,9 @@ function LiveModuleList({
               <Card
                 className="relative h-full overflow-hidden border-border/60 bg-card/60 transition-all duration-300"
                 style={{
-                  // Applied only on hover via CSS var consumption in className.
                   ["--hover-border" as string]: `rgba(${rgb}, 0.55)`,
                   ["--hover-shadow" as string]: `0 0 32px rgba(${rgb}, 0.25)`,
                 }}
-                data-hover
               >
                 <div
                   aria-hidden
@@ -295,43 +327,42 @@ function LiveModuleList({
           );
         })}
       </div>
-      <footer
-        className="mt-10 border-t border-border/40 pt-8 font-mono text-xs uppercase tracking-widest text-muted-foreground"
-        suppressHydrationWarning
-      >
+      <footer className="mt-10 border-t border-border/40 pt-8 font-mono text-xs uppercase tracking-widest text-muted-foreground">
         Modules are self-contained HTML — they open in a new page and own their own XP writes through the atlas shell.
       </footer>
     </section>
   );
 }
 
-function DraftPreview({
-  quest,
-  track,
+function RoadmapList({
+  modules,
   hex,
   rgb,
 }: {
-  quest: Quest;
-  track: Track;
+  modules: PlannedModule[];
   hex: string;
   rgb: string;
 }) {
   return (
     <section className="space-y-6">
-      <h2 className="font-mono text-xs uppercase tracking-widest" style={{ color: hex }}>
-        Preview
-      </h2>
+      <div className="flex items-baseline justify-between gap-4">
+        <h2 className="font-mono text-xs uppercase tracking-widest" style={{ color: hex }}>
+          Roadmap
+        </h2>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          {modules.length} modules planned
+        </span>
+      </div>
 
-      <Card className="border-border/60 bg-card/50">
+      <Card className="border-border/60 bg-card/40">
         <CardHeader className="space-y-3">
           <CardTitle className="font-display text-2xl leading-snug">
-            Drafted — content will be forged in a future wave
+            Drafted — the path is mapped, the modules will be forged next
           </CardTitle>
           <CardDescription className="text-base leading-relaxed text-muted-foreground">
-            Modules for this quest have not been generated yet. What you see below is the
-            pedagogical skeleton drawn from <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">{quest.sourceRepo}</code> — a sketch of what
-            the finished quest will cover. It will be rendered into {quest.moduleCount}{" "}
-            interactive modules following the same six-slot contract that powers the{" "}
+            What you see below is the pedagogical roadmap for this quest, drawn from the source repo.
+            Each module will be generated into an interactive page following the same six-slot
+            contract that powers the{" "}
             <Link
               href="/novice/build-and-ship/forge-barque"
               className="underline decoration-dotted underline-offset-4 transition-colors hover:text-primary"
@@ -339,56 +370,92 @@ function DraftPreview({
             >
               Forge BARQUE
             </Link>{" "}
-            quest (the one already live, for reference).
+            quest (live for reference). Source hints point to the real files each module will excerpt.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                Track context
-              </div>
-              <p className="leading-relaxed text-muted-foreground">{track.description}</p>
-            </div>
-            <div className="space-y-2">
-              <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                What you'll walk away with
-              </div>
-              <ul className="space-y-1.5 leading-relaxed text-muted-foreground">
-                <li>
-                  <span style={{ color: hex }}>▸</span>{" "}
-                  {quest.moduleCount} modules of primer + visual + interactive + artifact + self-check + next
-                </li>
-                <li>
-                  <span style={{ color: hex }}>▸</span>{" "}
-                  {quest.xpReward} XP banked into your sovereign export
-                </li>
-                <li>
-                  <span style={{ color: hex }}>▸</span>{" "}
-                  A <em>ship your own</em> finale — paste your repo URL, walk away with a permalink
-                </li>
-              </ul>
-            </div>
-          </div>
+      </Card>
 
-          <div
-            className="rounded-2xl border p-5"
-            style={{
-              borderColor: `rgba(${rgb}, 0.35)`,
-              background: `linear-gradient(135deg, rgba(${rgb}, 0.06), rgba(${rgb}, 0.02))`,
-            }}
-          >
-            <div className="font-mono text-xs uppercase tracking-widest" style={{ color: hex }}>
-              Pipeline status
-            </div>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              This quest is queued for the <span className="font-mono text-foreground">codebase-to-course</span> pipeline.
-              Phase 1 ships Forge BARQUE as the canonical reference; this quest will follow the same pattern once its
-              source repo has been spelunked and its six slots extracted. If you want to pressure-test the idea before
-              modules land, open the source repo link above and skim the README.
-            </p>
-          </div>
-        </CardContent>
+      <ol className="space-y-4">
+        {modules.map((m, idx) => {
+          const isShipYourOwn = m.id.includes("ship-your-own");
+          return (
+            <li
+              key={m.id}
+              className="relative rounded-2xl border border-border/60 p-6 transition-colors"
+              style={{
+                background: `linear-gradient(135deg, color-mix(in oklab, var(--card) 85%, transparent) 0%, rgba(${rgb}, 0.04) 100%)`,
+              }}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-0 top-6 h-[calc(100%-48px)] w-[3px] rounded-r"
+                style={{ background: hex, opacity: 0.55 }}
+              />
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full border font-mono text-[10px]"
+                      style={{
+                        color: hex,
+                        borderColor: `rgba(${rgb}, 0.5)`,
+                        backgroundColor: `rgba(${rgb}, 0.1)`,
+                      }}
+                    >
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="font-display text-lg leading-tight">{m.title}</h3>
+                    {isShipYourOwn ? (
+                      <Badge
+                        variant="outline"
+                        className="font-mono text-[10px] uppercase tracking-widest"
+                        style={{
+                          color: hex,
+                          borderColor: `rgba(${rgb}, 0.4)`,
+                          backgroundColor: `rgba(${rgb}, 0.12)`,
+                        }}
+                      >
+                        Ship your own
+                      </Badge>
+                    ) : null}
+                  </div>
+                  <p className="max-w-2xl pl-9 leading-relaxed text-muted-foreground">{m.teaser}</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 pt-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  <span>{m.estimated_minutes}m</span>
+                  <span style={{ color: hex }}>{m.xp_reward} XP</span>
+                </div>
+              </div>
+              <div className="mt-3 pl-9 font-mono text-[11px] text-muted-foreground">
+                <span style={{ color: hex }}>▸</span> source:{" "}
+                <code className="rounded bg-muted/60 px-1.5 py-0.5 text-[11px]">
+                  {m.source_hint}
+                </code>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
+function DraftFallback({ hex }: { hex: string }) {
+  return (
+    <section className="space-y-5">
+      <h2 className="font-mono text-xs uppercase tracking-widest" style={{ color: hex }}>
+        Preview
+      </h2>
+      <Card className="border-border/60 bg-card/50">
+        <CardHeader className="space-y-3">
+          <CardTitle className="font-display text-2xl leading-snug">
+            Drafted — content will be forged in a future wave
+          </CardTitle>
+          <CardDescription className="text-base leading-relaxed text-muted-foreground">
+            Modules for this quest have not been outlined yet. Check back soon — or open the source
+            repo link above and skim the README to pressure-test the idea.
+          </CardDescription>
+        </CardHeader>
       </Card>
     </section>
   );

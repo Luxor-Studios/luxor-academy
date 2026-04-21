@@ -92,31 +92,50 @@
   --sidebar-ring: #E9B949;
 }
 
-/* Parchment / light reserved for Phase 5 — dark-first MVP per launch-plan-v1.1 */
+/* Parchment / retro-boardwalk-on-cream — warm sand foundation, same accent palette.
+ * Kept compatible with the same track accent hexes (coral, cyan, magenta, violet, arcade
+ * green) — those colors read well on both cream and navy. */
 [data-theme="parchment"] {
-  --background: #FAF6F0;
-  --foreground: #1A1A2E;
-  --card: #F0EBE3;
+  --background: #FAF4EA;               /* warm parchment */
+  --foreground: #1A1A2E;               /* deep ink */
+  --card: #F3ECDB;                     /* toasted sand */
   --card-foreground: #1A1A2E;
-  --popover: #E8E2D8;
+  --popover: #EDE3D0;
   --popover-foreground: #1A1A2E;
-  --primary: #9E6A3C;
-  --primary-foreground: #FAF6F0;
-  --muted: #E8E2D8;
+  --primary: #B4782A;                  /* burnished gold — legible on cream */
+  --primary-foreground: #FAF4EA;
+  --secondary: #E8DEC5;
+  --secondary-foreground: #6B5C47;
+  --muted: #EFE6D2;
   --muted-foreground: #6B5C47;
-  --border: rgba(158, 106, 60, 0.35);
-  --input: rgba(158, 106, 60, 0.18);
+  --accent: #0077B6;                   /* deep teal — cyan phosphor darkened for readability */
+  --accent-foreground: #FAF4EA;
+  --destructive: #B33A3A;
+  --destructive-foreground: #FAF4EA;
+  --border: rgba(180, 120, 42, 0.32);
+  --input: rgba(180, 120, 42, 0.18);
+  --ring: #B4782A;
+  --sidebar: #FAF4EA;
+  --sidebar-foreground: #1A1A2E;
+  --sidebar-primary: #B4782A;
+  --sidebar-primary-foreground: #FAF4EA;
+  --sidebar-accent: #F3ECDB;
+  --sidebar-accent-foreground: #B4782A;
+  --sidebar-border: rgba(180, 120, 42, 0.18);
+  --sidebar-ring: #B4782A;
 }
 
 @layer base {
   * { @apply border-border; }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    /* Synergetic grid — subtle IVM texture */
+    /* Synergetic grid — subtle IVM texture. Color resolves via `currentColor` on a
+     * body::before so the grid tone flips with theme. */
     background-image:
-      linear-gradient(rgba(233, 185, 73, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(233, 185, 73, 0.03) 1px, transparent 1px);
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 32px 32px;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight;
@@ -127,9 +146,14 @@
   :focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 3px;
-    box-shadow: 0 0 16px rgba(233, 185, 73, 0.55), 0 0 4px rgba(233, 185, 73, 0.8);
+    box-shadow: 0 0 16px color-mix(in oklab, var(--primary) 55%, transparent),
+                0 0 4px color-mix(in oklab, var(--primary) 80%, transparent);
   }
 }
+
+/* Theme-responsive grid line colors */
+:root { --grid-line: rgba(233, 185, 73, 0.04); }
+[data-theme="parchment"] { --grid-line: rgba(180, 120, 42, 0.06); }
 
 /* Motion — reduced by default per v1.1 invariant */
 @media (prefers-reduced-motion: reduce) {

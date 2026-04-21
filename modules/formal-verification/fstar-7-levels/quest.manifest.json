@@ -1,0 +1,99 @@
+{
+  "id": "fstar-7-levels",
+  "version": "v0.1.0-draft",
+  "track": "formal-verification",
+  "title": "F* in Seven Levels",
+  "title_es": "F* en siete niveles",
+  "subtitle": "Novice proofs to shipping your own 7-level meta-prompting framework — all in F*.",
+  "subtitle_es": "De pruebas principiantes a publicar tu propio framework de meta-prompting de 7 niveles — todo en F*.",
+  "tier": "Adept",
+  "glyph": "geodesic",
+  "glyph_src": "atlas/icons/synergetics/geodesic-sphere.svg",
+  "description": "Seven modules, one per level, drawn from the fstar-framework project's 7-level categorical meta-prompting ladder. You will climb from simple SMT-discharged proofs at L1, through refinement types, dependent types, indexed types, effect polymorphism, and categorical proofs — and finish by shipping your own 7-level framework for a verification domain of your choice.",
+  "description_es": "Siete módulos, uno por nivel, basados en la escalera categórica de meta-prompting de 7 niveles del proyecto fstar-framework. Vas a escalar desde pruebas simples descargadas al SMT en L1, pasando por tipos refinados, dependientes, indexados, polimorfismo de efectos y pruebas categóricas — y terminarás publicando tu propio framework de 7 niveles para un dominio de verificación a tu elección.",
+  "source_repo": {
+    "vendored_path": "/Users/manu/Documents/LUXOR/PROJECTS/fstar-framework",
+    "upstream_url": null,
+    "upstream_ref": "main",
+    "license": "internal",
+    "readme_permalink": null
+  },
+  "status": "drafted",
+  "modules_planned": [
+    {
+      "id": "01-novice-proofs",
+      "title": "L1 — Novice Proofs",
+      "title_es": "L1 — Pruebas para principiantes",
+      "teaser": "Your first F* proof. Write a function, state a spec, let the SMT solver close the gap.",
+      "teaser_es": "Tu primera prueba en F*. Escribe una función, declara su especificación y deja que el SMT cierre el hueco.",
+      "estimated_minutes": 25,
+      "xp_reward": 150,
+      "source_hint": "exercises/week_01/exercise_1_1.fst"
+    },
+    {
+      "id": "02-refinement-types",
+      "title": "L2 — Refinement Types",
+      "title_es": "L2 — Tipos refinados",
+      "teaser": "Narrow a type with a predicate. Encode invariants like `nat` or `non_empty_list` so the type system carries your proof obligations.",
+      "teaser_es": "Estrecha un tipo con un predicado. Codifica invariantes como `nat` o `non_empty_list` para que el sistema de tipos cargue con tus obligaciones de prueba.",
+      "estimated_minutes": 30,
+      "xp_reward": 180,
+      "source_hint": "exercises/week_01/exercise_1_2.fst"
+    },
+    {
+      "id": "03-dependent-types",
+      "title": "L3 — Dependent Types",
+      "title_es": "L3 — Tipos dependientes",
+      "teaser": "Types that depend on values. Use Π-types to carry lengths, bounds, and proofs right inside the type.",
+      "teaser_es": "Tipos que dependen de valores. Usa Π-tipos para llevar longitudes, cotas y pruebas dentro del propio tipo.",
+      "estimated_minutes": 35,
+      "xp_reward": 210,
+      "source_hint": "exercises/week_02/exercise_2_1.fst"
+    },
+    {
+      "id": "04-indexed-types",
+      "title": "L4 — Indexed Types",
+      "title_es": "L4 — Tipos indexados",
+      "teaser": "Vectors with length, trees with height, state machines with phase — indexed families that catch shape errors at compile time.",
+      "teaser_es": "Vectores con longitud, árboles con altura, máquinas de estados con fase — familias indexadas que atrapan errores de forma en tiempo de compilación.",
+      "estimated_minutes": 35,
+      "xp_reward": 220,
+      "source_hint": "exercises/week_02/mini_project_merge_sort.fst"
+    },
+    {
+      "id": "05-effect-polymorphism",
+      "title": "L5 — Effect Polymorphism",
+      "title_es": "L5 — Polimorfismo de efectos",
+      "teaser": "State, exceptions, divergence — all as F* effects. Write once over an effect variable, instantiate many ways.",
+      "teaser_es": "Estado, excepciones, divergencia — todo como efectos de F*. Escríbelo una vez sobre una variable de efecto e instáncialo de muchas formas.",
+      "estimated_minutes": 40,
+      "xp_reward": 240,
+      "source_hint": "exercises/week_03/exercise_3_1.fst"
+    },
+    {
+      "id": "06-categorical-proofs",
+      "title": "L6 — Categorical Proofs",
+      "title_es": "L6 — Pruebas categóricas",
+      "teaser": "Functoriality, naturality, adjointness — proved in F*. Where the 7-level framework earns its categorical name.",
+      "teaser_es": "Funtorialidad, naturalidad, adjunción — demostradas en F*. Aquí el framework de 7 niveles se gana su apellido categórico.",
+      "estimated_minutes": 40,
+      "xp_reward": 260,
+      "source_hint": "FSTAR_META_PROMPTING_FRAMEWORK.md"
+    },
+    {
+      "id": "07-ship-your-own-framework",
+      "title": "L7 — Ship Your Own 7-Level Framework",
+      "title_es": "L7 — Publica tu propio framework de 7 niveles",
+      "teaser": "Pick a verification domain — crypto, parsing, distributed systems — and ship a 7-level meta-prompting ladder for it. Submit the repo.",
+      "teaser_es": "Elige un dominio de verificación — cripto, parsing, sistemas distribuidos — y publica una escalera de meta-prompting de 7 niveles para él. Entrega el repo.",
+      "estimated_minutes": 40,
+      "xp_reward": 300,
+      "source_hint": "COURSE_SPECIFICATION_GOLD.md"
+    }
+  ],
+  "module_count": 7,
+  "total_xp_planned": 1560,
+  "estimated_minutes": 245,
+  "canonical_last_module": "07-ship-your-own-framework",
+  "license": "CC-BY-SA-4.0"
+}

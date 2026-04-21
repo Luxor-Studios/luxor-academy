@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TIER_ORDER, TIERS } from "@/lib/tiers";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Nav() {
   return (
@@ -26,12 +27,9 @@ export function Nav() {
               {TIERS[tier].label}
             </Link>
           ))}
-          <Link
-            href="/atlas"
-            className="ml-2 rounded-md border border-border/60 px-3 py-2 text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-          >
-            Atlas
-          </Link>
+          <div className="ml-3 flex items-center">
+            <ThemeToggle />
+          </div>
         </nav>
       </div>
     </header>

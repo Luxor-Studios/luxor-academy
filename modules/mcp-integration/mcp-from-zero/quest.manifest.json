@@ -1,0 +1,89 @@
+{
+  "id": "mcp-from-zero",
+  "version": "v0.1.0-draft",
+  "track": "mcp-integration",
+  "title": "MCP from Zero",
+  "title_es": "MCP desde cero",
+  "subtitle": "Build, connect, and ship a Model Context Protocol server end to end.",
+  "subtitle_es": "Construye, conecta y publica un servidor Model Context Protocol de punta a punta.",
+  "tier": "Skilled",
+  "glyph": "jitterbug",
+  "glyph_src": "atlas/icons/synergetics/jitterbug.svg",
+  "description": "Six modules drawn from the vendored meta-prompting-plugin source, which encodes MCP as a category of tools, resources, and prompts. You will trace the two-layer wire protocol, watch capability negotiation happen on first connect, implement the three primitives, ship your first stdio server, wire it into Claude Code, and then publish your own.",
+  "description_es": "Seis módulos basados en el repositorio meta-prompting-plugin incorporado, donde MCP se codifica como una categoría de herramientas, recursos y prompts. Vas a rastrear el protocolo de dos capas, ver en vivo la negociación de capacidades en la primera conexión, implementar las tres primitivas, lanzar tu primer servidor stdio, conectarlo a Claude Code y finalmente publicar el tuyo.",
+  "source_repo": {
+    "vendored_path": "content/sources/meta-prompting-plugin",
+    "upstream_url": "https://github.com/manutej/meta-prompting-plugin",
+    "upstream_ref": "main",
+    "license": "MIT",
+    "readme_permalink": "https://github.com/manutej/meta-prompting-plugin/blob/main/README.md"
+  },
+  "status": "drafted",
+  "modules_planned": [
+    {
+      "id": "01-two-layer-protocol",
+      "title": "The Two-Layer Protocol",
+      "title_es": "El protocolo de dos capas",
+      "teaser": "Peel MCP apart into its transport layer and its JSON-RPC message layer — see why that split is what makes the protocol portable.",
+      "teaser_es": "Separa MCP en su capa de transporte y su capa de mensajes JSON-RPC — y entiende por qué esa división es lo que hace portable al protocolo.",
+      "estimated_minutes": 20,
+      "xp_reward": 120,
+      "source_hint": "docs/theory/foundations.md"
+    },
+    {
+      "id": "02-capability-negotiation",
+      "title": "Capability Negotiation",
+      "title_es": "Negociación de capacidades",
+      "teaser": "Trace the initialize handshake: how a client and server agree on which primitives each side will speak before any real work happens.",
+      "teaser_es": "Rastrea el handshake initialize: cómo cliente y servidor acuerdan qué primitivas hablará cada lado antes de que empiece el trabajo real.",
+      "estimated_minutes": 25,
+      "xp_reward": 140,
+      "source_hint": "skills/integrations/mcp-categorical/SKILL.md"
+    },
+    {
+      "id": "03-three-primitives",
+      "title": "The Three Primitives: Tools, Resources, Prompts",
+      "title_es": "Las tres primitivas: Tools, Resources, Prompts",
+      "teaser": "Tools are morphisms, resources are objects, prompts are exponentials — the categorical map that makes the three primitives click.",
+      "teaser_es": "Las tools son morfismos, los resources son objetos, los prompts son exponenciales — el mapa categórico que hace que las tres primitivas encajen.",
+      "estimated_minutes": 30,
+      "xp_reward": 160,
+      "source_hint": "skills/integrations/mcp-categorical/SKILL.md"
+    },
+    {
+      "id": "04-your-first-server",
+      "title": "Your First MCP Server",
+      "title_es": "Tu primer servidor MCP",
+      "teaser": "Stand up a working stdio server in TypeScript — register a tool, answer a listTools call, return a real result.",
+      "teaser_es": "Levanta un servidor stdio funcional en TypeScript — registra una tool, responde a un listTools y devuelve un resultado real.",
+      "estimated_minutes": 30,
+      "xp_reward": 170,
+      "source_hint": "docs/QUICKSTART.md"
+    },
+    {
+      "id": "05-client-integration-claude-code",
+      "title": "Wire It Into Claude Code",
+      "title_es": "Conéctalo a Claude Code",
+      "teaser": "Register your server with claude mcp add, invoke it from a live session, and debug the transport when it refuses to speak.",
+      "teaser_es": "Registra tu servidor con claude mcp add, invócalo desde una sesión viva y depura el transporte cuando se niega a hablar.",
+      "estimated_minutes": 25,
+      "xp_reward": 150,
+      "source_hint": "docs/EXAMPLES.md"
+    },
+    {
+      "id": "06-ship-your-own",
+      "title": "Ship Your Own MCP Server",
+      "title_es": "Publica tu propio servidor MCP",
+      "teaser": "Package, version, and publish your server so any Claude Code user can install it — and submit the install command as your quest proof.",
+      "teaser_es": "Empaqueta, versiona y publica tu servidor para que cualquier usuario de Claude Code pueda instalarlo — y entrega el comando de instalación como prueba de la quest.",
+      "estimated_minutes": 30,
+      "xp_reward": 200,
+      "source_hint": "README.md"
+    }
+  ],
+  "module_count": 6,
+  "total_xp_planned": 940,
+  "estimated_minutes": 160,
+  "canonical_last_module": "06-ship-your-own",
+  "license": "CC-BY-SA-4.0"
+}
