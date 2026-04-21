@@ -15,6 +15,7 @@
 | **Next milestone** | Phase 1 human gate — Manu reviews forge-barque in a browser, confirms keyboard/XP/form-stub behavior, flips `autonomy/loop-state.json.human_approval["phase-1"] = true`. Then Experienced (mercurio-for-decisions) + Expert (cmp-foundations) first quests. |
 | **Blockers** | None |
 | **Human gate pending** | `phase-1` (awaiting Manu review of 4 forge-barque modules rendered in browser) |
+| **Live deploy** | <https://luxor-academy.vercel.app> · Forge BARQUE quest: <https://luxor-academy.vercel.app/novice/build-and-ship/forge-barque/> · deploy recipe: `docs/DEPLOY.md` |
 
 ## Resume command
 
