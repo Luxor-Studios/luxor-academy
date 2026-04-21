@@ -3,6 +3,7 @@ import { Nav } from "@/components/nav";
 import { Separator } from "@/components/ui/separator";
 import { QuestCard } from "@/components/quest-card";
 import { GLYPH_MAP } from "@/components/synergetics";
+import { accentHex, accentRgb } from "@/lib/track-accents";
 import { TIERS, type Tier } from "@/lib/tiers";
 
 export function TierPage({ tier }: { tier: Tier }) {
@@ -71,17 +72,24 @@ export function TierPage({ tier }: { tier: Tier }) {
         {/* Tracks */}
         {data.tracks.map((track) => {
           const Glyph = GLYPH_MAP[track.glyph];
+          const hex = accentHex(track.glyph);
+          const rgb = accentRgb(track.glyph);
           return (
             <section key={track.id} className="mb-20 space-y-6">
               <div className="flex items-start gap-5">
-                <Glyph size={56} className="shrink-0 text-primary" />
+                <Glyph
+                  size={56}
+                  className="shrink-0"
+                  style={{ color: hex, filter: `drop-shadow(0 0 14px rgba(${rgb}, 0.45))` }}
+                />
                 <div className="space-y-2">
-                  <div className="font-mono text-xs uppercase tracking-widest text-accent">
+                  <div
+                    className="font-mono text-xs uppercase tracking-widest"
+                    style={{ color: hex }}
+                  >
                     Track · {track.glyph}
                   </div>
-                  <h2 className="font-display text-3xl leading-tight">
-                    {track.title}
-                  </h2>
+                  <h2 className="font-display text-3xl leading-tight">{track.title}</h2>
                   <p className="max-w-3xl leading-relaxed text-muted-foreground">
                     {track.description}
                   </p>

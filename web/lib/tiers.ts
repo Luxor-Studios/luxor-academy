@@ -17,6 +17,7 @@ export interface Quest {
   moduleCount: number;
   estimatedMinutes: number;
   xpReward: number;
+  xpReward_deferred?: number;
   sourceRepo: string;
   upstreamRepo?: string;
   status: "available" | "drafted" | "in-progress" | "locked";
@@ -64,10 +65,11 @@ export const TIERS: Record<Tier, TierData> = {
               "Turn Markdown into beautifully themed dual-light/dark PDFs, sent via Resend. Four modules, one live interactive simulator.",
             moduleCount: 4,
             estimatedMinutes: 57,
-            xpReward: 675,
+            xpReward: 325,
+            xpReward_deferred: 350,
             sourceRepo: "content/sources/barque",
             upstreamRepo: "https://github.com/manutej/luxor-barque",
-            status: "drafted",
+            status: "available",
           },
           {
             id: "design-tool-planner",
@@ -78,7 +80,7 @@ export const TIERS: Record<Tier, TierData> = {
             estimatedMinutes: 90,
             xpReward: 750,
             sourceRepo: "content/sources/design-tool-planner",
-            status: "locked",
+            status: "drafted",
           },
         ],
       },
@@ -98,7 +100,7 @@ export const TIERS: Record<Tier, TierData> = {
             estimatedMinutes: 60,
             xpReward: 600,
             sourceRepo: "vendor/skills/claude-api",
-            status: "locked",
+            status: "drafted",
           },
         ],
       },
@@ -135,7 +137,7 @@ export const TIERS: Record<Tier, TierData> = {
             estimatedMinutes: 75,
             xpReward: 900,
             sourceRepo: "content/sources/mercurio",
-            status: "locked",
+            status: "drafted",
           },
           {
             id: "mars-systems",
@@ -146,7 +148,7 @@ export const TIERS: Record<Tier, TierData> = {
             estimatedMinutes: 80,
             xpReward: 950,
             sourceRepo: "content/sources/mars",
-            status: "locked",
+            status: "drafted",
           },
         ],
       },
@@ -166,7 +168,7 @@ export const TIERS: Record<Tier, TierData> = {
             estimatedMinutes: 120,
             xpReward: 1100,
             sourceRepo: "content/sources/meta-prompting-plugin",
-            status: "locked",
+            status: "drafted",
           },
         ],
       },
@@ -203,7 +205,7 @@ export const TIERS: Record<Tier, TierData> = {
             estimatedMinutes: 150,
             xpReward: 1400,
             sourceRepo: "content/sources/meta-prompting-plugin",
-            status: "locked",
+            status: "drafted",
           },
         ],
       },
@@ -223,7 +225,7 @@ export const TIERS: Record<Tier, TierData> = {
             estimatedMinutes: 210,
             xpReward: 1800,
             sourceRepo: "content/sources/fstar-framework",
-            status: "locked",
+            status: "drafted",
           },
         ],
       },

@@ -8,10 +8,22 @@ export default function LandingPage() {
       <Nav />
       <main>
         {/* Hero */}
-        <section className="mx-auto w-full max-w-7xl px-6 pt-24 pb-16 sm:pt-32 sm:pb-20">
+        <section className="relative mx-auto w-full max-w-7xl px-6 pt-24 pb-16 sm:pt-32 sm:pb-20">
+          {/* Retro boardwalk horizon — coral → peach → cyan */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-6 top-20 h-px opacity-60 sm:top-28"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent 0%, rgba(255,126,107,0.7) 25%, rgba(255,214,176,0.8) 50%, rgba(0,245,255,0.7) 75%, transparent 100%)",
+            }}
+          />
           <div className="max-w-4xl space-y-8">
-            <span className="inline-block font-mono text-xs uppercase tracking-[0.2em] text-accent">
-              LUXOR · Academy · v0.5
+            <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em]">
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "#FF7E6B" }} />
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "#FFD6B0" }} />
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "#00F5FF" }} />
+              <span className="text-accent">LUXOR · Academy · v0.5</span>
             </span>
             <h1 className="font-display text-5xl leading-[1.02] tracking-tight sm:text-7xl">
               Walk through the <span className="text-primary">knowledge-ware library</span> of the cutting-edge future.
@@ -54,21 +66,36 @@ export default function LandingPage() {
           <div className="mx-auto w-full max-w-7xl px-6 py-12">
             <div className="grid gap-8 md:grid-cols-3">
               <div>
-                <div className="font-mono text-xs uppercase tracking-widest text-accent">Provenance</div>
+                <div
+                  className="font-mono text-xs uppercase tracking-widest"
+                  style={{ color: "#FF7E6B" }}
+                >
+                  ◆ Provenance
+                </div>
                 <p className="mt-3 leading-relaxed text-muted-foreground">
                   Every module cites a real file at a real commit SHA. No synthetic examples. If you can
                   run the code, you can read the line you learned from.
                 </p>
               </div>
               <div>
-                <div className="font-mono text-xs uppercase tracking-widest text-accent">Sovereignty</div>
+                <div
+                  className="font-mono text-xs uppercase tracking-widest"
+                  style={{ color: "#00F5FF" }}
+                >
+                  ◆ Sovereignty
+                </div>
                 <p className="mt-3 leading-relaxed text-muted-foreground">
                   XP lives in your browser (localStorage + one-click export). No accounts. No tracking.
                   Your progress is yours.
                 </p>
               </div>
               <div>
-                <div className="font-mono text-xs uppercase tracking-widest text-accent">Validation</div>
+                <div
+                  className="font-mono text-xs uppercase tracking-widest"
+                  style={{ color: "#A78BFA" }}
+                >
+                  ◆ Validation
+                </div>
                 <p className="mt-3 leading-relaxed text-muted-foreground">
                   Every module passes a 6-slot contract, axe-core a11y, Lighthouse budgets, and a
                   MERCURIO+MARS agentic review before it ships.

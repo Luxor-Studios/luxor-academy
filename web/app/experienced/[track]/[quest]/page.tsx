@@ -1,7 +1,7 @@
 import { QuestPage, generateQuestParamsFor } from "@/components/quest-page";
 
 export function generateStaticParams() {
-  return generateQuestParamsFor("novice");
+  return generateQuestParamsFor("experienced");
 }
 
 export default async function Page({
@@ -10,5 +10,5 @@ export default async function Page({
   params: Promise<{ track: string; quest: string }>;
 }) {
   const { track, quest } = await params;
-  return <QuestPage tier="novice" track={track} quest={quest} />;
+  return <QuestPage tier="experienced" track={track} quest={quest} />;
 }
