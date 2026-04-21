@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "04-validation-gates",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mars-systems",
+    "title": "Validation Gates",
+    "xp_reward": 125,
+    "estimated_minutes": 17,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Quality assurance is a running check, not a final audit\n\nMARS the ARCHITECT is not done when the diagram is done. The agent definition builds a five-gate quality-assurance routine directly into the design posture — five continuous checks that fire during the architectural pass, not at the end of it. If any gate fails, the ARCHITECT self-corrects before the blueprint moves forward.\n\nThe five gates are explicit. **Gate 1**: `Regularly verify that the design actually enables stated capabilities`. That is the capability check — does the thing you drew actually do what you claimed? **Gate 2**: `Check that integration remains coherent as complexity grows`. Integration does not stay coherent for free; it has to be re-checked every time the system gets bigger. **Gate 3**: `Ensure structural choices still serve transformation goals`. Structure drifts — a choice that served the goal last week may be fighting it now. **Gate 4**: `Identify and address single points of failure or brittleness`. **Gate 5** is the meta-gate: `Self-correct when you notice emerging fragility or misalignment`.\n\nThe fifth gate is what makes the first four operational. A validation gate that only names fragility is a memo. A validation gate that self-corrects is a feedback loop. This is where MARS the ARCHITECT stops being a diagramming agent and starts being a system that keeps its own designs honest.\n\nThe ship-or-fail decision is not a single audit at the end. It is the accumulated state of these five gates across the design pass. If any one of them is failing when the blueprint lands, the blueprint does not ship — it gets returned to the architect with a specific gate to re-run.",
+      "word_count": 267,
+      "key_insight": "The five architect gates — capability, integration coherence, transformation alignment, single-point brittleness, and self-correction — fire continuously. A blueprint with a failing gate does not ship."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Five vertical gates labeled 1 through 5 — Capability, Integration Coherence, Transformation Alignment, Single-Point Brittleness, Self-Correction — each with a green pass state and red fail state. A blueprint icon on the left moves rightward past each gate; a single red gate returns it to the architect with an annotation.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "04-validation-gates.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner runs a sample blueprint through all five gates. Each gate toggles pass or fail based on a supplied claim about the design. Success pill unlocks only when the learner correctly identifies that a blueprint with any single failing gate must be returned for self-correction, not shipped.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "mars-architect.md",
+      "permalink": "file:///Users/manu/.claude/agents/mars-architect.md#L87-L92",
+      "excerpt": "5. **Quality assurance**:\n   - Regularly verify that the design actually enables stated capabilities\n   - Check that integration remains coherent as complexity grows\n   - Ensure structural choices still serve transformation goals\n   - Identify and address single points of failure or brittleness\n   - Self-correct when you notice emerging fragility or misalignment",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per mars-architect.md §Quality assurance, how many continuous validation gates does the ARCHITECT run, and when do they fire?",
+          "correct": 1,
+          "explanation": "mars-architect.md lines 87-92 list exactly five QA bullets: capability verification, integration coherence, transformation alignment, single-point brittleness, and self-correction. They are listed under `Regularly verify` and `Check that` — continuous checks, not a final audit."
+        },
+        {
+          "prompt": "The fifth gate is the meta-gate that makes the first four operational rather than decorative. What does it prescribe?",
+          "correct": 2,
+          "explanation": "mars-architect.md line 92 reads: `Self-correct when you notice emerging fragility or misalignment`. Without that gate, the first four only name problems. Self-correction converts a list of checks into an active feedback loop — which is the only way the design pass stays honest."
+        },
+        {
+          "prompt": "Gate 2 of the ARCHITECT's QA routine addresses a specific drift mode. Which?",
+          "correct": 0,
+          "explanation": "mars-architect.md line 89 states: `Check that integration remains coherent as complexity grows`. Integration decays under growth for free — components accumulate, edges multiply, coherence erodes silently. Gate 2 forces a periodic re-verification so complexity does not outrun coherence."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "05-ship-your-own",
+      "siblings": ["01-parallel-discovery", "02-research-synthesis", "03-systems-optimization", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "id": "05-ship-your-own",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mercurio-for-decisions",
+    "title": "Ship Your Own Decision",
+    "xp_reward": 150,
+    "estimated_minutes": 25,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Frame a decision you actually owe, then run the loop end-to-end\n\nYou have read the three planes, matched decision shapes to convergence methods, calibrated the six confidence bands, and assembled a 3-to-7-expert panel that covers every dimension without paying prohibitive coordination cost. This module is where the reading stops and the shipping starts.\n\nThe canonical MERCURIO orchestrator file is explicit about the output artifact: a **NOUS.md** — described in the orchestrator as *a living map of synthesized knowledge* that is *built and maintained*, not written-once-and-forgotten. The orchestrator's Mental Plane directive is to *synthesize information from multiple sources into coherent, actionable wisdom*, *document your research in NOUS.md with clear structure*, and *always cite sources and acknowledge uncertainty where it exists*. That last clause is what separates a decision document from a pitch deck: calibrated MERCURIO output is allowed to say *we do not know yet*.\n\nThe Physical Plane directive from the same orchestrator file adds the operational layer: *continuously assess what you know versus what you need to know*, *be proactive in identifying gaps and taking action to fill them*, and *maintain clear vision of ultimate goals while handling immediate needs*. A shipped decision is one where the gaps are named, the next actions are assigned, and the confidence band is stamped at the top of the document.\n\nIn this module you frame one real decision you owe — a hiring call, an architecture pick, a pricing move, a product kill — and run the full MoE loop: three planes, panel assembly, method pick, threshold calibration, and NOUS-style convergence document. You paste the draft into the form and queue it for the Academy pipeline. Phase 1 vests 150 XP the moment you queue; Phase 3 mints the permalink that turns your decision document into a teachable specimen another learner can study.",
+      "markdown_es": "# Plantea una decision que realmente te toca, luego ejecuta el bucle completo\n\nHas leido los tres planos, emparejado formas de decision con metodos de convergencia, calibrado las seis bandas de confianza y ensamblado un panel de 3 a 7 expertos que cubre cada dimension sin pagar un costo de coordinacion prohibitivo. Este modulo es donde la lectura termina y el envio empieza.\n\nEl archivo canonico del orquestador MERCURIO es explicito sobre el artefacto de salida: un **NOUS.md**, descrito en el orquestador como *un mapa vivo de conocimiento sintetizado* que se *construye y mantiene*, no se escribe-una-vez-y-se-olvida. La directiva del Plano Mental del orquestador es *sintetizar informacion de multiples fuentes en sabiduria coherente y accionable*, *documentar tu investigacion en NOUS.md con estructura clara* y *siempre citar fuentes y reconocer incertidumbre donde exista*. Esa ultima clausula es lo que separa un documento de decision de una presentacion de ventas: la salida calibrada de MERCURIO tiene permiso para decir *todavia no sabemos*.\n\nLa directiva del Plano Fisico del mismo archivo del orquestador agrega la capa operativa: *evaluar continuamente lo que sabes frente a lo que necesitas saber*, *ser proactivo en identificar brechas y tomar accion para llenarlas* y *mantener vision clara de las metas ultimas mientras manejas necesidades inmediatas*. Una decision enviada es aquella donde las brechas estan nombradas, las proximas acciones estan asignadas y la banda de confianza esta sellada en la parte superior del documento.\n\nEn este modulo planteas una decision real que te toca: una contratacion, una eleccion de arquitectura, un movimiento de precios, la muerte de un producto, y ejecutas el bucle MoE completo: tres planos, ensamblaje de panel, eleccion de metodo, calibracion de umbral y documento de convergencia estilo NOUS. Pegas el borrador en el formulario y lo encolas para el pipeline de la Academia. La Fase 1 entrega 150 XP en el momento que encolas; la Fase 3 acuña el permalink que convierte tu documento de decision en un especimen enseñable que otro aprendiz puede estudiar.",
+      "word_count": 307,
+      "key_insight": "A shipped MERCURIO decision is a NOUS.md — a living document that cites its sources, names its gaps, stamps its confidence band, and assigns next actions. Pitch decks are allowed to hide uncertainty; convergence documents are not.",
+      "key_insight_es": "Una decision MERCURIO enviada es un NOUS.md: un documento vivo que cita sus fuentes, nombra sus brechas, sella su banda de confianza y asigna acciones siguientes. Las presentaciones de ventas tienen permiso para ocultar incertidumbre; los documentos de convergencia no."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "A flow from left to right: a decision prompt enters a three-lane pipeline (Mental, Physical, Spiritual planes), flows into a synthesizer diamond that picks one of four convergence methods, is stamped with one of six confidence bands, and emits a NOUS.md card with sections for sources, gaps, confidence stamp, and next actions. The card exits into a repo icon labelled 'your decision archive'.",
+      "alt_es": "Un flujo de izquierda a derecha: un prompt de decision entra a un pipeline de tres carriles (planos Mental, Fisico, Espiritual), fluye hacia un diamante sintetizador que elige uno de cuatro metodos de convergencia, se sella con una de seis bandas de confianza y emite una tarjeta NOUS.md con secciones para fuentes, brechas, sello de confianza y acciones siguientes. La tarjeta sale hacia un icono de repositorio etiquetado 'archivo de tus decisiones'.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "05-ship-your-own.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner fills a structured form: decision prompt, three-plane findings (one paragraph per plane), panel roster (3-7 experts with domain weights), convergence method pick, confidence band, gaps, next actions. On submit, the form serializes into a NOUS.md draft that the learner can copy. Phase 1 stores the draft locally and queues it for Phase 3 pipeline activation; the submit button is a visual stub in Phase 1.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "/Users/manu/.claude/agents/mercurio-orchestrator.md",
+      "permalink": "file:///Users/manu/.claude/agents/mercurio-orchestrator.md#L18-L45",
+      "excerpt": "**THE MENTAL PLANE - The Architect of Understanding**\n\nYou approach every topic with the boundless curiosity and creative wonder of a child, yet with the analytical rigor of a master researcher. Your primary artifact is NOUS.md, which you build and maintain as a living map of synthesized knowledge.\n\nWhen researching:\n- Use /deep to explore topics with profound thoroughness, following threads of inquiry wherever they lead\n- Use /learn to actively acquire and integrate new information, always connecting it to existing knowledge\n- Use /discover to uncover hidden patterns, relationships, and insights that emerge from synthesis\n- Create knowledge maps that balance depth with clarity - never sacrifice understanding for comprehensiveness\n- Synthesize information from multiple sources into coherent, actionable wisdom\n- Document your research in NOUS.md with clear structure, making complex ideas accessible without losing nuance\n- Always cite sources and acknowledge uncertainty where it exists\n\n**THE PHYSICAL PLANE - The Master of Execution**\n\nYou maintain complete awareness of your capabilities, constraints, and context. You are a pragmatic orchestrator who knows how to get things done.\n\nFor operational awareness:\n- Use /current to understand your present state and context\n- Use /to-do to track and prioritize tasks systematically\n- Use /goto to navigate efficiently through your work",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "The mercurio-orchestrator.md file names a single primary artifact that the Mental Plane builds and maintains. What is it?",
+          "correct": 1,
+          "explanation": "Line 21: 'Your primary artifact is NOUS.md, which you build and maintain as a living map of synthesized knowledge.' NOUS.md is the canonical output of a run — not a slide deck, not a chat log, a living document."
+        },
+        {
+          "prompt": "The Mental Plane bullet list in the orchestrator file ends with a specific discipline that separates an honest decision document from a pitch. Which phrase appears verbatim?",
+          "correct": 2,
+          "explanation": "Line 29: 'Always cite sources and acknowledge uncertainty where it exists.' The licence to say 'we do not know yet' is what the orchestrator explicitly grants — and what pitch decks reflexively strip out."
+        },
+        {
+          "prompt": "Why is the canonical last module of every LUXOR Academy Quest a 'Ship Your Own' step rather than a summary quiz?",
+          "correct": 0,
+          "explanation": "Sovereignty. Per §13 of the Academy meta-prompt and the MERCURIO canonical-last-module pattern, learners finish every Quest holding a permalink to their own artifact, not a score. The Quest trains you for the thing, not for the Quest."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["01-three-plane-analysis", "02-convergence-methods", "03-confidence-thresholds", "04-expert-selection"],
+      "ship_your_own": true
+    }
+  }
+}

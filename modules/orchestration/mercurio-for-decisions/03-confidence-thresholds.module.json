@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "id": "03-confidence-thresholds",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mercurio-for-decisions",
+    "title": "Confidence Thresholds: When to Execute, When to Gather Data",
+    "xp_reward": 100,
+    "estimated_minutes": 16,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Calibrate before you commit\n\nMERCURIO the PRAGMATIST is the sub-agent whose entire job is to refuse to ship decisions that look good on paper but collapse on contact with real budgets, real team bandwidth, and real calendars. The agent file calls it the *master of navigating reality while maintaining vision* and organizes its work across three dimensions: **Reality** (seeing what actually is), **Navigation** (finding pragmatic paths), and **Wisdom** (keeping perspective on what matters).\n\nThe Reality Plane's opening discipline is **unflinching constraint mapping**. It distinguishes between *fixed* constraints and *negotiable* ones, understands real team capabilities and actual bandwidth (not the roadmap-cartoon version), assesses cost in terms people feel (time, money, energy), and identifies hidden constraints and second-order effects before they bite. The recurring question, stated verbatim in the agent file, is: *Is this actually possible in our real context?*\n\nConfidence thresholds are how that honesty gets operationalized. MERCURIO pairs each recommendation with a six-band confidence score: **90%+ execute now**, **80-90% plan and commit**, **70-80% prototype first**, **60-70% run a spike**, **50-60% gather more data**, and **below 50% halt**. Each band maps to a concrete next action — no band says *just wing it*. The Wisdom Plane's test is likewise stated in the source: *help distinguish between 'hard no' and 'hard but possible.'*\n\nIn this module you read the pragmatist's own definition of reality, then calibrate one of your own open decisions against the six bands. The win condition is not reaching 90%. It is reaching the band that honestly describes what you know, and then taking the action that band requires.",
+      "markdown_es": "# Calibra antes de comprometerte\n\nMERCURIO el PRAGMATICO es el sub-agente cuyo unico trabajo es rechazar decisiones que se ven bien en papel pero colapsan al contacto con presupuestos reales, ancho de banda real del equipo y calendarios reales. El archivo del agente lo llama el *maestro de navegar la realidad manteniendo la vision* y organiza su trabajo en tres dimensiones: **Realidad** (ver lo que realmente es), **Navegacion** (hallar caminos pragmaticos) y **Sabiduria** (mantener la perspectiva sobre lo que importa).\n\nLa disciplina de apertura del Plano de la Realidad es el **mapeo de restricciones sin parpadear**. Distingue entre restricciones *fijas* y *negociables*, entiende las capacidades reales del equipo y el ancho de banda real (no la version de caricatura del roadmap), evalua el costo en terminos que la gente siente (tiempo, dinero, energia) e identifica restricciones ocultas y efectos de segundo orden antes de que muerdan. La pregunta recurrente, enunciada literalmente en el archivo del agente, es: *Es esto realmente posible en nuestro contexto real?*\n\nLos umbrales de confianza son como esa honestidad se operacionaliza. MERCURIO empareja cada recomendacion con una puntuacion de confianza en seis bandas: **90%+ ejecuta ya**, **80-90% planifica y compromete**, **70-80% prototipa primero**, **60-70% ejecuta un spike**, **50-60% recopila mas datos** y **por debajo de 50% detente**. Cada banda mapea a una accion concreta: ninguna banda dice *simplemente improvisa*. La prueba del Plano de la Sabiduria, igualmente enunciada en la fuente, es: *ayudar a distinguir entre 'no rotundo' y 'dificil pero posible'.*\n\nEn este modulo lees la definicion propia del pragmatico sobre la realidad, luego calibras una de tus decisiones abiertas contra las seis bandas. La condicion de victoria no es llegar a 90%. Es llegar a la banda que describe honestamente lo que sabes y luego tomar la accion que esa banda requiere.",
+      "word_count": 277,
+      "key_insight": "A 60% confidence score is not a failure — it is a prescription. It says 'spike, do not ship.' The hazard is not low confidence; the hazard is taking 90%-confidence actions on 60%-confidence evidence.",
+      "key_insight_es": "Una puntuacion de confianza de 60% no es un fracaso, es una prescripcion. Dice 'haz un spike, no lances'. El peligro no es la baja confianza; el peligro es tomar acciones de 90% de confianza con evidencia de 60%."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "A vertical confidence ladder with six bands stacked from top to bottom: 90%+ (execute now), 80-90% (plan and commit), 70-80% (prototype first), 60-70% (run a spike), 50-60% (gather more data), below 50% (halt). Each band is tagged with the concrete action it prescribes. A marker labelled 'your decision' can slide up and down the ladder.",
+      "alt_es": "Una escalera vertical de confianza con seis bandas apiladas de arriba hacia abajo: 90%+ (ejecuta ya), 80-90% (planifica y compromete), 70-80% (prototipa primero), 60-70% (spike), 50-60% (recopila mas datos), por debajo de 50% (detente). Cada banda esta etiquetada con la accion concreta que prescribe. Un marcador etiquetado 'tu decision' puede deslizarse arriba y abajo por la escalera.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "03-confidence-thresholds.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner drags a confidence marker along the six-band ladder; each band surfaces the exact next action it prescribes (execute, plan, prototype, spike, gather, halt). The badge lights once the learner has visited all six bands and confirmed an action for a sample decision.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "/Users/manu/.claude/agents/mercurio-pragmatist.md",
+      "permalink": "file:///Users/manu/.claude/agents/mercurio-pragmatist.md#L18-L58",
+      "excerpt": "You are MERCURIO the PRAGMATIST, the master of navigating reality while maintaining vision. You embody three integrated dimensions of pragmatic thinking that work in harmony:\n\n**THE REALITY PLANE - The Seer of What Actually Is**\n\nYou see the world as it genuinely is - with real budgets, real timelines, real team capabilities, real constraints. You navigate reality without illusion.\n\nWhen assessing reality:\n- Map actual constraints with unflinching honesty\n- Distinguish between fixed constraints and negotiable ones\n- Understand real team capabilities, growth edges, and actual bandwidth\n- Assess the cost of options in terms people understand (time, money, energy)\n- Identify hidden constraints and second-order effects\n- Model cascading dependencies and critical paths\n- Show where assumptions are built on sand\n- Always ask: \"Is this actually possible in our real context?\"\n\n**THE NAVIGATION PLANE - The Finder of Pragmatic Paths**\n\nYou find ways forward through constraint complexity. You identify what can work now and what needs preparation.\n\nFor pragmatic execution:\n- Create phased approaches that respect real limitations\n- Identify what's actually optimal vs what's theoretically perfect\n- Find unblocking moves that create new possibility\n- Navigate trade-offs explicitly - showing what you gain and what you sacrifice\n- Design capability-building that happens during execution\n- Create decision points that adapt as you learn\n- Find leverage points where small effort creates large impact\n- Make constraints visible and show where they can be shifted",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "The Reality Plane in mercurio-pragmatist.md closes its bullet list with one recurring question. What is it?",
+          "correct": 2,
+          "explanation": "Line 30: 'Always ask: Is this actually possible in our real context?' The question is what flips optimistic plans into calibrated ones. Without it, the six confidence bands have no honest input."
+        },
+        {
+          "prompt": "Your expert panel agrees the recommendation is worth pursuing, but three of five disagree on sequencing and no one has built the integration before. The pragmatist's confidence band for this evidence profile is most likely:",
+          "correct": 1,
+          "explanation": "70-80% — prototype first. Sequencing disagreement plus novel integration is exactly the 'find what can work now' brief from the Navigation Plane. Executing at 90% on untested integration violates Reality Plane discipline; halting wastes the converged-on-pursuit signal."
+        },
+        {
+          "prompt": "The Wisdom Plane describes its job as helping distinguish between two specific categories. Which pair does the agent file name verbatim?",
+          "correct": 0,
+          "explanation": "Line 51: 'Help distinguish between \"hard no\" and \"hard but possible\".' That distinction is the test that separates a below-50% halt from a 60-70% spike."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "04-expert-selection",
+      "siblings": ["01-three-plane-analysis", "02-convergence-methods", "04-expert-selection", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "id": "01-scaffold",
+    "version": "v0.1.0",
+    "track": "first-agent",
+    "quest": "hello-agent",
+    "title": "Scaffold Your Agent",
+    "xp_reward": 75,
+    "estimated_minutes": 12,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# From zero to a Claude reply in three lines of shell\n\nBefore an agent can loop, stream, or call tools, it has to *exist*. The Claude Agent SDK compresses that first-existence step into a very small ritual: install one package, export one key, run one message. The vendored multiplatform skill lays out the exact commands in its README — one block per language (`npm install @anthropic-ai/sdk`, `pip install anthropic`, `go get github.com/anthropics/anthropic-sdk-go`), then a twin block that calls `client.messages.create({ model, max_tokens, messages })` and prints the reply. That is the whole scaffold.\n\nTwo boundaries matter here. The first is the **API key boundary**: the SDK reads `ANTHROPIC_API_KEY` from the process environment, never from a hardcoded string. Put the key in `.env`, load it with `dotenv`, and your scaffold is safe to push. The second is the **model boundary**: you pass a model ID (the skill's canonical default is `claude-sonnet-4-5-20250929`) and a `max_tokens` cap. Those two values are the knobs for cost and latency for every subsequent module in this Quest.\n\nWhat the scaffold intentionally does *not* give you yet: a system prompt, a tool, a stream, a loop. All it gives you is a round-trip. Once that round-trip works — once `console.log(message.content)` prints actual Claude output — you have the bedrock every later module builds on. Skip this and nothing else compiles.",
+      "word_count": 223,
+      "key_insight": "An agent scaffold is three things: a package, a key in the environment, and one `messages.create` call. Everything else in this Quest is an elaboration of that round-trip."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/tetrahedron.svg",
+      "alt": "A three-stage pipeline: stage 1 is a terminal running `npm install @anthropic-ai/sdk`, stage 2 is a .env file holding `ANTHROPIC_API_KEY=sk-ant-...`, stage 3 is a node process emitting `await client.messages.create({...})` which round-trips with the Anthropic Messages API and prints `message.content` to stdout.",
+      "alt_es": "Una tuberia de tres etapas: etapa 1 es una terminal ejecutando `npm install @anthropic-ai/sdk`, etapa 2 es un archivo .env que guarda `ANTHROPIC_API_KEY=sk-ant-...`, etapa 3 es un proceso node llamando `await client.messages.create({...})` que hace un round-trip con la Messages API de Anthropic e imprime `message.content` en stdout.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/tetrahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "01-scaffold.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the annotated scaffold block, can identify which line installs the SDK, which line reads the API key from the environment, and which line performs the round-trip call.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "README.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform/README.md#L75-L91",
+      "excerpt": "### First Message\n\n**TypeScript:**\n```typescript\nimport Anthropic from \"@anthropic-ai/sdk\";\n\nconst client = new Anthropic({\n  apiKey: process.env.ANTHROPIC_API_KEY,\n});\n\nconst message = await client.messages.create({\n  model: \"claude-sonnet-4-5-20250929\",\n  max_tokens: 1024,\n  messages: [{ role: \"user\", content: \"Hello!\" }],\n});\n\nconsole.log(message.content);\n```",
+      "language": "typescript"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In the First Message TypeScript block (README.md lines 75-91), where does the `Anthropic` client read the API key from?",
+          "correct": 1,
+          "options": [
+            "From a hardcoded string literal inside `new Anthropic({...})`",
+            "From `process.env.ANTHROPIC_API_KEY`",
+            "From a `.anthropicrc` file discovered automatically"
+          ],
+          "explanation": "README.md line 81: `apiKey: process.env.ANTHROPIC_API_KEY`. The SDK reads the key from the process environment on construction. This is the boundary that keeps secrets out of source control."
+        },
+        {
+          "prompt": "Which field in `client.messages.create({...})` is the upper bound on Claude's reply length?",
+          "correct": 2,
+          "options": [
+            "`model`",
+            "`messages`",
+            "`max_tokens`"
+          ],
+          "explanation": "README.md line 86: `max_tokens: 1024`. `model` picks the model, `messages` is the conversation, and `max_tokens` caps the reply. Every subsequent module in this Quest inherits this cap."
+        },
+        {
+          "prompt": "The README.md Installation block (lines 59-72) lists one-line installs for three languages. Which command installs the TypeScript SDK?",
+          "correct": 0,
+          "options": [
+            "`npm install @anthropic-ai/sdk`",
+            "`pip install anthropic`",
+            "`go get github.com/anthropics/anthropic-sdk-go`"
+          ],
+          "explanation": "README.md line 61: `npm install @anthropic-ai/sdk` installs the TypeScript/Node SDK. `pip install anthropic` (line 66) is Python and `go get ...` (line 71) is Go. All three scaffold the same round-trip — pick the one your stack already speaks."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "02-system-prompt-and-tools",
+      "siblings": ["02-system-prompt-and-tools", "03-streaming", "04-tool-use-loop", "05-prompt-caching", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

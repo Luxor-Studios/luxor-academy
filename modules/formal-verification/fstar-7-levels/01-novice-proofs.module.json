@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "01-novice-proofs",
+    "version": "v0.1.0",
+    "track": "formal-verification",
+    "quest": "fstar-7-levels",
+    "title": "L1 — Novice Proofs",
+    "xp_reward": 150,
+    "estimated_minutes": 25,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/fstar-framework"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Your first F* proof: let Z3 close the gap\n\nA \"proof\" in F* does not always look like a proof. At Level 1 of the 7-level ladder, a proof looks like a *type*. You write a function, you annotate its argument with a refinement predicate, and when F* typechecks the file it hands the resulting logical obligation to the Z3 SMT solver. If Z3 returns `unsat` on the negation of your postcondition, F* accepts the function as verified. You never wrote `theorem` or `QED`. You wrote a type.\n\nThe canonical Week 1 example is safe division. `int / 0` is undefined, so we carve out the subset of integers that are not zero and call that `nonzero`:\n\n```fstar\ntype nonzero = x:int{x <> 0}\n\nlet safe_divide (a:int) (b:nonzero) : int = a / b\n```\n\nTwo things happen here. First, the refinement `{x <> 0}` is syntactic sugar for a **predicate subtype**: `nonzero` contains every integer `x` for which `x <> 0` holds. Second, any call site that passes `0` where `nonzero` is expected fails at *compile time* with `Could not prove refinement: 0 <> 0`. The solver attempted the check and Z3 handed back `sat` with the witness `x = 0`. That counterexample is the error.\n\nExtracted to OCaml, the refinement evaporates — the shipped code is just `let safe_divide a b = a / b`, no runtime guard, because the proof already ran at build time. That is the whole pedagogy of L1: write tight types, let the SMT solver discharge them, ship boring code that is provably safe.",
+      "word_count": 246,
+      "key_insight": "At L1, the proof IS the type. A refinement `{x <> 0}` is a predicate subtype — Z3 discharges the obligation at typecheck time and the check erases on extraction."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/geodesic-sphere.svg",
+      "alt": "A diagram of the F* -> Z3 -> verdict pipeline: on the left, F* source defines `type nonzero = x:int{x <> 0}` and a call site `safe_divide 10 0`. An arrow labeled `SMT query` flows to a Z3 box that asserts `(> 0 <> 0)` is unsat. Z3 returns `sat` with model `x = 0`, and the compiler emits `Could not prove refinement: 0 <> 0`. Below, a second path shows the well-typed call `safe_divide 10 2` passing cleanly through to extracted OCaml code `let safe_divide a b = a / b` with the refinement erased.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/geodesic-sphere.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "01-novice-proofs.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner types a divisor into the simulated F* REPL. The simulator reports VERIFIED for any non-zero integer and TYPE ERROR: Could not prove refinement: <value> <> 0 when the input is 0 — exactly the message F* emits. Success fires when the learner has seen both an accepted call and the zero-rejection.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "instructor_guide/solutions/week_01_all_solutions.fst",
+      "permalink": "file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/instructor_guide/solutions/week_01_all_solutions.fst",
+      "excerpt": "// Solution:\ntype nonzero = x:int{x <> 0}\n\nlet safe_divide (a:int) (b:nonzero) : int = a / b\n\n// Test cases\nlet test1_1 = safe_divide 10 2     // Result: 5\nlet test1_2 = safe_divide 100 (-5) // Result: -20\nlet test1_3 = safe_divide 7 1      // Result: 7\n\n// These should be TYPE ERRORS:\n// let test_fail1 = safe_divide 10 0\n// Error: \"Expected type nonzero, got type int\"\n//\n// let test_fail2 : nonzero = 0\n// Error: \"Could not prove refinement: 0 <> 0\"",
+      "language": "fstar"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In the definition `type nonzero = x:int{x <> 0}`, what exactly does the brace-enclosed predicate do?",
+          "correct": 1,
+          "explanation": "It defines a **predicate subtype** (also called a refinement type): `nonzero` is the set of integers `x` for which `x <> 0` holds. Membership is checked at typecheck time by Z3, not at runtime. Extraction erases the refinement, so the OCaml output is just `int`."
+        },
+        {
+          "prompt": "A learner writes `let test_fail1 = safe_divide 10 0` and F* refuses to compile. Which error message is the one F* actually emits, per week_01_all_solutions.fst?",
+          "correct": 2,
+          "explanation": "The inline comment in the solutions file names it exactly: `Could not prove refinement: 0 <> 0`. F* handed Z3 the obligation `0 <> 0`; Z3 returned `sat` (the witness is `x = 0` itself), so the refinement is unprovable and the call is rejected at compile time."
+        },
+        {
+          "prompt": "After F* extracts `safe_divide` to OCaml, what happens to the `nonzero` refinement at runtime?",
+          "correct": 0,
+          "explanation": "Refinement types are **erased** during extraction. The OCaml code is just `let safe_divide a b = a / b` with no runtime check — F* already proved safety at compile time, so there is nothing left to check when the program runs. Week 1 teaching notes call this out as the Level-1 payoff."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "02-refinement-types",
+      "siblings": ["02-refinement-types", "03-dependent-types", "04-indexed-types", "05-effect-polymorphism", "06-categorical-proofs", "07-ship-your-own-framework"],
+      "ship_your_own": false
+    }
+  }
+}

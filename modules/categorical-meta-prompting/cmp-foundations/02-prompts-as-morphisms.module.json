@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "02-prompts-as-morphisms",
+    "version": "v0.1.0",
+    "track": "categorical-meta-prompting",
+    "quest": "cmp-foundations",
+    "title": "Prompts as Morphisms",
+    "xp_reward": 170,
+    "estimated_minutes": 30,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/categorical-meta-prompting"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Prompts are not strings. Prompts are typed arrows.\n\nThe first move of `categorical-meta-prompting` is to stop treating a prompt as `String` and start treating it as a morphism — a typed arrow between context objects. In the framework's central functor `F: Task → Prompt`, a task is an object with structure (keywords, modifiers, operators), and a prompt is an object with structure (`{context}`, `{mode}`, `{format}`, assembled body). `F` is the structure-preserving map between them.\n\nThe guide decomposes `F` further: `F = F_template ∘ F_tier ∘ F_domain`. Raw task keywords flow through a domain classifier, then a tier selector (`L1..L7` complexity), then a template assembler. Each step is its own arrow. Composition means: running the three sub-functors in order produces the same prompt as running the composite `F` — that is exactly the composition law `F(g ∘ f) = F(g) ∘ F(f)` applied to your concrete pipeline.\n\nWhy this buys you something: once prompts are arrows between typed objects, you get *composition for free*. `A → B → C` means run the first prompt whose output becomes the input context for the second, whose output becomes input for the third, and the quality of the composite is `min(q_A, q_B, q_C)` — the weakest link. Parallel prompts `A || B` aggregate as `mean`. You never have to invent this bookkeeping; it falls out of the algebra. The `/meta` command is the executable form of `F`; when you type `/meta \"implement rate limiter\"`, the framework is quite literally evaluating a functor application.",
+      "word_count": 262,
+      "key_insight": "A prompt is a morphism between typed context objects, not a string. Composition, identity, and quality-tracking then fall out of the algebra instead of being bolted on."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/icosahedron.svg",
+      "alt": "Diagram showing the decomposition of F: Task → Prompt as three stacked arrows: F_domain (keywords to domain), F_tier (complexity level L1-L7), F_template (context + mode + format assembly). On the right, a composition diagram shows two prompts f: Task → Prompt and g: Prompt → Response composing as g ∘ f: Task → Response, with the quality rule min(q_f, q_g) labelled beneath.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/icosahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "02-prompts-as-morphisms.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner enters a task description, selects a tier (L1-L7) and a domain (ALGORITHM | API | SECURITY | DEBUG | TESTING), and the simulator renders the resulting assembled prompt structure `{context:...}+{mode:...}+{format:...} body`. The simulator then shows the functor laws visibly: toggling tier twice returns to the original prompt (identity), and composing two tier transitions equals the single composite transition (composition).",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "docs/CATEGORICAL-META-PROMPTING-COMPLETE-GUIDE.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/docs/CATEGORICAL-META-PROMPTING-COMPLETE-GUIDE.md#L24-L46",
+      "excerpt": "Task ──[F: Functor]──> Prompt ──[M: Monad]──> Refined ──[W: Comonad]──> Output\n        Structure        │        Iteration      │        Context\n        Preserving       │        & Refinement   │        Extraction\n                        │                        │\n                 ┌──────▼────────┐      ┌───────▼────────┐\n                 │ Quality [0,1] │      │ Token Budget   │\n                 │ Enrichment    │      │ Tracking       │\n                 └───────────────┘      └────────────────┘\n\n/<command> @modifier:value [composition] \"task description\"\n\nExample:\n/meta @mode:active @tier:L5 [R→D→I→T] \"build auth system\"",
+      "language": "text"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "The guide decomposes F: Task → Prompt as F_template ∘ F_tier ∘ F_domain. If composition is associative, which of the following rewrites is guaranteed to produce the same prompt?",
+          "correct": 2,
+          "explanation": "Associativity says `(F_template ∘ F_tier) ∘ F_domain = F_template ∘ (F_tier ∘ F_domain)`. Both groupings produce the same prompt because the framework requires F to satisfy `F(g ∘ f) = F(g) ∘ F(f)` (`CATEGORICAL-ONTOLOGY.md §2.1`). The parentheses only change evaluation order, not the result."
+        },
+        {
+          "prompt": "You compose two prompts sequentially: `A → B` where `q(A) = 0.9` and `q(B) = 0.7`. What is the quality of the composite under the framework's rule?",
+          "correct": 1,
+          "explanation": "Sequential composition uses `min`: `q(A → B) = min(q_A, q_B) = min(0.9, 0.7) = 0.7`. This is stated in `docs/CATEGORICAL-META-PROMPTING-COMPLETE-GUIDE.md §Composition Operators` (line ~97). Averaging (0.8) would be the rule for `||` parallel composition, not sequence."
+        },
+        {
+          "prompt": "Why does treating a prompt as a string (rather than a typed morphism) break the composition law?",
+          "correct": 0,
+          "explanation": "When every value is `String`, every arrow is `String → String` and there is no type-level constraint on what can compose with what. The composition law `F(g ∘ f) = F(g) ∘ F(f)` becomes vacuous because there is nothing distinguishing `f` from `g`. Typed objects (`Task`, `Prompt`, `Context`) make the law a real, load-bearing structural claim — without them, composition degenerates to concatenation."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "03-natural-transformations",
+      "siblings": ["01-objects-morphisms-composition", "03-natural-transformations", "04-cmp-query-language", "05-recursive-meta-prompting", "06-ship-your-own-composition"],
+      "ship_your_own": false
+    }
+  }
+}

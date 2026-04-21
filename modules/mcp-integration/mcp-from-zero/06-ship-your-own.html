@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Ship Your Own MCP Server · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#0A1628;--surface-1:#111D33;--surface-2:#162440;--primary:#E9B949;--accent:#FF4DD8;--text:#fff;--text-dim:#94A3B8;--border:rgba(233,185,73,0.22);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh;background-image:linear-gradient(rgba(233,185,73,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(233,185,73,0.025) 1px,transparent 1px);background-size:32px 32px;padding:2rem 1.25rem 4rem}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:0 0 16px rgba(233,185,73,0.45)}
+.shell{max-width:720px;margin:0 auto}
+.topbar{border-bottom:1px solid var(--border);padding-bottom:1.5rem;margin-bottom:2.5rem}
+.crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase}
+h1{font-family:var(--font-display);font-size:2.25rem;margin:0.5rem 0;color:var(--text);line-height:1.1}
+.subtitle{color:var(--text-dim);font-style:italic;font-size:1.05rem}
+.meta{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--text-dim);text-transform:uppercase;margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap}
+.meta span{display:inline-flex;align-items:center;gap:0.4rem}
+h2{font-family:var(--font-display);font-size:1.5rem;margin-bottom:1rem;color:var(--accent);font-weight:700}
+section{margin-bottom:3rem}
+.primer p,.primer h3,.primer h4,.primer h5{margin-bottom:1rem}
+.primer code{background:var(--surface-1);padding:0.1em 0.4em;border-radius:3px;font-family:var(--font-mono);font-size:0.9em;color:var(--accent)}
+.key-insight{border-left:3px solid var(--accent);padding:0.5rem 1rem;margin:1.5rem 0;color:#F5D06B;font-style:italic;background:rgba(233,185,73,0.04)}
+.artifact .source{color:var(--text-dim);font-family:var(--font-mono);font-size:0.75rem;margin-bottom:0.5rem}
+.artifact .source code{color:var(--primary)}
+.artifact pre{background:var(--surface-1);border:1px solid var(--border);padding:1rem;border-radius:6px;overflow-x:auto;font-family:var(--font-mono);font-size:0.85rem;line-height:1.5}
+.mcq{list-style:none}
+.mcq li.q{background:var(--surface-1);padding:1.5rem;border-radius:8px;margin-bottom:1rem;border:1px solid var(--border)}
+.mcq .prompt{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.mcq .options{list-style:none;margin-left:0}
+.mcq .options li{padding:0.5rem 0.75rem;border-left:2px solid transparent;cursor:pointer;transition:all 150ms;font-size:0.95rem}
+.mcq .options li:hover{border-left-color:var(--accent);background:rgba(255,255,255,0.02)}
+.mcq details{margin-top:0.75rem;color:var(--text-dim);font-size:0.9rem;padding:0.75rem;border-left:2px solid var(--border)}
+.mcq summary{cursor:pointer;color:var(--accent);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase}
+.ship-your-own-form{background:var(--surface-1);padding:1.5rem;border-radius:8px;border:1px solid var(--accent)}
+.ship-your-own-form label{display:block;font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem}
+.ship-your-own-form input{width:100%;padding:0.75rem;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;font-family:var(--font-mono);margin-bottom:1rem;font-size:0.9rem}
+.ship-your-own-form input:focus{outline:none;border-color:var(--accent)}
+.ship-your-own-form button{background:var(--accent);color:var(--bg);padding:0.75rem 1.5rem;border:none;border-radius:4px;font-family:var(--font-mono);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-size:0.85rem}
+.ship-your-own-form .hint{margin-top:1rem;color:var(--text-dim);font-size:0.85rem;line-height:1.5}
+.ship-your-own-form .hint code{background:var(--bg);padding:0.1em 0.4em;border-radius:3px;font-family:var(--font-mono);font-size:0.85em;color:var(--accent)}
+.next-link{font-family:var(--font-mono);color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;font-size:0.85rem}
+.back{display:inline-block;color:var(--text-dim);text-decoration:none;font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;margin-top:3rem;border-top:1px solid var(--border);padding-top:1.5rem;width:100%}
+.back:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="topbar">
+<div class="crumb">← mcp-from-zero · Adept</div>
+<h1>Ship Your Own MCP Server</h1>
+<p class="subtitle">The canonical last module is always a ship step. Your install command is the Quest proof — it turns learner into author, and your repo into the next learner&#39;s curriculum.</p>
+<div class="meta"><span>◆ 200 XP</span><span>◆ 30 min</span><span>◆ Adept</span></div>
+</div>
+<section class="primer">
+<h2>Primer</h2>
+<h3>Publish the server; submit the install command</h3>
+<p>You have built a server, wired it into Claude Code, and watched it answer a <code>tools/call</code>. The last step is the one that matters to anyone but you: turning your local binary into something a stranger can install with one command.</p>
+<p>The shape to imitate is the meta-prompting-plugin&#39;s own <code>README.md</code>. Look at its roadmap: <code>v0.1.0</code> is a git-clone install, <code>v0.2.0</code> promises a TypeScript library and an MCP server, and <code>v0.3.0</code> aims at the Claude Code marketplace. That is the arc every server author walks. You start as <code>git clone &amp;&amp; ./INSTALL.sh</code>, you harden into a versioned package on npm or PyPI, and — when the marketplace accepts your submission — you reduce to a one-liner install: <code>claude mcp add &lt;your-server&gt;</code>.</p>
+<p>The sovereignty clause of this Quest is the same one Forge BARQUE ends on. You do not finish holding a certificate; you finish holding a URL and an install command that teaches the next learner what you built. <strong>Submit that install command as your Quest proof.</strong> In Phase 1 of LUXOR Academy the submission is captured locally and queued for the codebase-to-course pipeline. In Phase 3 the pipeline runs live: it extracts your README, your capability declaration, and one representative tool handler, validates them against <code>validators/slots.schema.json</code>, and mints a permalink Quest that teaches <em>your</em> MCP server by the same six-slot contract you just completed.</p>
+<p>You came in knowing what MCP was. You leave with a server other people can install.</p>
+<blockquote class="key-insight">The canonical last module is always a ship step. Your install command is the Quest proof — it turns learner into author, and your repo into the next learner&#39;s curriculum.</blockquote>
+</section>
+<section class="artifact">
+<h2>Artifact</h2>
+<div class="source"><code>README.md</code> · <a href="https://github.com/manutej/meta-prompting-plugin/blob/main/README.md#L340-L346" target="_blank" rel="noopener noreferrer">commit permalink ↗</a></div>
+<pre><code class="language-markdown">## Status &amp; roadmap
+
+- **v0.1.0** — plugin-only: 5 commands, 17 skills, curated theory docs. You are here.
+- **v0.2.0** — TypeScript library (`@meta-prompting/core`, fp-ts based) + MCP server.
+- **v0.3.0** — marketplace submission, richer quality visualizations, property-based skill tests in CI.</code></pre>
+</section>
+<section class="self-check">
+<h2>Self-check</h2>
+<ol class="mcq">
+<li class="q" data-correct="1">
+      <p class="prompt"><strong>Q1.</strong> Per <code>README.md</code> §Status &amp; roadmap, in which release does the meta-prompting-plugin ship an MCP server alongside its TypeScript library?</p>
+      <ul class="options"></ul>
+      <details><summary>Show explanation</summary><p>README.md line 343: <code><strong>v0.2.0</strong> — TypeScript library (@meta-prompting/core, fp-ts based) + MCP server.</code> The shipping arc of any MCP project starts as a git-clone plugin, hardens into a versioned library paired with a server, and ends at marketplace submission.</p></details>
+    </li><li class="q" data-correct="0">
+      <p class="prompt"><strong>Q2.</strong> What distinguishes a <code>v0.3.0</code>-style marketplace install from the <code>v0.1.0</code> git-clone install?</p>
+      <ul class="options"></ul>
+      <details><summary>Show explanation</summary><p>A marketplace install collapses to a single <code>claude mcp add &lt;name&gt;</code> line that the client resolves from its registry. Git-clone installs require the user to pick a checkout path, run the installer, and wire the launch line by hand — three steps where the marketplace needs one.</p></details>
+    </li><li class="q" data-correct="2">
+      <p class="prompt"><strong>Q3.</strong> Why is the canonical last module of every LUXOR Academy Quest a &#39;Ship Your Own&#39; step rather than a summary quiz?</p>
+      <ul class="options"></ul>
+      <details><summary>Show explanation</summary><p>Sovereignty. The Academy&#39;s canonical-last-module pattern requires learners to leave each Quest holding a permalink to their own work — an install command, a repo URL, a published server — not a score. A summary quiz trains for the Quest. Ship-Your-Own trains for the next repo.</p></details>
+    </li>
+</ol>
+</section>
+<section class="next">
+<h2>Next</h2>
+<form class="ship-your-own-form" onsubmit="event.preventDefault();alert('Queued — your repo URL will enter the Phase 3 pipeline when it is live.');this.reset();">
+    <label for="repoUrl">Paste your repo URL</label>
+    <input type="url" id="repoUrl" name="repoUrl" placeholder="https://github.com/your/repo" required>
+    <button type="submit">Queue for the pipeline</button>
+    <p class="hint">Your submission is stored in-browser only (Phase 1). When the <code>codebase-to-course</code> pipeline goes live (Phase 3), it runs through your URL and mints a permalink quest with your name on the attribution line.</p>
+  </form>
+</section>
+<a href="/experienced/mcp-integration/mcp-from-zero/" class="back">← Back to quest</a>
+</div>
+<script>
+document.querySelectorAll('.mcq li.q').forEach(q => {
+  const correct = Number(q.dataset.correct);
+  q.querySelectorAll('.options li').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const i = Number(opt.dataset.i);
+      opt.style.background = (i === correct) ? 'rgba(57,255,20,0.15)' : 'rgba(255,59,59,0.10)';
+      opt.style.borderLeftColor = (i === correct) ? '#39FF14' : '#FF3B3B';
+      const d = q.querySelector('details'); if (d) d.setAttribute('open', '');
+    });
+  });
+});
+</script>
+</body>
+</html>

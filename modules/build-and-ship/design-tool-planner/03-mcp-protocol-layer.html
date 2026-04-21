@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 03 — The MCP Protocol Layer · Design-Tool Planner · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#FF7E6B;
+  --primary-soft:#FFA595;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(255,126,107,0.22);
+  --border-strong:rgba(255,126,107,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-coral:0 0 16px rgba(255,126,107,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(255,126,107,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,126,107,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-coral)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+.swap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;background:var(--surface-1);border:1px solid var(--border-strong);border-radius:6px;padding:1.1rem;box-shadow:var(--glow-coral)}
+.swap .pane{background:#050B18;border:1px solid var(--border);border-radius:4px;overflow:hidden;min-height:360px}
+.swap .paneh{background:var(--surface-2);padding:0.45rem 0.8rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--primary-soft);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.swap .paneh .pill{font-size:0.65rem;padding:0.15rem 0.45rem;background:var(--surface-3);color:var(--accent);border-radius:3px;letter-spacing:0.06em;text-transform:uppercase}
+.swap pre{margin:0;padding:0.7rem 0.9rem;font-family:var(--font-mono);font-size:0.74rem;line-height:1.5;color:#D4E4F7;overflow-x:auto;white-space:pre}
+.swap .k{color:#FFA595}
+.swap .s{color:#22C55E}
+.swap .c{color:#64748B}
+.swap .d{color:var(--danger)}
+.swap .highlight{background:rgba(255,126,107,0.12)}
+.swap .nocross{color:#94A3B8}
+.swap-toolbar{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;align-items:center}
+.swap-toolbar label{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
+.swap-toolbar button{font-family:var(--font-mono);font-size:0.72rem;padding:0.4rem 0.8rem;background:var(--surface-3);border:1px solid var(--border);color:var(--text-dim);border-radius:4px;cursor:pointer;transition:all 150ms;text-transform:uppercase;letter-spacing:0.06em}
+.swap-toolbar button:hover,.swap-toolbar button:focus-visible{border-color:var(--accent);color:var(--accent)}
+.swap-toolbar button.on{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+@media (max-width:620px){.swap{grid-template-columns:1fr}}
+
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-coral)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Cuboctahedron Track glyph">
+    <g fill="none" stroke="#FF7E6B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29"/>
+      <polygon points="50,32 68,50 32,50"/>
+      <polygon points="50,68 32,50 68,50"/>
+      <line x1="50" y1="8" x2="50" y2="32"/>
+      <line x1="86" y1="29" x2="68" y2="50"/>
+      <line x1="86" y1="71" x2="68" y2="50"/>
+      <line x1="50" y1="92" x2="50" y2="68"/>
+      <line x1="14" y1="71" x2="32" y2="50"/>
+      <line x1="14" y1="29" x2="32" y2="50"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Build &amp; Ship · Design-Tool Planner · Module 03 of 05</div>
+    <div class="qname">The MCP Protocol Layer</div>
+  </div>
+  <div class="stats">
+    <span><strong>+125</strong> XP</span>
+    <span><strong>18</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">The MCP Protocol Layer</h1>
+<div class="module-subtitle">// Tier: Initiate · Source: DESIGN-TOOL-PLANNER/canva-sdk-two-agent-spec.yaml</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>One tool interface to hold every visual API</h1>
+  <p>The agents (Module 02) do not call Canva or Figma or Adobe directly. They call <strong>tools</strong> — objects that conform to the Model Context Protocol. Every tool, regardless of what API it wraps, has the same three-part shape: a <code>name</code>, a <code>description</code> that teaches the LLM when to reach for it, and an <code>input_schema</code> that constrains what arguments it will accept. The agent-builder guide makes this literal in lines 644-662: the <code>MCPTool</code> TypeScript interface has exactly those fields plus an <code>execute(params)</code> method that returns a <code>ToolResult</code>.</p>
+  <p>The payoff is fungibility. When you swap Canva for Figma, you do not edit the agent — you edit one tool file. The guide's example at lines 664-711 shows a <code>CanvaAPI</code> class implementing <code>MCPTool</code>: its <code>execute</code> method is a plain <code>fetch()</code> to <code>https://api.canva.com/rest/v1/designs</code>. Replace that URL and body with Figma's and you have a Figma tool that the exact same agent can use. The agent never knew there was a difference.</p>
+  <p>This is why the Universal Template generalises across Canva + NanoBanana, Figma + DALL-E, Adobe + Midjourney, and Sketch + Stable Diffusion. Each combination is a different <em>set of tools</em> — but the same <em>set of agents</em>, the same system prompts, the same decision matrix, the same quality gates. The <code>canva-sdk-two-agent-spec.yaml</code> formalises this at lines 109-136: the planner gets a short list of discovery tools (<code>canva_list_templates</code>, <code>canva_get_brand_kit</code>, <code>analyze_design_requirements</code>) while the executor gets the action tools (<code>nanobanana_generate</code>, <code>canva_create_design</code>, <code>canva_add_elements</code>, <code>canva_export_design</code>). Swap the prefix and the pattern still holds.</p>
+  <blockquote class="pullquote">MCP is the seam. Swap the tool file, keep the agent. That is why one template covers Canva + NanoBanana, Figma + DALL-E, and every pair after.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 340" role="img" aria-label="Three-tier diagram: agents on top, an MCP Tool Layer rectangle in the middle with four tool chips, and four concrete API swimlanes (Canva, Figma, Adobe, Sketch) at the bottom connected by dashed lines to the tool chips. Caption: Swap the lane, keep the layer." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#94A3B8}
+          .hd{font-family:'Playfair Display',serif;font-size:12px;fill:#FF7E6B}
+          .ag{fill:#111D33;stroke:#FF7E6B;stroke-opacity:0.55}
+          .layer{fill:#1C2B47;stroke:#FF7E6B;stroke-opacity:0.7}
+          .chip{fill:#162440;stroke:#00F5FF;stroke-opacity:0.5}
+          .api{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.35}
+          .ln{stroke:#00F5FF;stroke-opacity:0.5;stroke-dasharray:3 3;fill:none}
+          .kw{fill:#FFA595;font-family:'JetBrains Mono',monospace;font-size:9px}
+        </style>
+      </defs>
+
+      <rect class="ag" x="90" y="20" width="150" height="48" rx="5"/>
+      <text class="hd" x="100" y="40">Planning Agent</text>
+      <text class="lbl" x="100" y="58">strategic · 2048 tokens</text>
+      <rect class="ag" x="320" y="20" width="150" height="48" rx="5"/>
+      <text class="hd" x="330" y="40">Execution Agent</text>
+      <text class="lbl" x="330" y="58">tactical · 8192 tokens</text>
+
+      <rect class="layer" x="40" y="110" width="480" height="100" rx="6"/>
+      <text class="hd" x="50" y="128">MCP TOOL LAYER · invariant shape for every tool</text>
+      <text class="lbl" x="50" y="144">{ name · description · input_schema · execute(params) → ToolResult }</text>
+      <rect class="chip" x="55" y="158" width="110" height="40" rx="3"/>
+      <text class="kw" x="60" y="174">canva_create</text>
+      <text class="lbl" x="60" y="188">name/desc/schema</text>
+      <rect class="chip" x="175" y="158" width="110" height="40" rx="3"/>
+      <text class="kw" x="180" y="174">figma_frame</text>
+      <text class="lbl" x="180" y="188">name/desc/schema</text>
+      <rect class="chip" x="295" y="158" width="110" height="40" rx="3"/>
+      <text class="kw" x="300" y="174">adobe_xd_doc</text>
+      <text class="lbl" x="300" y="188">name/desc/schema</text>
+      <rect class="chip" x="415" y="158" width="100" height="40" rx="3"/>
+      <text class="kw" x="420" y="174">sketch_page</text>
+      <text class="lbl" x="420" y="188">name/desc/schema</text>
+
+      <path class="ln" d="M 163 70 L 110 110"/>
+      <path class="ln" d="M 395 70 L 450 110"/>
+
+      <text class="hd" x="20" y="240">CONCRETE APIs (swappable lanes)</text>
+      <rect class="api" x="55" y="250" width="110" height="50" rx="3"/>
+      <text class="lbl" x="60" y="268">Canva Connect API</text>
+      <text class="lbl" x="60" y="282">api.canva.com/rest</text>
+      <rect class="api" x="175" y="250" width="110" height="50" rx="3"/>
+      <text class="lbl" x="180" y="268">Figma REST API</text>
+      <text class="lbl" x="180" y="282">api.figma.com/v1</text>
+      <rect class="api" x="295" y="250" width="110" height="50" rx="3"/>
+      <text class="lbl" x="300" y="268">Adobe Express API</text>
+      <text class="lbl" x="300" y="282">developer.adobe.com</text>
+      <rect class="api" x="415" y="250" width="100" height="50" rx="3"/>
+      <text class="lbl" x="420" y="268">Sketch API</text>
+      <text class="lbl" x="420" y="282">developer.sketch.com</text>
+
+      <path class="ln" d="M 110 198 L 110 250"/>
+      <path class="ln" d="M 230 198 L 230 250"/>
+      <path class="ln" d="M 350 198 L 350 250"/>
+      <path class="ln" d="M 465 198 L 465 250"/>
+
+      <text class="lbl" x="280" y="322" text-anchor="middle">Swap the lane, keep the layer. The agents never changed shape.</text>
+    </svg>
+    <p class="visual-caption">Fallback: static three-tier diagram. The MCP layer is the seam; APIs below are interchangeable.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Swap the Lane</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Click <strong style="color:var(--primary)">Canva</strong> or <strong style="color:var(--primary)">Figma</strong> on the right pane. Notice that the left pane (the <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">MCPTool</code> interface, lines 644-662) never changes — only the concrete <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">execute()</code> body does.</p>
+  <div class="swap-toolbar">
+    <label>Tool target:</label>
+    <button type="button" id="btnCanva" class="on" data-v="canva">Canva</button>
+    <button type="button" id="btnFigma" data-v="figma">Figma</button>
+  </div>
+  <div class="swap">
+    <div class="pane">
+      <div class="paneh"><span>MCPTool interface (invariant)</span><span class="pill">lines 644-662</span></div>
+<pre><span class="k">interface</span> <span class="s">MCPTool</span> {
+  <span class="k">name</span>: string;
+  <span class="k">description</span>: string;
+  <span class="k">input_schema</span>: {
+    type: <span class="s">'object'</span>;
+    properties: Record&lt;string, any&gt;;
+    required: string[];
+  };
+  <span class="k">execute</span>(params: object): Promise&lt;ToolResult&gt;;
+}
+
+<span class="c">// THIS SHAPE NEVER CHANGES.</span>
+<span class="c">// Every tool the agent reaches for</span>
+<span class="c">// implements exactly these four slots.</span></pre>
+    </div>
+    <div class="pane" id="rightPane">
+      <div class="paneh"><span id="rightTitle">Canva implementation</span><span class="pill">swappable</span></div>
+<pre id="rightCode"></pre>
+    </div>
+  </div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">CLAUDE-SDK-AGENT-BUILDER-GUIDE.md · lines 644–662</span>
+      <a href="https://github.com/manutej/luxor-design-tool-planner/blob/main/CLAUDE-SDK-AGENT-BUILDER-GUIDE.md#L644-L662" target="_blank" rel="noopener noreferrer">view on github →</a>
+    </div>
+<pre><code>### MCP Tool Interface
+
+```typescript
+interface MCPTool {
+  name: string;
+  description: string;
+  input_schema: {
+    type: 'object';
+    properties: Record&lt;string, any&gt;;
+    required: string[];
+  };
+  execute(params: object): Promise&lt;ToolResult&gt;;
+}
+
+interface ToolResult {
+  success: boolean;
+  data?: any;
+  error?: string;
+}
+```</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — Per the MCPTool interface in lines 646–655, which field carries the description an agent reads to decide <em>when</em> to call the tool?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>name</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>description</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>input_schema</code></span></button>
+      <button class="choice" type="button" data-i="3"><span class="idx">D</span><span><code>execute</code></span></button>
+    </div>
+    <div class="explanation">The interface declares <code>description: string</code> alongside <code>name</code> and <code>input_schema</code>. The agent selects tools by reading <code>description</code> text; <code>name</code> is only the identifier used when actually issuing the tool-use call. <code>input_schema</code> constrains arguments, not intent.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — In <code>canva-sdk-two-agent-spec.yaml</code> (lines 113–136), the planner and executor agents are given <em>different</em> tool lists. Which tool is assigned to the executor and NOT to the planner?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>canva_list_templates</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>canva_get_brand_kit</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>nanobanana_generate</code></span></button>
+      <button class="choice" type="button" data-i="3"><span class="idx">D</span><span><code>analyze_design_requirements</code></span></button>
+    </div>
+    <div class="explanation">The spec at line 127 lists <code>nanobanana_generate</code> as an executor tool (it generates assets — a tactical action). The planner's tools (lines 113–116) are read-only discovery tools: list templates, fetch brand kit, analyze requirements. The split mirrors the strategic-vs-tactical division from Module 02.</div>
+  </div>
+
+  <div class="question" data-correct="1" id="q3">
+    <div class="q">3 — The CanvaAPI example at lines 667–677 declares <code>name = 'canva_create_design'</code> and an <code>input_schema</code> requiring which two fields?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>design_id</code> and <code>content</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>template_id</code> and <code>title</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>url</code> and <code>body</code></span></button>
+      <button class="choice" type="button" data-i="3"><span class="idx">D</span><span><code>prompt</code> and <code>style</code></span></button>
+    </div>
+    <div class="explanation">Lines 670–677: the input_schema declares properties <code>template_id</code> and <code>title</code>, and <code>required: ['template_id', 'title']</code>. These are the two arguments the LLM must supply on every tool call. The implementation then posts them to the Canva REST endpoint at line 684.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="02-two-agent-pattern.html">
+      <span class="label">← previous module</span>
+      <span class="title">02 · The Two-Agent Pattern</span>
+    </a>
+    <a href="04-five-step-pipeline.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">04 · The 5-Step Planning Pipeline</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* Swap-the-lane renderer — pure DOM, no eval */
+(function(){
+  const btnC = document.getElementById('btnCanva');
+  const btnF = document.getElementById('btnFigma');
+  const title = document.getElementById('rightTitle');
+  const code = document.getElementById('rightCode');
+  const canvaSrc =
+    '<span class="k">class</span> <span class="s">CanvaAPI</span> <span class="k">implements</span> <span class="s">MCPTool</span> {\n' +
+    '  name = <span class="s">\'canva_create_design\'</span>;\n' +
+    '  description = <span class="s">\'Create a new design in Canva\'</span>;\n' +
+    '  input_schema = {\n' +
+    '    type: <span class="s">\'object\'</span>,\n' +
+    '    properties: {\n' +
+    '      template_id: { type: <span class="s">\'string\'</span> },\n' +
+    '      title:       { type: <span class="s">\'string\'</span> }\n' +
+    '    },\n' +
+    '    required: [<span class="s">\'template_id\'</span>, <span class="s">\'title\'</span>]\n' +
+    '  };\n' +
+    '\n' +
+    '  <span class="k">async</span> execute(params) {\n' +
+    '    <span class="highlight">const res = <span class="k">await</span> fetch(\n' +
+    '      <span class="s">\'https://api.canva.com/rest/v1/designs\'</span>,\n' +
+    '      { method: <span class="s">\'POST\'</span>, headers: {...}, body: JSON.stringify(params) }\n' +
+    '    );</span>\n' +
+    '    return { success: true, data: <span class="k">await</span> res.json() };\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    '<span class="c">// ↑ only the URL + body change when swapping APIs</span>';
+  const figmaSrc =
+    '<span class="k">class</span> <span class="s">FigmaAPI</span> <span class="k">implements</span> <span class="s">MCPTool</span> {\n' +
+    '  name = <span class="s">\'figma_create_frame\'</span>;\n' +
+    '  description = <span class="s">\'Create a new frame in a Figma file\'</span>;\n' +
+    '  input_schema = {\n' +
+    '    type: <span class="s">\'object\'</span>,\n' +
+    '    properties: {\n' +
+    '      file_key: { type: <span class="s">\'string\'</span> },\n' +
+    '      name:     { type: <span class="s">\'string\'</span> }\n' +
+    '    },\n' +
+    '    required: [<span class="s">\'file_key\'</span>, <span class="s">\'name\'</span>]\n' +
+    '  };\n' +
+    '\n' +
+    '  <span class="k">async</span> execute(params) {\n' +
+    '    <span class="highlight">const res = <span class="k">await</span> fetch(\n' +
+    '      <span class="s">\'https://api.figma.com/v1/files/\'</span> + params.file_key + <span class="s">\'/nodes\'</span>,\n' +
+    '      { method: <span class="s">\'POST\'</span>, headers: {...}, body: JSON.stringify(params) }\n' +
+    '    );</span>\n' +
+    '    return { success: true, data: <span class="k">await</span> res.json() };\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    '<span class="c">// ↑ the four MCPTool slots are identical to CanvaAPI</span>';
+  function show(v){
+    if (v === 'canva'){
+      btnC.classList.add('on'); btnF.classList.remove('on');
+      title.textContent = 'Canva implementation';
+      code.innerHTML = canvaSrc;
+    } else {
+      btnF.classList.add('on'); btnC.classList.remove('on');
+      title.textContent = 'Figma implementation';
+      code.innerHTML = figmaSrc;
+    }
+    try { localStorage.setItem('luxor.academy.interactive.design-tool-planner.03', v); } catch(e){}
+  }
+  btnC.addEventListener('click', () => show('canva'));
+  btnF.addEventListener('click', () => show('figma'));
+  show('canva');
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) { c.classList.add('correct'); } else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+        try { localStorage.setItem('luxor.academy.completed.design-tool-planner.03', '1'); } catch(e){}
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

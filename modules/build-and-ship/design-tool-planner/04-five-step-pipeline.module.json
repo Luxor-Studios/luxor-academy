@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "id": "04-five-step-pipeline",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "design-tool-planner",
+    "title": "The 5-Step Planning Pipeline",
+    "xp_reward": 125,
+    "estimated_minutes": 20,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-design-tool-planner"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Analyze, research, architect, plan, document\n\nThe five-step pipeline is the actual engine behind the template. `UNIVERSAL-TEMPLATE-README.md` §Workflow Steps Deep Dive (lines 131-219) walks each step with its own time budget, token budget, quality score, and assigned agent. Together they took 22 minutes on the CANVA-CODE validation run and emitted 3,822 lines of implementation-ready documentation.\n\n**Step 1 · Analyze Task Space** (3 min, ~4,500 tokens, 9.2/10). `mercurio-orchestrator` runs 14+ sequential-thinking thoughts, decomposes the project into a SPARK vector (Skills, Personality, Approach, Resources, Knowledge), and outputs a constraint map. **Step 2 · Research APIs** (2 min, ~8,000 tokens, 8.9/10). `deep-researcher` launches three parallel web searches — Claude SDK, `{PRIMARY_API}`, `{SECONDARY_SERVICES}` — and returns a capability-and-limits table. **Step 3 · Design Architecture** (5 min, ~18,000 tokens, 9.5/10). `mars-architect` synthesizes the two-agent pattern, MCP tool boundaries, state versioning, and retry logic. This is the step with the highest quality gate in the whole workflow (≥0.90, line 178).\n\n**Step 4 · Plan Workflows** (4 min, ~12,000 tokens, 9.0/10). `mercurio-orchestrator` returns and writes three personas — Speed Demon, Perfectionist, Creative Explorer (lines 196-198) — each with primary and iteration flows, measurable success scenarios, and timing breakdowns. **Step 5 · Document Everything** (8 min, ~13,565 tokens, 9.3/10). `docs-generator` renders six interconnected markdown files: `PROJECT-OVERVIEW.md` (248 lines), `ARCHITECTURE.md` (1,018), `API-INTEGRATION.md` (1,181), `WORKFLOWS.md` (564), `README.md` (386), `PROJECT-SUMMARY.md` (425). Average across all five steps: **9.18/10**. None of the step-scores were aspirational; they are historical measurements from the validation run (lines 423-430).",
+      "markdown_es": "# Analizar, investigar, diseñar, planear, documentar\n\nEl pipeline de cinco pasos es el motor real detrás de la plantilla. `UNIVERSAL-TEMPLATE-README.md` §Profundización en los Pasos (líneas 131-219) recorre cada paso con su propio presupuesto de tiempo, presupuesto de tokens, puntaje de calidad y agente asignado. Juntos tomaron 22 minutos en la corrida de validación CANVA-CODE y emitieron 3.822 líneas de documentación lista para implementar.\n\n**Paso 1 · Analizar Espacio de Tarea** (3 min, ~4.500 tokens, 9.2/10). `mercurio-orchestrator` ejecuta 14+ pensamientos secuenciales y produce un vector SPARK (Habilidades, Personalidad, Enfoque, Recursos, Conocimiento). **Paso 2 · Investigar APIs** (2 min, ~8.000 tokens, 8.9/10). `deep-researcher` lanza tres búsquedas web en paralelo — Claude SDK, `{PRIMARY_API}`, `{SECONDARY_SERVICES}`. **Paso 3 · Diseñar Arquitectura** (5 min, ~18.000 tokens, 9.5/10). `mars-architect` sintetiza el patrón de dos agentes, los límites de las herramientas MCP y la lógica de reintentos. Éste es el paso con la compuerta de calidad más alta del flujo (≥0.90).\n\n**Paso 4 · Planear Flujos** (4 min, ~12.000 tokens, 9.0/10). `mercurio-orchestrator` regresa y escribe tres personas — Velocista, Perfeccionista, Explorador Creativo. **Paso 5 · Documentar Todo** (8 min, ~13.565 tokens, 9.3/10). `docs-generator` renderiza seis archivos markdown interconectados. Promedio de los cinco pasos: **9.18/10**.",
+      "word_count": 284,
+      "key_insight": "Five steps, five agents, one sequence. Each step has a time budget, a token budget, and a validated quality score. 9.18/10 average is the ceiling the template has already hit.",
+      "key_insight_es": "Cinco pasos, cinco agentes, una secuencia. Cada paso tiene presupuesto de tiempo, presupuesto de tokens y calidad validada. El promedio de 9.18/10 es el techo que la plantilla ya alcanzó."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/cuboctahedron.svg",
+      "alt": "A horizontal pipeline bar broken into five labeled stations: 01 Analyze (3min, 4.5k tokens, 9.2/10, mercurio-orchestrator), 02 Research (2min, 8k tokens, 8.9/10, deep-researcher), 03 Architect (5min, 18k tokens, 9.5/10, mars-architect), 04 Plan (4min, 12k tokens, 9.0/10, mercurio-orchestrator), 05 Document (8min, 13.5k tokens, 9.3/10, docs-generator). Above each station is a small coral dot marking the quality score. Below the bar a running total reads '22 min · 56k tokens · 9.18/10 avg · 3,822 lines out'.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/cuboctahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "04-five-step-pipeline.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner steps through a static readable timeline of the five stages, expanding each to see its agent, inputs, outputs, and validated quality score. Upon reaching stage 5 the aggregate panel reveals the 9.18/10 average and 3,822-line output total — matching the figures on UNIVERSAL-TEMPLATE-README.md lines 423-430.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "UNIVERSAL-TEMPLATE-README.md",
+      "permalink": "https://github.com/manutej/luxor-design-tool-planner/blob/main/UNIVERSAL-TEMPLATE-README.md#L166-L219",
+      "excerpt": "### 3. Design Architecture (5 min, 18000 tokens, 9.5/10 quality)\n\n**What It Does:**\n- Synthesizes architecture from constraints and API capabilities\n- Applies proven patterns (two-agent, MCP, state versioning)\n- Optimizes for your speed and quality targets\n- Designs error handling and retry logic\n\n**Key Output:** Production-ready architecture specification (1000+ lines)\n\n**Agent:** `mars-architect`\n\n**Quality Gate:** ≥ 0.90 (highest threshold in workflow)\n\n---\n\n### 4. Plan Workflows (4 min, 12000 tokens, 9.0/10 quality)\n\n**What It Does:**\n- Maps user journeys and interaction patterns\n- Creates 3 detailed personas with use cases\n- Validates success scenarios with concrete metrics\n- Defines timing breakdowns\n\n**Key Output:** User workflow documentation with measurable value propositions\n\n**Agent:** `mercurio-orchestrator`\n\n**Personas:**\n1. Speed Demon (high-volume users)\n2. Perfectionist (quality-focused users)\n3. Creative Explorer (experimental users)\n\n---\n\n### 5. Document Everything (8 min, 13565 tokens, 9.3/10 quality)",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per UNIVERSAL-TEMPLATE-README.md lines 166-178, which pipeline step has the highest quality gate in the entire workflow?",
+          "options": [
+            "Step 1 · Analyze Task Space (≥ 0.85)",
+            "Step 3 · Design Architecture (≥ 0.90)",
+            "Step 5 · Document Everything (≥ 0.85)"
+          ],
+          "correct": 1,
+          "explanation": "Line 178 explicitly states: `Quality Gate: ≥ 0.90 (highest threshold in workflow)`. Design Architecture is where load-bearing decisions crystallize (two-agent split, MCP boundaries, state versioning), so it carries the strictest gate. The other two quoted gates sit at 0.85 per lines 417-419."
+        },
+        {
+          "prompt": "Step 4 (Plan Workflows) produces exactly three personas. Which three are named in UNIVERSAL-TEMPLATE-README.md lines 196-198?",
+          "options": [
+            "Marketer, Designer, Developer",
+            "Novice, Intermediate, Expert",
+            "Speed Demon, Perfectionist, Creative Explorer"
+          ],
+          "correct": 2,
+          "explanation": "Lines 196-198 list the three canonical personas: Speed Demon (high-volume users), Perfectionist (quality-focused users), Creative Explorer (experimental users). They encode three real design-team behaviors, not skill levels or job titles."
+        },
+        {
+          "prompt": "Step 5 (Document Everything) generates six markdown files. Which file is documented at the largest line count in UNIVERSAL-TEMPLATE-README.md lines 213-219?",
+          "options": [
+            "PROJECT-OVERVIEW.md (248 lines)",
+            "ARCHITECTURE.md (1,018 lines)",
+            "API-INTEGRATION.md (1,181 lines)",
+            "WORKFLOWS.md (564 lines)"
+          ],
+          "correct": 2,
+          "explanation": "Lines 215: `API-INTEGRATION.md (1,181 lines)` is the largest. API-INTEGRATION is where the actual code examples and integration patterns live — it carries the most weight. ARCHITECTURE.md is second at 1,018 lines."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "05-ship-your-own",
+      "siblings": ["01-universal-template", "02-two-agent-pattern", "03-mcp-protocol-layer", "04-five-step-pipeline", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

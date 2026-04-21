@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "05-recursive-meta-prompting",
+    "version": "v0.1.0",
+    "track": "categorical-meta-prompting",
+    "quest": "cmp-foundations",
+    "title": "Recursive Meta-Prompting: The Fixed Point",
+    "xp_reward": 210,
+    "estimated_minutes": 35,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/categorical-meta-prompting"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# A prompt that rewrites itself until it stops changing\n\nRecursive Meta-Prompting (RMP) is the framework's name for *quality-gated iteration*: you start with a prompt `p₀`, evaluate its quality `q₀ ∈ [0,1]`, and if `q₀` is below your threshold θ, you apply an improvement morphism to get `p₁`, evaluate `q₁`, and continue. You stop when either `qₙ ≥ θ` (success) or you hit `max_iterations` (give up). The categorical reading of this loop is exactly a **fixed-point computation**: you are searching for a `p*` such that `improve(p*) = p*` — the prompt that does not change any more, because the quality threshold has been met.\n\nStructurally, RMP is the **Monad M** of the framework: `M: Prompt →ⁿ Prompt`, with `return` lifting a raw prompt into the refinement context, `>>=` (bind) chaining an improvement step, and `join` flattening a nested refinement. The three monad laws — **left identity** (`return >=> f = f`), **right identity** (`f >=> return = f`), and **associativity** (`(f >=> g) >=> h = f >=> (g >=> h)`) — are what guarantee that rearranging the order in which you group refinement stages does not change the final prompt. The `recursive-meta-prompting` skill notes that all 15 of its monad-law tests pass.\n\nThere is a second structure here: **Comonad W**, which handles the *history* half of the loop. `extract: W(a) → a` returns the current best prompt; `duplicate: W(a) → W(W(a))` gives you the history-of-histories so you can observe *why* quality plateaued; `extend: (W(a) → b) → W(a) → W(b)` applies a history-aware refinement. The monad writes forward; the comonad reads backward. Together they give RMP its two essential moves: refine with memory, converge on a fixed point. That is exactly what `/rmp @quality:0.85 \"optimize algorithm\"` does when you invoke it.",
+      "word_count": 296,
+      "key_insight": "RMP is a fixed-point operator on the category of prompts: iterate improve() until improve(p*) = p*. The Monad M provides the iteration; the Comonad W provides the history-awareness that lets you detect plateau versus real progress."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/icosahedron.svg",
+      "alt": "Diagram of the RMP loop: a node p₀ with an arrow to evaluate q₀, a decision diamond 'q ≥ θ?', a 'YES' branch to CONVERGED, and a 'NO' branch back to an improve morphism that produces p₁ — then loops. Alongside the loop is a quality-trend graph (q₀, q₁, q₂, ...) showing RAPID_IMPROVEMENT → STEADY_IMPROVEMENT → PLATEAU. Below the loop, three monad laws are listed: left identity, right identity, associativity.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/icosahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "05-recursive-meta-prompting.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner sets a quality threshold (e.g. 0.85) and a max_iterations (e.g. 5), then clicks 'run' to step through a scripted RMP trajectory: q₀=0.62 → q₁=0.74 → q₂=0.83 → q₃=0.88. The widget shows the convergence at iteration 3 (q₃ ≥ θ) and reports the RMPContext.quality_trend: STEADY_IMPROVEMENT. A toggle lets the learner see a plateau trajectory (q₀=0.70 → q₁=0.71 → q₂=0.71) classified as PLATEAU, demonstrating why the comonadic history matters.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": ".claude/skills/recursive-meta-prompting/skill.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/.claude/skills/recursive-meta-prompting/skill.md#L37-L58",
+      "excerpt": "Monad M (Iterative Refinement)\n\nM: Prompt →^n Prompt     (Monad - iterative refinement)\n\nLaws:\n- Left identity:  return >=> f = f\n- Right identity: f >=> return = f\n- Associativity:  (f >=> g) >=> h = f >=> (g >=> h)\n\nFixed-Point Semantics\n\nRMP treats prompt improvement as a fixed-point computation:\n\n  F: Prompt → Prompt\n  Fix(F) = p where F(p) = p (converged prompt)\n\nThe monad structure ensures:\n- Return: Initial prompt enters refinement context\n- Bind (>=>): Quality assessment chains to improvement\n- Join: Nested refinements flatten to single improvement",
+      "language": "text"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "RMP is described categorically as a 'fixed-point computation'. Which equation defines the fixed point p* that the loop is searching for?",
+          "correct": 1,
+          "explanation": "The fixed point is `p*` such that `improve(p*) = p*` — applying the improvement morphism one more time does not change the prompt. In RMP this is operationalised as `quality(p*) ≥ θ`, at which point further iteration would either not change p or exceed budget. The skill states: `Fix(F) = p where F(p) = p (converged prompt)`."
+        },
+        {
+          "prompt": "Which of the following is NOT one of the three monad laws that RMP is required to satisfy?",
+          "correct": 2,
+          "explanation": "The three monad laws are **left identity** (`return >=> f = f`), **right identity** (`f >=> return = f`), and **associativity** (`(f >=> g) >=> h = f >=> (g >=> h)`). 'Commutativity' (`f >=> g = g >=> f`) is NOT a monad law — monads are deliberately non-commutative because order of effects matters (refining-then-evaluating is not the same as evaluating-then-refining). Confusing associativity with commutativity is a classic slip."
+        },
+        {
+          "prompt": "The RMPContext comonad exposes a `quality_trend()` method that classifies the history as RAPID_IMPROVEMENT, STEADY_IMPROVEMENT, PLATEAU, or DEGRADING. Why does RMP need a comonad for this, rather than just a monad?",
+          "correct": 0,
+          "explanation": "Monads write forward (accumulate effects, produce the next prompt). Comonads read backward (extract patterns from the history). Detecting PLATEAU vs STEADY_IMPROVEMENT requires looking at the entire quality trajectory q₀, q₁, ..., qₙ — that is a co-Kleisli arrow `W(History) → Classification`, not a Kleisli arrow. The skill's RMPContext class uses `duplicate` to access the full quality history and `extend` to apply a history-aware transformation."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "06-ship-your-own-composition",
+      "siblings": ["01-objects-morphisms-composition", "02-prompts-as-morphisms", "03-natural-transformations", "04-cmp-query-language", "06-ship-your-own-composition"],
+      "ship_your_own": false
+    }
+  }
+}

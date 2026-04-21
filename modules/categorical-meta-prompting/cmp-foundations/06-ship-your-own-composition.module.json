@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "06-ship-your-own-composition",
+    "version": "v0.1.0",
+    "track": "categorical-meta-prompting",
+    "quest": "cmp-foundations",
+    "title": "Ship Your Own Composition",
+    "xp_reward": 240,
+    "estimated_minutes": 40,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/categorical-meta-prompting"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Pick a real task. Decompose it. Compose the morphisms. Ship the composition.\n\nThis module is the canonical last module of the CMP Foundations quest. You have installed the vocabulary (objects, morphisms, composition), accepted that prompts are typed arrows, met natural transformations as strategy-swaps, learned the CMP Query Language, and seen RMP as a fixed-point operator. Now you are going to ship a composition of your own.\n\nThe `EXAMPLES-LIBRARY.md` in `categorical-meta-prompting` shows the shape. A composite like `F → M` — transform a task into a prompt, then iteratively refine — is written in CMP as `ASSESS → TRANSFORM → ITERATE^3 FOR \"implement LRU cache\"`, and it compiles to `/chain [/meta @tier:L3 → /rmp @quality:0.85] \"implement LRU cache\"`. The example library records a quality journey of `0.68 → 0.75 → 0.87 ✓` for that exact composition. A `W → F` composite is different shape: `CONTEXT → TRANSFORM FOR \"add validation to user model\"` which extracts file-focused context first, then generates a context-aware implementation. Each composite is a real specimen — a morphism built from smaller morphisms, with measured quality.\n\nYour assignment: pick a task from your own work, decompose it into typed stages using the operators `→`, `||`, `>=>`, `⊗` and the macros `ASSESS`, `TRANSFORM`, `ITERATE`, `RMP`, `FULL`; write the composition as a CMP query; and submit it as your quest proof. What you get back is a permalink to your composition, attributed to you, slotted into the public library of categorical compositions. You are no longer a consumer of the framework. You are a contributor to its specimen collection. That is the sovereignty clause of LUXOR Academy — you own the composition your work produced, and the composition teaches the next learner what you just built.",
+      "word_count": 283,
+      "key_insight": "The Quest ends not with a quiz but with a specimen. Your own real task, decomposed into typed morphisms, compiled through the CMP DSL, ships as a permalink that teaches the next learner what you built."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/icosahedron.svg",
+      "alt": "Flow diagram: a learner's task description enters a decomposer that emits a sequence of typed stages (ASSESS, TRANSFORM, ITERATE). The stages compose via the four operators (→, ||, >=>, ⊗) into a CMP pipeline. The pipeline compiles down to /blocks, then /meta and /rmp invocations, then executes — producing both an output and a quality trajectory (q₀ → q₁ → ... → qₙ ≥ θ). The output is stamped with the learner's handle and emitted as a permalink ribbon, filed in the specimen library alongside F→M, W→F, α→M examples.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/icosahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "06-ship-your-own-composition.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner writes a task description, selects 2-5 macros (ASSESS / TRANSFORM / EXECUTE / QUALITY / REFINE / ITERATE / RMP / FULL), joins them with one of the four operators (→ || >=> ⊗), and submits the resulting CMP query. The widget validates the grammar (uppercase macros, lowercase blocks, balanced groups), shows the compiled /blocks pipeline and the /meta or /rmp command invocation, and stores the composition locally for Phase 3 permalink minting. The submit button is a visual stub in Phase 1.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "docs/EXAMPLES-LIBRARY.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/docs/EXAMPLES-LIBRARY.md#L840-L926",
+      "excerpt": "### Example 5.1: F → M (Transform then Refine)\n\nUse Case: Generate implementation then refine to quality threshold\n\n/chain [/meta @tier:L3 → /rmp @quality:0.85] \"implement LRU cache\"\n\nStage 1: F(Task) → Prompt\n  [Initial implementation from /meta — quality 0.68]\n\nStage 2: M(Prompt) →^n Prompt (quality: 0.68 → 0.87)\n  [Thread-safe LRUCache with OrderedDict, Lock, generics, O(1) ops]\n\nQuality Journey: 0.68 → 0.75 → 0.87 ✓",
+      "language": "text"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Why is the canonical last module of every LUXOR Academy quest a 'Ship Your Own' step rather than a summary quiz?",
+          "correct": 1,
+          "explanation": "Sovereignty — the Academy's canonical-last-module pattern requires every quest to end with the learner holding a permalink to their own work, not a score. A summary quiz trains for the quest; Ship-Your-Own trains for the next repo. In CMP Foundations specifically, your own composition becomes a specimen in the framework's public library, attributed to you."
+        },
+        {
+          "prompt": "Looking at Example 5.1 in EXAMPLES-LIBRARY.md (F → M composition for 'implement LRU cache'), which CMP operator is used between /meta and /rmp?",
+          "correct": 0,
+          "explanation": "`→` (sequence). The example is written as `/chain [/meta @tier:L3 → /rmp @quality:0.85] \"implement LRU cache\"` — plain sequential composition. Stage 1 produces a prompt, Stage 2 refines it. The Kleisli `>=>` would additionally quality-gate between stages; `||` would run them in parallel (which would not make sense here because Stage 2 consumes Stage 1's output). `⊗` is tensor, for combining independent contexts."
+        },
+        {
+          "prompt": "You submit the composition `(ASSESS:security || ASSESS:performance) → TRANSFORM → RMP^3 FOR \"review critical endpoint\"`. What does this say categorically about how the two ASSESS stages relate to each other?",
+          "correct": 2,
+          "explanation": "`||` is parallel composition — the two ASSESS stages (security and performance) run independently on the same input, and their results are aggregated. The quality rule is `mean(q_security, q_performance)` (from `CATEGORICAL-ONTOLOGY.md §3.1`). They do not compose sequentially (that would be `→`) and they are not tensored (that would be `⊗`). Independence plus mean-aggregation is exactly what `||` encodes."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["01-objects-morphisms-composition", "02-prompts-as-morphisms", "03-natural-transformations", "04-cmp-query-language", "05-recursive-meta-prompting"],
+      "ship_your_own": true
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "06-ship-your-own",
+    "version": "v0.1.0",
+    "track": "mcp-integration",
+    "quest": "mcp-from-zero",
+    "title": "Ship Your Own MCP Server",
+    "xp_reward": 200,
+    "estimated_minutes": 30,
+    "tier": "Adept",
+    "license": "MIT",
+    "source_repo": "https://github.com/manutej/meta-prompting-plugin"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Publish the server; submit the install command\n\nYou have built a server, wired it into Claude Code, and watched it answer a `tools/call`. The last step is the one that matters to anyone but you: turning your local binary into something a stranger can install with one command.\n\nThe shape to imitate is the meta-prompting-plugin's own `README.md`. Look at its roadmap: `v0.1.0` is a git-clone install, `v0.2.0` promises a TypeScript library and an MCP server, and `v0.3.0` aims at the Claude Code marketplace. That is the arc every server author walks. You start as `git clone && ./INSTALL.sh`, you harden into a versioned package on npm or PyPI, and — when the marketplace accepts your submission — you reduce to a one-liner install: `claude mcp add <your-server>`.\n\nThe sovereignty clause of this Quest is the same one Forge BARQUE ends on. You do not finish holding a certificate; you finish holding a URL and an install command that teaches the next learner what you built. **Submit that install command as your Quest proof.** In Phase 1 of LUXOR Academy the submission is captured locally and queued for the codebase-to-course pipeline. In Phase 3 the pipeline runs live: it extracts your README, your capability declaration, and one representative tool handler, validates them against `validators/slots.schema.json`, and mints a permalink Quest that teaches *your* MCP server by the same six-slot contract you just completed.\n\nYou came in knowing what MCP was. You leave with a server other people can install.",
+      "word_count": 265,
+      "key_insight": "The canonical last module is always a ship step. Your install command is the Quest proof — it turns learner into author, and your repo into the next learner's curriculum."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/jitterbug.svg",
+      "alt": "A three-station release ladder. Bottom rung: a `git clone && ./INSTALL.sh` terminal icon labelled `v0.1.0 — early adopters`. Middle rung: an npm package icon labelled `v0.2.0 — versioned release`. Top rung: a Claude Code marketplace ribbon labelled `v0.3.0 — claude mcp add <your-server>`. An arrow labelled `Quest proof` points from a learner-submitted repo card upward through the ladder, ending at a permalink ribbon that reads `luxor.academy/quest/<your-server>`.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/jitterbug.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "06-ship-your-own.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner pastes a GitHub repo URL and a proposed install command (e.g. `claude mcp add <name> -- npx -y @scope/my-mcp`) into the form. The simulator previews what the Phase 3 codebase-to-course pipeline will extract — README title, capability declaration, a representative tool — and records the submission in `localStorage` under `luxor.academy.completed.mcp-from-zero.06`. The submit button is a visual stub in Phase 1; live pipeline activation lands in Phase 3.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "README.md",
+      "permalink": "https://github.com/manutej/meta-prompting-plugin/blob/main/README.md#L340-L346",
+      "excerpt": "## Status & roadmap\n\n- **v0.1.0** — plugin-only: 5 commands, 17 skills, curated theory docs. You are here.\n- **v0.2.0** — TypeScript library (`@meta-prompting/core`, fp-ts based) + MCP server.\n- **v0.3.0** — marketplace submission, richer quality visualizations, property-based skill tests in CI.",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per `README.md` §Status & roadmap, in which release does the meta-prompting-plugin ship an MCP server alongside its TypeScript library?",
+          "correct": 1,
+          "explanation": "README.md line 343: `**v0.2.0** — TypeScript library (@meta-prompting/core, fp-ts based) + MCP server.` The shipping arc of any MCP project starts as a git-clone plugin, hardens into a versioned library paired with a server, and ends at marketplace submission."
+        },
+        {
+          "prompt": "What distinguishes a `v0.3.0`-style marketplace install from the `v0.1.0` git-clone install?",
+          "correct": 0,
+          "explanation": "A marketplace install collapses to a single `claude mcp add <name>` line that the client resolves from its registry. Git-clone installs require the user to pick a checkout path, run the installer, and wire the launch line by hand — three steps where the marketplace needs one."
+        },
+        {
+          "prompt": "Why is the canonical last module of every LUXOR Academy Quest a 'Ship Your Own' step rather than a summary quiz?",
+          "correct": 2,
+          "explanation": "Sovereignty. The Academy's canonical-last-module pattern requires learners to leave each Quest holding a permalink to their own work — an install command, a repo URL, a published server — not a score. A summary quiz trains for the Quest. Ship-Your-Own trains for the next repo."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["01-two-layer-protocol", "02-capability-negotiation", "03-three-primitives", "04-your-first-server", "05-client-integration-claude-code"],
+      "ship_your_own": true
+    }
+  }
+}

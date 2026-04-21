@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "05-ship-your-own",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mars-systems",
+    "title": "Ship Your Own Breakthrough",
+    "xp_reward": 150,
+    "estimated_minutes": 25,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Run MARS end-to-end on a stuck system you actually own\n\nYou have now seen the shape: parallel fan-out, epistemic constraint classification, systems-level metrics, five continuous architect gates. The MARS Quick Reference packages that whole arc as six concrete operations — and this module turns them back at you.\n\nThe six operations are commands you can call by name: `/mars research <problem>` for multi-domain parallel discovery, `/mars synthesize <research>` to integrate into a unified framework, `/mars apply <blueprint>` to map the framework to your real-world context, `/mars optimize <system>` to find leverage points, `/mars validate <blueprint>` to test against constraints, and `/mars iterate <results>` to learn and improve. Those six, in that order, are the full end-to-end run.\n\nThe Quick Reference is also explicit about when *not* to invoke MARS. `Don't use MARS when: Single domain sufficient (use specialized agent instead); Simple tactical execution (use Task Relay); Pure research needed (use deep-researcher); Code implementation (use practical-programmer).` MARS is for the multi-domain, systems-level, organizational-transformation class of problem — festival operations, manufacturing transformation, emergency-department throughput. If your stuck system fits that silhouette, it qualifies.\n\nThis module is the canonical last module of the quest. You pick one genuinely stuck system in your world — a process, an organization, a product line, a system that has fought every attempt at fixing it — and you run the six MARS operations on it end to end. You publish the analysis with sources cited. You get back a permalink you can hand to someone else. That is the sovereignty clause: you own what you ran, and you own what the run produced.",
+      "word_count": 276,
+      "key_insight": "MARS ships as six named operations — research, synthesize, apply, optimize, validate, iterate — invoked in that order on a stuck system you own."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Six-step pipeline diagram, labeled left to right: research → synthesize → apply → optimize → validate → iterate. Each step is an octahedron node with a token-budget annotation (30K, 15K, 10K, 12K, 8K, 10K). A final output ribbon on the right is stamped with the learner's handle and a permalink URL.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "05-ship-your-own.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner pastes a one-sentence description of a stuck system they own into the form, selects at least three candidate domains from the decomposition list, and submits. Phase 1 stores the submission locally and marks the module complete; Phase 3 will run the six-operation pipeline live and return a permalink to the generated analysis.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "MARS_QUICK_REFERENCE.md",
+      "permalink": "file:///Users/manu/.claude/agents/MARS_QUICK_REFERENCE.md#L27-L35",
+      "excerpt": "## The 6 Operations\n\n```bash\n/mars research <problem>        # Multi-domain parallel discovery\n/mars synthesize <research>     # Integrate into unified framework\n/mars apply <blueprint>         # Map to real-world context\n/mars optimize <system>         # Find leverage points\n/mars validate <blueprint>      # Test against constraints\n/mars iterate <results>         # Learn and improve\n```",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per the MARS Quick Reference, which sequence lists the six core operations in the order an end-to-end run invokes them?",
+          "correct": 1,
+          "explanation": "MARS_QUICK_REFERENCE.md §The 6 Operations (lines 27-35) lists them in this exact order: research, synthesize, apply, optimize, validate, iterate. Research gathers the parallel fan-out; synthesis integrates it; apply grounds it in your context; optimize finds leverage; validate tests against constraints; iterate captures learnings for the next run."
+        },
+        {
+          "prompt": "The Quick Reference lists four cases where you should NOT use MARS. Which of the following is one of them?",
+          "correct": 2,
+          "explanation": "MARS_QUICK_REFERENCE.md §When to Use MARS (lines 18-23) states: `Don't use MARS when: Single domain sufficient (use specialized agent instead); Simple tactical execution (use Task Relay); Pure research needed (use deep-researcher); Code implementation (use practical-programmer).` Single-domain problems belong to specialized agents; MARS is for multi-domain, systems-level work."
+        },
+        {
+          "prompt": "You are about to run the six MARS operations on a stuck system you own. What kind of problem does the Quick Reference say actually qualifies?",
+          "correct": 0,
+          "explanation": "MARS_QUICK_REFERENCE.md §When to Use MARS (lines 11-16) enumerates the positive cases: `Challenge requires multi-domain analysis (logistics + tech + people + finance); Need systems-level intelligence; Organizational transformation required; SpaceX-level innovation desired; Complex operations (festival, manufacturing, product launch, transformation).` The multi-domain, systems-level silhouette is the qualifier."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["01-parallel-discovery", "02-research-synthesis", "03-systems-optimization", "04-validation-gates"],
+      "ship_your_own": true
+    }
+  }
+}

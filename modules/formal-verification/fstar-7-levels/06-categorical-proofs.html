@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 06 — L6 — Categorical Proofs · F* in Seven Levels · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#39FF14;
+  --primary-soft:#7FFF5F;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(57,255,20,0.22);
+  --border-strong:rgba(57,255,20,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-green:0 0 16px rgba(57,255,20,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(57,255,20,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,255,20,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-green)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* Top bar */
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+/* Title */
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+/* Sections */
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+/* Primer */
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.primer pre{background:#050B18;border:1px solid var(--border);border-radius:6px;padding:1rem 1.15rem;margin:1rem 0;overflow-x:auto}
+.primer pre code{background:transparent;color:#D4E4F7;border:none;padding:0;font-size:0.85rem;line-height:1.6}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+/* Visual */
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+/* Interactive */
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-green)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .chrome .state.active{color:var(--primary)}
+.sim .chrome .state.fail{color:var(--danger)}
+.sim .body{padding:1rem 1rem 0.5rem;min-height:220px;color:#D4E4F7;white-space:pre-wrap;line-height:1.55}
+.sim .ps1{color:var(--primary);font-weight:600}
+.sim .ps1 .prefix{color:var(--accent)}
+.sim .input{color:#FFFFFF}
+.sim .out{color:#94A3B8;display:block;margin-bottom:0.3rem}
+.sim .out.good{color:var(--primary)}
+.sim .out.bad{color:var(--danger)}
+.sim .out.cite{color:var(--primary-soft);font-style:italic}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim .controls label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-right:0.4rem}
+.sim .controls input[type="text"],.sim .controls input[type="url"]{background:var(--surface-3);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:0.8rem;padding:0.4rem 0.6rem;border-radius:4px;flex:1;min-width:140px}
+.sim .controls input[type="text"]:focus,.sim .controls input[type="url"]:focus{outline:none;border-color:var(--primary);box-shadow:var(--glow-green)}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text);}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .activate{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .activate:hover,.sim .activate:focus-visible{background:var(--primary-soft);color:var(--background)}
+.sim .activate[disabled]{opacity:0.4;cursor:not-allowed}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(57,255,20,0.12);color:var(--primary);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--primary);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+
+/* Artifact */
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+
+/* Self-check */
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--primary);background:rgba(57,255,20,0.1);color:var(--primary)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.explanation code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.88em}
+
+/* Next */
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-green)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Geodesic sphere — F* in Seven Levels glyph">
+    <g fill="none" stroke="#39FF14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="50" cy="50" r="42"/>
+      <ellipse cx="50" cy="50" rx="42" ry="14" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="14" ry="42" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="28" ry="42" opacity="0.55"/>
+      <polygon points="50,8 78,28 68,62 32,62 22,28" opacity="0.85"/>
+      <polygon points="50,92 22,72 32,38 68,38 78,72" opacity="0.85"/>
+      <circle cx="50" cy="8" r="1.4" fill="#39FF14"/>
+      <circle cx="50" cy="92" r="1.4" fill="#39FF14"/>
+      <circle cx="8" cy="50" r="1.4" fill="#39FF14"/>
+      <circle cx="92" cy="50" r="1.4" fill="#39FF14"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Formal Verification · F* in Seven Levels · Module 06 of 07</div>
+    <div class="qname">L6 — Categorical Proofs</div>
+  </div>
+  <div class="stats">
+    <span><strong>+260</strong> XP</span>
+    <span><strong>40</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">L6 — Categorical Proofs</h1>
+<div class="module-subtitle">// Tier: Master · Source: fstar-framework · Level 6/7</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Involutions, functoriality, naturality — proved in F*</h1>
+  <p>Level 6 is where the 7-level framework earns its categorical name. F* types form a cartesian-closed category: objects are types, morphisms are total functions, products are pairs, exponentials are function types <code>a -&gt; b</code>. Every pure function is a morphism; every polymorphic function is a natural transformation between functors; every self-inverse function is an involution, i.e., a morphism <code>f : A -&gt; A</code> satisfying <code>f ∘ f = id_A</code>.</p>
+  <p>The Week 2 flagship proof is exactly that statement for <code>reverse</code>. An involution is a morphism whose square is the identity. In F*:</p>
+  <pre><code class="lang-fstar">let rec reverse (#a:Type) (xs:list a) : list a =
+  match xs with
+  | [] -&gt; []
+  | hd :: tl -&gt; append (reverse tl) [hd]
+
+val reverse_reverse: #a:Type -&gt; xs:list a -&gt;
+  Lemma (reverse (reverse xs) == xs)</code></pre>
+  <p>The proof is <strong>not</strong> a one-liner. It decomposes into two helpers — <code>reverse_append</code> (which is naturality of <code>reverse</code> with respect to <code>append</code>: <code>reverse (xs ++ ys) == reverse ys ++ reverse xs</code>) and <code>reverse_singleton</code> — and then recurses structurally. Each helper is itself a lemma, and each lemma's return value is <code>()</code> because a lemma <em>proves</em>, it does not <em>compute</em>. The 'output' is the knowledge F* gains.</p>
+  <p>Read the decomposition categorically and the pattern snaps into focus. <code>reverse</code> is a contravariant operation on the <code>List</code> functor; <code>reverse_append</code> is the statement that <code>reverse</code> is a <em>natural transformation</em> from <code>List a x List b</code> to <code>List b x List a</code>; and <code>reverse_reverse</code> is the claim that squaring this natural transformation yields the identity. F* does not let you write <code>functor</code>, <code>natural transformation</code>, or <code>adjoint</code> directly — but the proofs of their laws are exactly the shape you just wrote. This is L6: the categorical structure is latent, the proofs are explicit, and F* + Z3 connect the dots.</p>
+  <blockquote class="pullquote">At L6 the categorical laws are provable statements in F*'s logic: <code>reverse</code> is an involution iff <code>reverse_reverse</code> typechecks, and the proof decomposes naturally into the naturality lemma <code>reverse_append</code> plus structural induction.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    
+    <svg viewBox="0 0 540 280" role="img" aria-label="Commutative diagram for reverse as an involution." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#39FF14}
+          .node{fill:#111D33;stroke:#39FF14;stroke-opacity:0.6}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .id{stroke:#39FF14;fill:none;stroke-width:1.2;stroke-dasharray:3 2}
+        </style>
+        <marker id="a6" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+        <marker id="a6g" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#39FF14"/>
+        </marker>
+      </defs>
+      <text class="head" x="20" y="20">reverse ∘ reverse = id_{list a}</text>
+
+      <circle class="node" cx="80" cy="80" r="30"/>
+      <text class="label" x="60" y="84">list a</text>
+
+      <circle class="node" cx="260" cy="80" r="30"/>
+      <text class="label" x="240" y="84">list a</text>
+
+      <circle class="node" cx="440" cy="80" r="30"/>
+      <text class="label" x="420" y="84">list a</text>
+
+      <path class="arrow" d="M112 80 L228 80" marker-end="url(#a6)"/>
+      <text class="label" x="150" y="70">reverse</text>
+
+      <path class="arrow" d="M292 80 L408 80" marker-end="url(#a6)"/>
+      <text class="label" x="330" y="70">reverse</text>
+
+      <path class="id" d="M80 115 Q260 180 440 115" marker-end="url(#a6g)"/>
+      <text class="label" x="235" y="170">id_{list a}</text>
+
+      <rect fill="#111D33" stroke="#39FF14" stroke-opacity="0.4" x="20" y="210" width="500" height="50" rx="3"/>
+      <text class="label" x="30" y="228">Lemma reverse_singleton: reverse [x] == [x]</text>
+      <text class="label" x="30" y="244">Lemma reverse_append: reverse (xs ++ ys) == reverse ys ++ reverse xs   (naturality)</text>
+    </svg>
+    <p class="visual-caption">A commutative diagram for the involution proof. Top row: object <code>list a</code> on the left; arrow <code>reverse</code> points right to <code>list a</code>; arrow <code>reverse</code> again points right to <code>list a</code>. The composite <code>reverse ∘ reverse</code> is shown curving back to the original via a dashed arrow labeled <code>id_list a</code>. Below the diagram, three stacked boxes labeled in order: <code>Lemma reverse_singleton: reverse [x] == [x]</code>, <code>Lemma reverse_append: reverse (xs ++ ys) == reverse ys ++ reverse xs</code>, <code>Lemma reverse_reverse: reverse (reverse xs) == xs</code>. Arrows connect the helper lemmas up into the main proof, with the legend 'decompose, recurse, reassemble'.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Helper-Lemma Assignment</h2>
+  
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Match each step of the inductive case <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">hd :: tl</code> of <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">reverse_reverse</code> to the helper lemma that discharges it. Three steps, three helpers. <em>Static proof-assignment widget — no real F* executes.</em></p>
+  <div class="sim" role="region" aria-label="Helper lemma assignment">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>fstar — reverse_reverse proof</span>
+      <span class="state" id="simstate">0 / 3 assigned</span>
+    </div>
+    <div class="body" id="simbody"></div>
+    <div class="controls">
+      <label>step:</label>
+      <button class="cmd" type="button" data-step="1" data-expect="ih">1 · apply IH</button>
+      <button class="cmd" type="button" data-step="2" data-expect="ra">2 · distribute reverse over append</button>
+      <button class="cmd" type="button" data-step="3" data-expect="rs">3 · simplify reverse [hd]</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ QED — reverse is an involution on list a.</div>
+
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">instructor_guide/solutions/week_02_all_solutions.fst</span>
+      <a href="file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/instructor_guide/solutions/week_02_all_solutions.fst" target="_blank" rel="noopener noreferrer">open source file →</a>
+    </div>
+<pre><code>val reverse_append: #a:Type -&gt; xs:list a -&gt; ys:list a -&gt;
+  Lemma (reverse (append xs ys) == append (reverse ys) (reverse xs))
+
+let rec reverse_append #a xs ys =
+  match xs with
+  | [] -&gt; ()
+  | hd :: tl -&gt;
+      reverse_append tl ys;
+      ()
+
+val reverse_reverse: #a:Type -&gt; xs:list a -&gt;
+  Lemma (reverse (reverse xs) == xs)
+
+let rec reverse_reverse #a xs =
+  match xs with
+  | [] -&gt; ()
+  | hd :: tl -&gt;
+      reverse_reverse tl;
+      reverse_append (reverse tl) [hd];
+      reverse_singleton hd;
+      ()</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="0" id="q1">
+    <div class="q">1 — Why is the body of every lemma in F* just <code>()</code> (unit)?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Lemmas prove propositions, not values — the interesting content is in the *type*; <code>()</code> is a marker that the obligations introduced by the type have been discharged.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>()</code> is a performance optimisation that skips runtime code generation.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>()</code> is the default value of the <code>Lemma</code> effect and F* requires it syntactically.</span></button>
+    </div>
+    <div class="explanation">Lemmas **prove** propositions, they do not compute values. The interesting content is in the *type* — <code>Lemma (reverse (reverse xs) == xs)</code> — and the <code>()</code> is a marker that the proof obligations introduced by the type have been discharged. The solutions file names this directly: 'the real output is the knowledge F* gains about the property being true.'</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — Why is <code>reverse_append</code> (the statement that <code>reverse (xs ++ ys) == reverse ys ++ reverse xs</code>) required as a helper before the main involution proof?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Because <code>reverse</code> is not total without it.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Because F*'s list library does not export <code>append</code> by default.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Because expanding <code>reverse (reverse (hd :: tl))</code> yields <code>reverse (append (reverse tl) [hd])</code>, and the SMT solver does not know how <code>reverse</code> distributes over <code>append</code> without the helper — the lemma is naturality of reverse-over-append.</span></button>
+    </div>
+    <div class="explanation">In the inductive case <code>hd :: tl</code> of <code>reverse_reverse</code>, expanding <code>reverse (reverse (hd :: tl))</code> yields <code>reverse (append (reverse tl) [hd])</code>. The SMT solver does not know how <code>reverse</code> distributes over <code>append</code>, so without the helper lemma the subsequent rewriting step stalls. The helper is naturality of reverse-over-append, and it is exactly the bridge F* needs.</div>
+  </div>
+
+  <div class="question" data-correct="1" id="q3">
+    <div class="q">3 — Read categorically: the statement <code>reverse_reverse : reverse (reverse xs) == xs</code> says that <code>reverse</code> is an involution on <code>list a</code>. Which of these is an equivalent categorical claim?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>That <code>reverse</code> is a functor from <code>list a</code> to <code>list a</code>.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>That <code>reverse ∘ reverse == id_{list a}</code>, i.e., <code>reverse</code> squares to the identity morphism on <code>list a</code> in the category of types and total functions.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>That <code>reverse</code> admits a right adjoint.</span></button>
+    </div>
+    <div class="explanation">An involution is a morphism <code>f : A -&gt; A</code> whose square is the identity: <code>f ∘ f = id_A</code>. For <code>reverse : list a -&gt; list a</code>, that is exactly <code>reverse ∘ reverse == id_{list a}</code>, which — evaluated pointwise — is <code>reverse (reverse xs) == xs</code>. The F* proof and the categorical claim are the same statement in two notations.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="05-effect-polymorphism.html"><span class="label">← previous</span><span class="title">module 05</span></a>
+    <a href="07-ship-your-own-framework.html" class="next"><span class="label">next module →</span><span class="title">07 · L7 · Ship Your Own Framework</span></a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* 06-categorical-proofs interactive — pure DOM, no eval, no network. */
+(function(){
+  const body = document.getElementById('simbody');
+  const state = document.getElementById('simstate');
+  const resetBtn = document.getElementById('resetBtn');
+  const successPill = document.getElementById('successPill');
+  const assigned = { 1: false, 2: false, 3: false };
+
+  function write(cls, txt){
+    const el = document.createElement('span');
+    el.className = 'out ' + cls;
+    el.textContent = txt;
+    body.appendChild(el);
+  }
+
+  function seed(){
+    body.innerHTML = '';
+    write('cite', '# citation: instructor_guide/solutions/week_02_all_solutions.fst — Exercise 2.3 reverse_reverse');
+    write('out', 'val reverse_reverse: #a:Type -> xs:list a -> Lemma (reverse (reverse xs) == xs)');
+    write('out', 'let rec reverse_reverse #a xs = match xs with');
+    write('out', '  | [] -> ()');
+    write('out', '  | hd :: tl ->');
+    write('out', '      step 1: _________________________ ;');
+    write('out', '      step 2: _________________________ ;');
+    write('out', '      step 3: _________________________ ;');
+    write('out', '      ()');
+  }
+
+  function step(n, expect){
+    const correctMap = { 1: 'ih', 2: 'ra', 3: 'rs' };
+    const filledText = { 1: 'reverse_reverse tl', 2: 'reverse_append (reverse tl) [hd]', 3: 'reverse_singleton hd' };
+    if (expect === correctMap[n]) {
+      write('good', 'step ' + n + ' ← ' + filledText[n] + '   ✓');
+      assigned[n] = true;
+    } else {
+      write('bad', 'step ' + n + ' ← mismatch — wrong helper for this step');
+    }
+    const done = assigned[1] && assigned[2] && assigned[3];
+    const count = [1,2,3].filter(k => assigned[k]).length;
+    state.textContent = count + ' / 3 assigned';
+    if (done) {
+      state.classList.add('active');
+      write('good', '');
+      write('good', 'QED  — reverse ∘ reverse = id_{list a}');
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.fstar-7-levels.06', '1'); } catch(e){}
+    }
+  }
+
+  function reset(){
+    assigned[1] = false; assigned[2] = false; assigned[3] = false;
+    successPill.classList.remove('visible');
+    state.textContent = '0 / 3 assigned';
+    state.classList.remove('active');
+    seed();
+  }
+
+  document.querySelectorAll('.sim .cmd[data-step]').forEach(btn => {
+    btn.addEventListener('click', () => step(parseInt(btn.dataset.step, 10), btn.dataset.expect));
+  });
+  resetBtn.addEventListener('click', reset);
+  seed();
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) {
+          c.classList.add('correct');
+        } else {
+          c.classList.add('wrong');
+          choices[correct].classList.add('correct');
+        }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+/* XP export (sovereignty clause) */
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "03-systems-optimization",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mars-systems",
+    "title": "Systems-Level Optimization",
+    "xp_reward": 125,
+    "estimated_minutes": 18,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Stop optimizing parts. Optimize the whole.\n\nThe most common failure mode of a well-run organization is also the most invisible: every department hits its own numbers and the whole thing falls apart. The Integrative Dimension Playbook names this directly. `Finance minimizes costs. Sales maximizes revenue. Operations minimizes waste. HR minimizes turnover. Result: Departments succeed, organization fails (They work against each other).`\n\nThat is local optimization. It looks like discipline. It reads like accountability. And it quietly destroys the system, because each department is optimizing a metric that does not include the others. Finance trims the training budget; Operations loses the ability to cross-train; HR's turnover number goes up; nobody is lying, and yet the whole degrades.\n\nSystems-level optimization is the inversion. The playbook prescribes a four-step move: (1) `Define system goal (what's the real objective?)` — usually not *maximize profit* but something like `Create sustainable value` or `Delight customers while supporting people`; (2) `Map how parts serve whole` — Finance enables investment in capability, Sales brings customer feedback into development; (3) `Align incentives to system goal` — do not reward local optimization that hurts the whole; (4) `Measure system health, not component efficiency`.\n\nThe fourth step is the bite. The playbook specifies the replacement metric explicitly: `Customer satisfaction + employee engagement + financial health + innovation`, not `cost per unit or revenue per employee`. That composite is what forces the system to stay coherent — because nobody can hit it by sacrificing another department. This is the SpaceX-level move behind MARS: you do not innovate by optimizing harder. You innovate by switching which thing you are optimizing.",
+      "word_count": 262,
+      "key_insight": "Local optimization makes every department succeed while the organization fails. Systems-level optimization measures the composite the whole is actually for."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Two-panel contrast diagram. Left panel: four departments (Finance, Sales, Operations, HR) each with a green local-metric arrow pointing up, but a red composite-health arrow pointing down. Right panel: the same four departments with arrows all routed into a single composite metric (Customer satisfaction + Employee engagement + Financial health + Innovation) pointing up.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "03-systems-optimization.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner toggles between 'Local Optimization' mode (each department slider maximizes its own metric, composite health falls) and 'System Optimization' mode (sliders are coupled through the composite metric). Success pill unlocks when learner switches to System Optimization and sees all four composite components (customer / employee / financial / innovation) rise together.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "mars-agent/docs/INTEGRATIVE-DIMENSION-PLAYBOOK.md",
+      "permalink": "file:///Users/manu/.claude/agents/mars-agent/docs/INTEGRATIVE-DIMENSION-PLAYBOOK.md#L279-L325",
+      "excerpt": "## System Optimization vs Local Optimization\n\n### The Problem\n\nOptimizing parts ≠ Optimizing whole\n\n```\nExample: Optimizing individual departments\n├─ Finance minimizes costs\n├─ Sales maximizes revenue\n├─ Operations minimizes waste\n├─ HR minimizes turnover\nResult: Departments succeed, organization fails\n        (They work against each other)\n```\n\n### System-Level Optimization\n\n**Question**: \"What design makes the whole system work best?\"\n\n**Process**:\n1. **Define system goal** (what's the real objective?)\n2. **Map how parts serve whole**\n3. **Align incentives to system goal**\n4. **Measure system health, not component efficiency**\n   - Metric: Customer satisfaction + employee engagement + financial health + innovation\n   - Not just: Cost per unit or revenue per employee",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per the Integrative Dimension Playbook, what is the failure mode when Finance, Sales, Operations, and HR each maximize their own department metric?",
+          "correct": 0,
+          "explanation": "INTEGRATIVE-DIMENSION-PLAYBOOK.md §The Problem (lines 285-292) states it literally: `Departments succeed, organization fails (They work against each other).` Local optimization is not slow failure; it is invisible failure masked by green dashboards in every department."
+        },
+        {
+          "prompt": "The playbook replaces component-efficiency metrics with a specific composite. What are its four components?",
+          "correct": 2,
+          "explanation": "INTEGRATIVE-DIMENSION-PLAYBOOK.md line 323 names the composite exactly: `Customer satisfaction + employee engagement + financial health + innovation`. The point of the composite is that nobody can hit it by sacrificing another component, so coherence is enforced by the metric itself."
+        },
+        {
+          "prompt": "Step 1 of the System-Level Optimization process asks you to define the system goal. The playbook says this is usually NOT which phrase?",
+          "correct": 1,
+          "explanation": "INTEGRATIVE-DIMENSION-PLAYBOOK.md line 307 is blunt: `Usually NOT: \"Maximize profit\"`. The playbook offers `Create sustainable value` or `Delight customers while supporting people` instead. Picking the wrong system goal is how local optimization sneaks back in through the front door."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "04-validation-gates",
+      "siblings": ["01-parallel-discovery", "02-research-synthesis", "04-validation-gates", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

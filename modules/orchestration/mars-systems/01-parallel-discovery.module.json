@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "01-parallel-discovery",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mars-systems",
+    "title": "Parallel Discovery",
+    "xp_reward": 125,
+    "estimated_minutes": 18,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Fire three specialists at once\n\nMARS is not a domain expert. Its own agent definition is blunt about it: `MARS is NOT a domain expert (that's what specialized agents are for). MARS is a meta-cognitive orchestrator`. What MARS does is decompose a complex problem into research-able domains and then **dispatch specialists in parallel** — each with a scoped budget of roughly five thousand tokens and an extraction target of four hundred to five hundred focused words.\n\nThe shape of a MARS research round is load-bearing. Phase 1 (problem decomposition) names the constituent domains — logistics, technology, people, finance, whatever the problem actually contains — and maps which depend on which. Phase 2 (parallel discovery) launches N specialists simultaneously. Each returns a focused extract, not a monograph. The total **wall-clock cost is `Max specialist (not sum), typically 3-5 min`**, while the total token cost is the sum of the fan-out, around twenty-five thousand for five domains.\n\nThat arithmetic is the whole point. Sequential research costs you the sum of times and the sum of tokens. Parallel research costs you the sum of tokens but only the maximum of times. On a five-domain problem that is a 5× wall-clock win for the same token spend — which is exactly the `SpaceX-level innovation on the ground in all moments` tempo MARS exists to enable.\n\nBefore you can synthesize anything across domains, you need the fan-out to have happened cleanly. That is Module 01.",
+      "word_count": 238,
+      "key_insight": "Parallel discovery costs the sum of tokens but only the max of wall-clock times. Five domains in parallel ship in the time of one."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Fan-out diagram: a MARS orchestrator node at the top branches simultaneously to five domain specialist nodes (logistics, talent, marketing, technology, finance). Each specialist has a token budget of ~5K and returns a ~450-word extract. Wall-clock time is labeled as 'max(specialists), not sum'.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "01-parallel-discovery.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner picks at least three of the five domain specialists, clicks 'launch parallel', and sees the wall-clock timer stop at the slowest specialist (not the sum) while the token counter tallies the sum. Success pill appears when the wall-clock time is strictly less than the sequential baseline for the same selection.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "MARS_AGENT_DEFINITION.md",
+      "permalink": "file:///Users/manu/.claude/agents/MARS_AGENT_DEFINITION.md#L283-L310",
+      "excerpt": "### Mode 1: Research Mode (Parallel Discovery)\n\n**When to Use**: Need comprehensive understanding across multiple domains\n\n**How It Works**:\n```\nMARS orchestrates N specialists in parallel:\n├─ Specialist 1 researches Domain 1 (budget: 5K)\n├─ Specialist 2 researches Domain 2 (budget: 5K)\n├─ Specialist 3 researches Domain 3 (budget: 5K)\n└─ Specialist N researches Domain N (budget: 5K)\n\nEach produces focused extract (400-500 words)\nTotal time: Max specialist (not sum), typically 3-5 min\nTotal tokens: Sum of specialists (~25K for 5 domains)\n```",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In MARS Mode 1 (Research Mode / Parallel Discovery), how does the total wall-clock time of a 5-specialist fan-out relate to the individual specialist times?",
+          "correct": 1,
+          "explanation": "MARS_AGENT_DEFINITION.md line 296 is explicit: `Total time: Max specialist (not sum), typically 3-5 min`. Parallel discovery pays the maximum, not the sum. That is what turns a 25-minute sequential study into a 5-minute fan-out at the same token cost."
+        },
+        {
+          "prompt": "According to its own agent definition, MARS explicitly refuses one role. Which?",
+          "correct": 0,
+          "explanation": "MARS_AGENT_DEFINITION.md line 52 reads: `MARS is NOT a domain expert (that's what specialized agents are for). MARS is a meta-cognitive orchestrator`. The separation of orchestration from expertise is what makes parallel fan-out coherent; MARS routes, specialists produce."
+        },
+        {
+          "prompt": "What is the target extract size per specialist in a MARS parallel-discovery round, and what is the approximate token budget?",
+          "correct": 2,
+          "explanation": "MARS_AGENT_DEFINITION.md line 294 sets the extract target at `focused extract (400-500 words)`, and lines 146 and 297 set each specialist budget around 5K tokens (≈25K total for 5 domains). The 400-500-word cap is what forces specialists to report findings, not lore."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "02-research-synthesis",
+      "siblings": ["02-research-synthesis", "03-systems-optimization", "04-validation-gates", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

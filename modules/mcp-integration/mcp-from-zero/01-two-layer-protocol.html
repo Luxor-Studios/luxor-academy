@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 01 — The Two-Layer Protocol · MCP from Zero · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#FF4DD8;
+  --primary-soft:#FF8DE6;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(255,77,216,0.22);
+  --border-strong:rgba(255,77,216,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-primary:0 0 16px rgba(255,77,216,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(255,77,216,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,77,216,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-primary)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-primary)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .chrome .state.active{color:var(--success)}
+.sim .body{padding:1rem 1rem 0.5rem;min-height:220px;color:#D4E4F7;white-space:pre-wrap;line-height:1.55}
+.sim .ps1{color:var(--primary);font-weight:600}
+.sim .ps1 .prefix{color:var(--accent)}
+.sim .input{color:#FFFFFF}
+.sim .out{color:#94A3B8;display:block;margin-bottom:0.3rem}
+.sim .out.good{color:var(--success)}
+.sim .out.bad{color:var(--danger)}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim .controls label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-right:0.4rem}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text);}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .cmd.selected{border-color:var(--primary);color:var(--primary)}
+.sim .activate{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .activate:hover,.sim .activate:focus-visible{background:var(--primary-soft)}
+.sim .activate[disabled]{opacity:0.4;cursor:not-allowed}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(34,197,94,0.12);color:var(--success);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--success);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-primary)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Jitterbug Track glyph">
+    <g fill="none" stroke="#FF4DD8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29" opacity="0.35"/>
+      <polygon points="50,18 78,66 22,66"/>
+      <polygon points="50,82 22,34 78,34"/>
+      <circle cx="50" cy="50" r="2" fill="#FF4DD8" stroke="none"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">MCP Integration · MCP from Zero · Module 01 of 06</div>
+    <div class="qname">The Two-Layer Protocol</div>
+  </div>
+  <div class="stats">
+    <span><strong>+120</strong> XP</span>
+    <span><strong>20</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">The Two-Layer Protocol</h1>
+<div class="module-subtitle">// Tier: Adept · Source: meta-prompting-plugin/docs/theory/foundations.md</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Transport carries bytes. Protocol carries meaning.</h1>
+  <p>MCP is built from two layers stacked on top of each other, and the whole design pays off because that split is clean. The bottom layer is a <strong>transport</strong> — stdio pipes, a WebSocket, an HTTP stream — whose only job is to move opaque byte frames between a client process and a server process. The top layer is a <strong>message protocol</strong> — JSON-RPC 2.0 — whose only job is to turn those bytes into typed <code>request / response / notification</code> objects with method names, parameters, and ids.</p>
+  <p>The meta-prompting-plugin's <code>docs/theory/foundations.md</code> uses a lens that is almost perfect for this: it treats every system as four <strong>primary objects</strong> — <code>Task</code>, <code>Prompt</code>, <code>Context</code>, and a <code>Quality q ∈ [0,1]</code> scalar — connected by structure-preserving morphisms. Map that onto MCP and the split is obvious. The transport is a <strong>functor</strong> <code>Bytes → Frames</code>: it preserves order and identity, nothing more. The protocol is a <strong>monad</strong> <code>Frame →ⁿ Frame</code>: it chains requests, tracks ids, threads conversational state, and gates everything on well-typed payloads.</p>
+  <p>Why does the split matter? Because you can swap transports without rewriting a single handler. <code>StdioServerTransport</code> and a WebSocket transport both feed the same JSON-RPC layer the same JSON frames. Your <code>listTools</code> handler does not know — and does not need to know — whether its frame arrived over a pipe or a socket. Two layers; one responsibility each; any real MCP server you read will make this separation load-bearing.</p>
+  <blockquote class="pullquote">Transport is a functor over bytes; JSON-RPC is a monad over frames. Keep them separate and any transport plugs into any server.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 540 280" role="img" aria-label="Two horizontal bands stacked vertically. The bottom band is labelled Transport Layer and shows stdio pipes, a WebSocket, and an HTTP stream feeding byte frames into a central spine. The top band is labelled JSON-RPC 2.0 Message Layer and shows typed request/response/notification envelopes with method names and ids flowing along the spine." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#FF4DD8}
+          .box{fill:#111D33;stroke:#FF4DD8;stroke-opacity:0.45}
+          .boxok{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.55}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2}
+          .mono{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#D4E4F7}
+        </style>
+      </defs>
+
+      <!-- Upper band: JSON-RPC layer -->
+      <text class="head" x="20" y="20">JSON-RPC 2.0 MESSAGE LAYER · monad (Frame →ⁿ Frame)</text>
+      <rect class="boxok" x="20" y="32" width="500" height="70" rx="4"/>
+      <text class="mono" x="32" y="52">{ "jsonrpc": "2.0", "id": 1, "method": "tools/list" }</text>
+      <text class="mono" x="32" y="68">{ "jsonrpc": "2.0", "id": 1, "result": { "tools": [ … ] } }</text>
+      <text class="mono" x="32" y="84">{ "jsonrpc": "2.0", "method": "notifications/initialized" }</text>
+      <text class="label" x="32" y="98">↳ typed request / response / notification</text>
+
+      <!-- Divider spine -->
+      <line class="arrow" x1="270" y1="105" x2="270" y2="170" stroke-dasharray="4 3"/>
+      <text class="label" x="278" y="140">same frames,</text>
+      <text class="label" x="278" y="154">either transport</text>
+
+      <!-- Lower band: Transport -->
+      <text class="head" x="20" y="195">TRANSPORT LAYER · functor (Bytes → Frames)</text>
+      <rect class="box" x="20" y="208" width="150" height="52" rx="4"/>
+      <text class="label" x="32" y="226">stdio pipes</text>
+      <text class="mono" x="32" y="244">StdioServerTransport</text>
+
+      <rect class="box" x="195" y="208" width="150" height="52" rx="4"/>
+      <text class="label" x="207" y="226">websocket</text>
+      <text class="mono" x="207" y="244">WebSocketTransport</text>
+
+      <rect class="box" x="370" y="208" width="150" height="52" rx="4"/>
+      <text class="label" x="382" y="226">http stream</text>
+      <text class="mono" x="382" y="244">HttpServerTransport</text>
+
+      <path class="arrow" d="M95 208 L95 180 L270 170"/>
+      <path class="arrow" d="M270 208 L270 170"/>
+      <path class="arrow" d="M445 208 L445 180 L270 170"/>
+    </svg>
+    <p class="visual-caption">Any transport feeds the same JSON-RPC frames up to the same handler. Swap the bottom band — nothing above it changes.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Transport Swap</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Pick a transport below, then click <strong style="color:var(--primary)">emit frame</strong>. The simulator shows the byte envelope the transport ships, and the identical JSON-RPC frame that lands on the handler above it. Try both transports. <em>No real network. Pure DOM.</em></p>
+  <div class="sim" role="region" aria-label="Two-layer simulator">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>mcp · two-layer inspector</span>
+      <span class="state" id="simstate">transport: stdio</span>
+    </div>
+    <div class="body" id="simbody"></div>
+    <div class="controls">
+      <label>Transport:</label>
+      <button class="cmd selected" type="button" data-transport="stdio" id="btn-stdio">stdio</button>
+      <button class="cmd" type="button" data-transport="ws" id="btn-ws">websocket</button>
+      <button class="activate" type="button" id="emitBtn">emit frame (tools/list)</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you confirmed the JSON-RPC frame is identical across transports.</div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">docs/theory/foundations.md · lines 10–40</span>
+      <a href="https://github.com/manutej/meta-prompting-plugin/blob/main/docs/theory/foundations.md#L10-L40" target="_blank" rel="noopener noreferrer">view on github →</a>
+    </div>
+<pre><code>## The primary objects
+
+- **Task `T`** — a goal in natural language: "implement X", "summarize Y".
+- **Prompt `P`** — the string we actually send to the model.
+- **Context `C`** — the surrounding state: history, code, tool outputs.
+- **Quality `q ∈ [0,1]`** — a scalar we track alongside every transformation.
+
+## The primary morphisms (commands)
+
+### `/meta` — Functor `F : Task → Prompt`
+
+A functor is a structure-preserving map. `/meta` takes a task and produces a prompt such that:
+
+- **Identity:** `F(id_T) = id_P` — the "do nothing" task maps to the "do nothing" prompt.
+- **Composition:** `F(g ∘ f) = F(g) ∘ F(f)` — composing two tasks first and then mapping equals mapping each and then composing.
+
+In practice: complexity classification is a functor. Tier `L3` tasks always produce `L3`-shaped prompts.
+
+### `/rmp` — Monad `M : Prompt →ⁿ Prompt`
+
+A monad is a way to chain computations that carry extra context. `M = (Prompt, return, bind)`:
+
+- `return : Prompt → M(Prompt)` — wrap a prompt in quality-tracking context.
+- `bind : M(Prompt) × (Prompt → M(Prompt)) → M(Prompt)` — refine, carrying quality forward.</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — MCP splits into two layers. Which pair correctly identifies them?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Authentication layer + authorisation layer.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Transport layer (stdio / WebSocket / HTTP) + JSON-RPC 2.0 message layer.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Presentation layer + session layer.</span></button>
+    </div>
+    <div class="explanation">MCP is a transport layer (moves bytes) plus a JSON-RPC 2.0 message layer (moves typed meaning). The categorical reading in <code>docs/theory/foundations.md</code> calls transport a structure-preserving functor and the protocol a monad that chains typed frames.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — In the foundations.md morphism table, what structure is <code>/rmp</code> modelled as?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>A comonad <code>W : History → Context</code>.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>A natural transformation <code>α : F ⇒ G</code>.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>A monad <code>M : Prompt →ⁿ Prompt</code>.</span></button>
+    </div>
+    <div class="explanation"><code>docs/theory/foundations.md</code> line 28: <code>### /rmp — Monad M : Prompt →ⁿ Prompt</code>. <code>/rmp</code> iterates <code>refine &gt;=&gt; refine &gt;=&gt; ...</code> with quality carried forward — the same shape MCP's JSON-RPC layer uses when chaining request/response frames.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q3">
+    <div class="q">3 — Why can an MCP server swap <code>StdioServerTransport</code> for a WebSocket transport without changing its tool handlers?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Because the handler code only talks to the JSON-RPC message layer; the transport is a functor that preserves the shape of the frames it carries.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Because MCP auto-generates a handler adapter for every transport at runtime.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Because both transports are just shell scripts and the runtime treats them the same.</span></button>
+    </div>
+    <div class="explanation">Handler code is layer-above. The transport preserves message shape; the monadic request/response layer above it stays intact. Swapping the carrier does not change the cargo.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="#" aria-disabled="true" style="opacity:0.4;pointer-events:none">
+      <span class="label">← previous</span>
+      <span class="title">—</span>
+    </a>
+    <a href="02-capability-negotiation.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">02 · Capability Negotiation</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* Pure DOM simulator for two-layer transport swap. No eval. No network. */
+(function(){
+  const body = document.getElementById('simbody');
+  const state = document.getElementById('simstate');
+  const emitBtn = document.getElementById('emitBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const btnStdio = document.getElementById('btn-stdio');
+  const btnWs = document.getElementById('btn-ws');
+  const successPill = document.getElementById('successPill');
+  let transport = 'stdio';
+  const seen = { stdio: false, ws: false };
+
+  function setTransport(t){
+    transport = t;
+    state.textContent = 'transport: ' + (t === 'ws' ? 'websocket' : 'stdio');
+    btnStdio.classList.toggle('selected', t === 'stdio');
+    btnWs.classList.toggle('selected', t === 'ws');
+  }
+
+  function line(html, cls){
+    const el = document.createElement('div');
+    if (cls) el.className = 'out ' + cls; else el.className = 'out';
+    el.innerHTML = html;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function emit(){
+    const frame = '{ "jsonrpc": "2.0", "id": 1, "method": "tools/list" }';
+    if (transport === 'stdio') {
+      line('<span style="color:#FF4DD8">[transport:stdio]</span> write ' + frame.length + ' bytes → pipe');
+      line('<span style="color:#00F5FF">[json-rpc layer]</span> <span class="input">' + frame + '</span>', 'good');
+    } else {
+      line('<span style="color:#FF4DD8">[transport:ws]</span> ws.send(frame) · ' + frame.length + ' bytes · text frame');
+      line('<span style="color:#00F5FF">[json-rpc layer]</span> <span class="input">' + frame + '</span>', 'good');
+    }
+    seen[transport] = true;
+    if (seen.stdio && seen.ws) {
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.mcp-from-zero.01', '1'); } catch(e){}
+    }
+  }
+
+  function reset(){
+    seen.stdio = false; seen.ws = false;
+    body.innerHTML = '';
+    successPill.classList.remove('visible');
+    setTransport('stdio');
+    seed();
+  }
+
+  function seed(){
+    line('# pick a transport, emit the same frame, confirm the upper layer sees identical JSON.');
+  }
+
+  btnStdio.addEventListener('click', () => setTransport('stdio'));
+  btnWs.addEventListener('click', () => setTransport('ws'));
+  emitBtn.addEventListener('click', emit);
+  resetBtn.addEventListener('click', reset);
+  seed();
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) c.classList.add('correct');
+        else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+/* XP export (sovereignty — §2 of the Academy meta-prompt) */
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

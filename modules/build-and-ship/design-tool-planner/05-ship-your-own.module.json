@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "id": "05-ship-your-own",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "design-tool-planner",
+    "title": "Ship Your Own Plan",
+    "xp_reward": 150,
+    "estimated_minutes": 22,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-design-tool-planner"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Fill in the seven variables. Pick a pattern. Ship a plan.\n\nYou have read the universal template, the two-agent pattern, the MCP tool layer, and the five-step pipeline. Now it is your turn. This is the canonical last module of the Quest: you walk away with a plan-repository for your *own* design-automation tool, shaped by the exact same contract CANVA-CODE used when it scored 9.18/10.\n\nStart by choosing values for the seven template variables (from Module 01). Your `PROJECT_NAME` (for example `FigmaAI` or `SketchAssist`). Your `PRIMARY_API` (Figma, Adobe Express, Canva, Sketch — whichever you actually want to build against). Your `SECONDARY_SERVICES` (DALL-E 3, Midjourney, NanoBanana, Stable Diffusion). Your `TARGET_USERS`, `SPEED_TARGET`, `QUALITY_TARGET`, and `ARCHITECTURE_PATTERN` (use the decision matrix from Module 02 — if you will make 3-10 API calls per request, choose `two-agent`).\n\nThen hand those seven values to the pipeline from Module 04. The CANVA-CODE retrospective (DESIGN-TOOL-PLANNER/README.md lines 1-10) is the shape your output will take: a one-line project tagline, a natural-language usage example, a quick-start, and links to the six documents (`PROJECT-OVERVIEW`, `ARCHITECTURE`, `API-INTEGRATION`, `WORKFLOWS`, `README`, `PROJECT-SUMMARY`). In Phase 1 of LUXOR Academy you queue your seven variables in the form below; **150 XP vests the moment you submit**. In Phase 3 the pipeline runs live and returns a permalink to your generated plan repo. Future learners reading this Quest will see *your* tool alongside CANVA-CODE in the examples gallery. That is the sovereignty clause — you own the plan the Academy generated, attribution and all.",
+      "markdown_es": "# Completa las siete variables. Elige un patrón. Lanza un plan.\n\nHas leído la plantilla universal, el patrón de dos agentes, la capa de herramientas MCP y el pipeline de cinco pasos. Ahora te toca a ti. Éste es el módulo canónico final del Quest: te vas con un repositorio de plan para *tu propia* herramienta de automatización de diseño, moldeado por el mismo contrato que CANVA-CODE usó cuando obtuvo 9.18/10.\n\nEmpieza eligiendo valores para las siete variables de la plantilla (del Módulo 01). Tu `PROJECT_NAME` (por ejemplo `FigmaAI` o `SketchAssist`). Tu `PRIMARY_API` (Figma, Adobe Express, Canva, Sketch). Tus `SECONDARY_SERVICES` (DALL-E 3, Midjourney, NanoBanana, Stable Diffusion). Tus `TARGET_USERS`, `SPEED_TARGET`, `QUALITY_TARGET` y `ARCHITECTURE_PATTERN` (usa la matriz de decisión del Módulo 02 — si harás de 3 a 10 llamadas por petición, elige `two-agent`).\n\nLuego entrega esas siete variables al pipeline del Módulo 04. En la Fase 1 de LUXOR Academy cargas las variables en el formulario; **150 XP se acreditan al enviar**. En la Fase 3 el pipeline corre en vivo y devuelve un permalink al repositorio de plan generado. Los futuros aprendices verán *tu* herramienta junto a CANVA-CODE. Esa es la cláusula de soberanía — eres dueño del plan que la Academia generó, con tu atribución.",
+      "word_count": 278,
+      "key_insight": "The Quest ends with your repo, not a badge. Seven variables in; a plan repo out. Future learners browse your project in the examples gallery, permalinked to your name.",
+      "key_insight_es": "El Quest termina con tu repositorio, no con una insignia. Siete variables entran; un repositorio de plan sale. Futuros aprendices verán tu proyecto con tu atribución."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/cuboctahedron.svg",
+      "alt": "A flow diagram: on the left, a seven-slot input form lists PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, TARGET_USERS, SPEED_TARGET, QUALITY_TARGET, ARCHITECTURE_PATTERN with example fills (FigmaAI, Figma REST API, DALL-E 3, product designers, < 30s, 90%+, two-agent). A coral arrow flows into a pipeline gear labeled 'analyze → research → architect → plan → document'. On the right, a stack of six document ribbons (PROJECT-OVERVIEW, ARCHITECTURE, API-INTEGRATION, WORKFLOWS, README, PROJECT-SUMMARY) emerges, bound by a permalink tag stamped with the learner's handle.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/cuboctahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "05-ship-your-own.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner fills in the seven template variables (PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, TARGET_USERS, SPEED_TARGET, QUALITY_TARGET, ARCHITECTURE_PATTERN), reviews the preview of what the five-step pipeline would generate (six-document table of contents), and submits. Phase 1 stores the submission locally for Phase 3 pipeline activation; the submit button is a visual stub in Phase 1 that logs to localStorage under `luxor.academy.shipped.design-tool-planner`.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "README.md",
+      "permalink": "https://github.com/manutej/luxor-design-tool-planner/blob/main/README.md#L1-L15",
+      "excerpt": "# 🎨 CANVA-CODE\n\n**AI-Powered Design Automation | Next-Generation Design Tool**\n\nTransform design workflows with natural language. Create professional designs in < 60 seconds.\n\n```\nDesigner: \"Create an Instagram post for our product launch\"\nCANVA-CODE: ✨ [Professional design ready in 28 seconds]\n```\n\n---\n\n## 🚀 What is CANVA-CODE?\n\nCANVA-CODE is an **AI-powered design automation platform** that combines:\n- **[Claude Agent SDK](https://docs.claude.com/en/docs/agent-sdk)**: Intelligent orchestration\n- **[Canva Connect API](https://www.canva.dev/docs/connect/)**: Professional design infrastructure",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "You are planning a design-automation tool that will make about 5 API calls per generation request (parse intent, fetch template, generate one image, assemble design, export). Per the decision matrix in CLAUDE-SDK-AGENT-BUILDER-GUIDE.md lines 17-31, which ARCHITECTURE_PATTERN should you set?",
+          "options": [
+            "single-agent",
+            "two-agent",
+            "multi-agent"
+          ],
+          "correct": 1,
+          "explanation": "The decision matrix (lines 17-26) and the decision flowchart (lines 730-751) both map 3-10 API calls to `two-agent`. Your case (5 calls) sits squarely in that band, and two-agent carries the only validated quality number (9.5/10 on CANVA-CODE)."
+        },
+        {
+          "prompt": "The CANVA-CODE README.md opens with a one-line tagline and an in/out example before any prose. What is the purpose of that shape (lines 1-10) for the plan repositories this Quest produces?",
+          "options": [
+            "To meet Markdown style-guide requirements",
+            "To demonstrate the natural-language-in / artifact-out contract at a glance, before the reader scrolls",
+            "To list contributors alphabetically"
+          ],
+          "correct": 1,
+          "explanation": "Lines 7-10 of README.md show the shape: `Designer: \"Create an Instagram post...\"` → `CANVA-CODE: ✨ [Professional design ready in 28 seconds]`. That in/out example compresses the entire value proposition into four lines and is the shape every plan-repo produced by this Quest should open with."
+        },
+        {
+          "prompt": "Why is this the canonical last module of the Quest (rather than a summary quiz)?",
+          "options": [
+            "Sovereignty — you leave holding a plan repo of your own, not a score",
+            "Because Quests require an even number of modules",
+            "Because the validator refuses to approve summary quizzes"
+          ],
+          "correct": 0,
+          "explanation": "Per the MERCURIO canonical-last-module pattern used across LUXOR Academy, the final module must hand the learner a permalink to their own artifact — a plan repo, a deployed app, a teachable specimen — not a badge. The Quest trains for the next repo, not for itself."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["01-universal-template", "02-two-agent-pattern", "03-mcp-protocol-layer", "04-five-step-pipeline", "05-ship-your-own"],
+      "ship_your_own": true
+    }
+  }
+}

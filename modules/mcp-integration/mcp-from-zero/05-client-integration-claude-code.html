@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 05 — Wire It Into Claude Code · MCP from Zero · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628; --surface-1:#111D33; --surface-2:#162440; --surface-3:#1C2B47;
+  --primary:#FF4DD8; --primary-soft:#FF8DE6; --accent:#00F5FF;
+  --text:#FFFFFF; --text-dim:#94A3B8; --text-muted:#64748B;
+  --border:rgba(255,77,216,0.22); --border-strong:rgba(255,77,216,0.6);
+  --danger:#FF3B3B; --success:#22C55E;
+  --glow-primary:0 0 16px rgba(255,77,216,0.45);
+  --font-display:'Playfair Display',Georgia,serif; --font-body:'Inter',system-ui,sans-serif; --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:var(--background);background-image:linear-gradient(rgba(255,77,216,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,216,0.025) 1px,transparent 1px);background-size:32px 32px;color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-primary)}
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-primary)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .body{padding:1rem 1rem 0.5rem;min-height:240px;color:#D4E4F7;white-space:pre-wrap;line-height:1.55}
+.sim .out{color:#94A3B8;display:block;margin-bottom:0.3rem}
+.sim .out.good{color:var(--success)}
+.sim .out.bad{color:var(--danger)}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim .controls label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-right:0.4rem}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text)}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .toggle[aria-pressed="true"]{border-color:var(--primary);color:var(--primary);background:rgba(255,77,216,0.1)}
+.sim .activate{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .activate:hover,.sim .activate:focus-visible{background:var(--primary-soft)}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(34,197,94,0.12);color:var(--success);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--success);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-primary)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+@media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Jitterbug Track glyph">
+    <g fill="none" stroke="#FF4DD8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29" opacity="0.35"/>
+      <polygon points="50,18 78,66 22,66"/>
+      <polygon points="50,82 22,34 78,34"/>
+      <circle cx="50" cy="50" r="2" fill="#FF4DD8" stroke="none"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">MCP Integration · MCP from Zero · Module 05 of 06</div>
+    <div class="qname">Wire It Into Claude Code</div>
+  </div>
+  <div class="stats">
+    <span><strong>+150</strong> XP</span>
+    <span><strong>25</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Wire It Into Claude Code</h1>
+<div class="module-subtitle">// Tier: Adept · Source: meta-prompting-plugin/docs/EXAMPLES.md</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Register once; invoke like any other tool</h1>
+  <p>A server is only useful when a client knows how to find it. Claude Code has one command for that — <code>claude mcp add &lt;name&gt; -- &lt;launch-command&gt;</code> — and one config file it writes to: <code>~/.claude.json</code>. The entry stores a human name, the process launch line (often <code>node dist/server.js</code> for TypeScript or <code>python -m my_mcp</code> for Python), and an optional <code>env</code> block for anything secret. That is the whole registration surface.</p>
+  <p>Once registered, the server participates in a Claude Code session exactly the way a <code>/meta → /rmp → /review</code> pipeline does in <code>docs/EXAMPLES.md</code>: the client composes the server's capabilities into the chain. When Claude decides a tool is appropriate, it sends <code>tools/call</code> down the registered transport, receives the typed result, and splices it into the conversation. The wiring is declarative at setup, automatic at runtime.</p>
+  <p>When the transport refuses to speak — and it will, the first time — the debug loop is small and mechanical. Check <code>claude mcp list</code> to confirm the server is registered. Check the process is actually launchable from the exact path in <code>~/.claude.json</code> (absolute paths beat shell aliases every time). Tail the server's stderr while Claude Code boots to catch <code>initialize</code> failures. If the handshake completes but no tools appear, your <code>ListToolsRequestSchema</code> handler is not registered — or your <code>capabilities</code> bag never mentioned <code>tools</code>. Three places to look; one of them is always the cause.</p>
+  <blockquote class="pullquote"><code>claude mcp add</code> is one command that writes one JSON entry into <code>~/.claude.json</code>. When the handshake fails, the cause is almost always the launch path, the capability bag, or the handler registration — in that order.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 540 270" role="img" aria-label="A Claude Code window on the left. An arrow labelled claude mcp add writes into a central ~/.claude.json box. A second arrow from that entry launches a subprocess representing the MCP server, linked back to the Claude Code window by a bidirectional stdio pipe." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:12px;fill:#FF4DD8}
+          .box{fill:#111D33;stroke:#FF4DD8;stroke-opacity:0.45}
+          .boxok{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.55}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.4}
+          .mono{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#D4E4F7}
+          .fail{fill:#FF3B3B;font-family:'JetBrains Mono',monospace;font-size:9px}
+        </style>
+        <marker id="m5" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/></marker>
+      </defs>
+
+      <rect class="box" x="10" y="20" width="140" height="80" rx="4"/>
+      <text class="head" x="22" y="40">CLAUDE CODE</text>
+      <text class="label" x="22" y="58">session</text>
+      <text class="mono" x="22" y="80">/meta → /rmp → /review</text>
+
+      <rect class="boxok" x="200" y="20" width="140" height="80" rx="4"/>
+      <text class="head" x="212" y="40">~/.claude.json</text>
+      <text class="mono" x="212" y="58">"mcpServers": {</text>
+      <text class="mono" x="212" y="72">  "my-server": {</text>
+      <text class="mono" x="212" y="86">    "command": "node", ...</text>
+
+      <rect class="box" x="390" y="20" width="140" height="80" rx="4"/>
+      <text class="head" x="402" y="40">MCP SERVER</text>
+      <text class="mono" x="402" y="58">node dist/server.js</text>
+      <text class="label" x="402" y="80">stdio subprocess</text>
+
+      <path class="arrow" d="M150 55 L195 55" marker-end="url(#m5)"/>
+      <text class="label" x="155" y="48">claude mcp add</text>
+
+      <path class="arrow" d="M340 55 L385 55" marker-end="url(#m5)"/>
+      <text class="label" x="350" y="48">launch</text>
+
+      <path class="arrow" stroke-dasharray="4 3" d="M80 100 C200 175 300 175 460 100"/>
+      <text class="label" x="220" y="190">bidirectional stdio · JSON-RPC frames</text>
+
+      <rect class="box" x="40" y="215" width="460" height="45" rx="4"/>
+      <text class="head" x="52" y="232">DEBUG — three places to look when handshake fails:</text>
+      <text class="fail" x="52" y="250">1. wrong launch path  ·  2. missing tools capability  ·  3. unregistered handler</text>
+    </svg>
+    <p class="visual-caption">One command; one config line; one subprocess. When it refuses to speak, the fault is nearly always one of three.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Register &amp; Invoke</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Click <strong style="color:var(--primary)">register</strong> to simulate <code>claude mcp add</code> writing to <code>~/.claude.json</code>, then click <strong style="color:var(--primary)">invoke</strong> to send a <code>tools/call</code>. Toggle the <code>tools</code> capability off and invoke again to see the mismatch failure mode. <em>Pure DOM — no shell, no network.</em></p>
+  <div class="sim" role="region" aria-label="Claude Code registration simulator">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>claude code · mcp inspector</span>
+      <span class="state" id="simstate">unregistered · tools=ON</span>
+    </div>
+    <div class="body" id="simbody"></div>
+    <div class="controls">
+      <label>Server caps:</label>
+      <button class="cmd toggle" type="button" data-cap="tools" aria-pressed="true" id="capTools">tools</button>
+      <button class="activate" type="button" id="regBtn">register</button>
+      <button class="activate" type="button" id="invokeBtn" disabled>invoke tool</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you observed both the accepted and the capability-mismatch path.</div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">docs/EXAMPLES.md · lines 1–21</span>
+      <a href="https://github.com/manutej/meta-prompting-plugin/blob/main/docs/EXAMPLES.md#L1-L21" target="_blank" rel="noopener noreferrer">view on github →</a>
+    </div>
+<pre><code># Examples
+
+Real recipes that use the five commands together.
+
+---
+
+## 1. Ship a feature end-to-end
+
+**Goal:** implement a feature, iterate until good, then review before merge.
+
+```
+/chain [/meta→/rmp→/review] @quality:0.9 "add rate limiting to /api/login with exponential backoff"
+```
+
+- `/meta` picks a strategy based on complexity (likely L4 — algorithm + integration).
+- `/rmp` iterates until the implementation scores ≥ 0.9 on the quality rubric.
+- `/review` does a final safety pass.
+
+Chain quality rule: `min(q_meta, q_rmp, q_review)` — weakest link gates the output.</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="0" id="q1">
+    <div class="q">1 — Which single CLI command registers an MCP server with Claude Code?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>claude mcp add &lt;name&gt; -- &lt;launch-command&gt;</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>npm install -g @anthropic-ai/mcp-register</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>claude config --add-server</code></span></button>
+    </div>
+    <div class="explanation">The command writes an entry into <code>~/.claude.json</code>'s <code>mcpServers</code> map and records the launch line Claude Code should spawn on startup.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — In <code>docs/EXAMPLES.md</code> §1, the <code>/chain</code> quality rule is <code>min(q_meta, q_rmp, q_review)</code>. Why is that the right gate for a client-integrated MCP server too?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Because <code>min(...)</code> makes the pipeline run faster.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Because Claude Code never retries a failed tool call.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>A sequential pipeline is only as good as its weakest stage; any failing leg short-circuits the compose.</span></button>
+    </div>
+    <div class="explanation">EXAMPLES.md line 19: <code>weakest link gates the output</code>. For MCP-integrated chains, a broken handshake or missing capability is a weak link that must gate the whole pipeline.</div>
+  </div>
+
+  <div class="question" data-correct="1" id="q3">
+    <div class="q">3 — Claude Code completed <code>initialize</code> but no tools appear when the model asks for them. Which of these is NOT a plausible cause?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>The server's <code>capabilities</code> bag omits <code>tools</code>.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>~/.claude.json</code> is missing.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>ListToolsRequestSchema</code> was never registered.</span></button>
+    </div>
+    <div class="explanation">If <code>~/.claude.json</code> were missing the handshake would never have happened. The real causes are capability-bag omission, handler not registered, or handler returning an empty array.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="04-your-first-server.html">
+      <span class="label">← previous</span>
+      <span class="title">04 · Your First MCP Server</span>
+    </a>
+    <a href="06-ship-your-own.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">06 · Ship Your Own MCP Server</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+(function(){
+  const body = document.getElementById('simbody');
+  const state = document.getElementById('simstate');
+  const regBtn = document.getElementById('regBtn');
+  const invokeBtn = document.getElementById('invokeBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const capTools = document.getElementById('capTools');
+  const successPill = document.getElementById('successPill');
+  let registered = false;
+  let toolsOn = true;
+  const seen = { ok: false, mismatch: false };
+
+  function refreshState(){
+    state.textContent = (registered ? 'registered' : 'unregistered') + ' · tools=' + (toolsOn ? 'ON' : 'OFF');
+  }
+
+  function line(html, cls){
+    const el = document.createElement('div');
+    el.className = 'out' + (cls ? ' ' + cls : '');
+    el.innerHTML = html;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function register(){
+    line('$ claude mcp add my-server -- node /abs/path/dist/server.js');
+    line('→ writing entry to ~/.claude.json :: "mcpServers.my-server"', 'good');
+    line('{');
+    line('  "mcpServers": {');
+    line('    "my-server": {');
+    line('      "command": "node",');
+    line('      "args": ["/abs/path/dist/server.js"]');
+    line('    }');
+    line('  }');
+    line('}', 'good');
+    registered = true;
+    regBtn.disabled = true;
+    invokeBtn.disabled = false;
+    refreshState();
+  }
+
+  function invoke(){
+    line('$ /invoke my-server.analyze { "input": "hello" }');
+    if (toolsOn) {
+      line('← { "content": [ { "type": "text", "text": "Analyzed: hello" } ] }', 'good');
+      seen.ok = true;
+    } else {
+      line('← { "error": { "code": -32601, "message": "Method not found: tools/call (capability not declared)" } }', 'bad');
+      line('debug: check ~/.claude.json · capability bag · handler registration', 'bad');
+      seen.mismatch = true;
+    }
+    if (seen.ok && seen.mismatch) {
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.mcp-from-zero.05', '1'); } catch(e){}
+    }
+  }
+
+  function reset(){
+    registered = false; toolsOn = true;
+    seen.ok = false; seen.mismatch = false;
+    body.innerHTML = '';
+    regBtn.disabled = false;
+    invokeBtn.disabled = true;
+    capTools.setAttribute('aria-pressed', 'true');
+    successPill.classList.remove('visible');
+    refreshState();
+    seed();
+  }
+
+  function seed(){
+    line('# 1) register with `claude mcp add`   2) invoke   3) toggle `tools` cap, invoke again');
+  }
+
+  capTools.addEventListener('click', () => {
+    toolsOn = !toolsOn;
+    capTools.setAttribute('aria-pressed', toolsOn ? 'true' : 'false');
+    refreshState();
+  });
+  regBtn.addEventListener('click', register);
+  invokeBtn.addEventListener('click', invoke);
+  resetBtn.addEventListener('click', reset);
+  refreshState();
+  seed();
+})();
+
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) c.classList.add('correct');
+        else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

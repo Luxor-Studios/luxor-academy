@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "05-client-integration-claude-code",
+    "version": "v0.1.0",
+    "track": "mcp-integration",
+    "quest": "mcp-from-zero",
+    "title": "Wire It Into Claude Code",
+    "xp_reward": 150,
+    "estimated_minutes": 25,
+    "tier": "Adept",
+    "license": "MIT",
+    "source_repo": "https://github.com/manutej/meta-prompting-plugin"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Register once; invoke like any other tool\n\nA server is only useful when a client knows how to find it. Claude Code has one command for that — `claude mcp add <name> -- <launch-command>` — and one config file it writes to: `~/.claude.json`. The entry stores a human name, the process launch line (often `node dist/server.js` for TypeScript or `python -m my_mcp` for Python), and an optional `env` block for anything secret. That is the whole registration surface.\n\nOnce registered, the server participates in a Claude Code session exactly the way a `/meta → /rmp → /review` pipeline does in `docs/EXAMPLES.md`: the client composes the server's capabilities into the chain. When Claude decides a tool is appropriate, it sends `tools/call` down the registered transport, receives the typed result, and splices it into the conversation. The wiring is declarative at setup, automatic at runtime.\n\nWhen the transport refuses to speak — and it will, the first time — the debug loop is small and mechanical. Check `claude mcp list` to confirm the server is registered. Check the process is actually launchable from the exact path in `~/.claude.json` (absolute paths beat shell aliases every time). Tail the server's stderr while Claude Code boots to catch `initialize` failures. If the handshake completes but no tools appear, your `ListToolsRequestSchema` handler is not registered — or your `capabilities` bag never mentioned `tools`. Three places to look; one of them is always the cause.",
+      "word_count": 242,
+      "key_insight": "`claude mcp add` is one command that writes one JSON entry into `~/.claude.json`. When the handshake fails, the cause is almost always the launch path, the capability bag, or the handler registration — in that order."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/jitterbug.svg",
+      "alt": "A Claude Code window on the left with a conversation panel. An arrow labelled `claude mcp add my-server -- node dist/server.js` writes into a central `~/.claude.json` box showing a `mcpServers` entry. A second arrow from that entry launches a subprocess on the right representing the MCP server, linked back to the Claude Code window by a bidirectional stdio pipe carrying JSON-RPC frames. A small debug panel underneath lists three failure modes: wrong launch path, missing tools capability, unregistered handler.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/jitterbug.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "05-client-integration-claude-code.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner types `claude mcp add my-server -- node dist/server.js` into the simulator, sees the generated `~/.claude.json` patch, then simulates a session by clicking `invoke tool`. If the learner intentionally introduces a capability mismatch (toggle `tools` off), the simulator shows the resulting `method not found` error; after re-enabling `tools`, the invocation succeeds. The success pill appears once both the success and the failure path have been observed.",
+      "interactive_kind_is_static_readable_in_phase_1": false
+    },
+    "artifact": {
+      "source_path": "docs/EXAMPLES.md",
+      "permalink": "https://github.com/manutej/meta-prompting-plugin/blob/main/docs/EXAMPLES.md#L1-L21",
+      "excerpt": "# Examples\n\nReal recipes that use the five commands together.\n\n---\n\n## 1. Ship a feature end-to-end\n\n**Goal:** implement a feature, iterate until good, then review before merge.\n\n```\n/chain [/meta→/rmp→/review] @quality:0.9 \"add rate limiting to /api/login with exponential backoff\"\n```\n\n- `/meta` picks a strategy based on complexity (likely L4 — algorithm + integration).\n- `/rmp` iterates until the implementation scores ≥ 0.9 on the quality rubric.\n- `/review` does a final safety pass.\n\nChain quality rule: `min(q_meta, q_rmp, q_review)` — weakest link gates the output.",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Which single CLI command registers an MCP server with Claude Code?",
+          "correct": 0,
+          "explanation": "`claude mcp add <name> -- <launch-command>` — it writes an entry into `~/.claude.json`'s `mcpServers` map and records the launch line Claude Code should spawn on startup. There is no separate config-editing step."
+        },
+        {
+          "prompt": "In `docs/EXAMPLES.md` §1, the `/chain` quality rule is `min(q_meta, q_rmp, q_review)`. Why is that the right gate for a client-integrated MCP server too?",
+          "correct": 2,
+          "explanation": "A sequential pipeline is only as good as its weakest stage. For an MCP-integrated chain, any failing leg (server unreachable, handshake error, tool rejection) should short-circuit the whole compose; `min(...)` is the quality semantic that enforces exactly that. EXAMPLES.md line 19 spells this out: `weakest link gates the output`."
+        },
+        {
+          "prompt": "Claude Code completed `initialize` but no tools appear when the model asks for them. Which of these is NOT a plausible cause?",
+          "correct": 1,
+          "explanation": "The transport is fine — `initialize` already confirmed that. The three real causes are: (a) the server's `capabilities` bag omits `tools`, (b) `ListToolsRequestSchema` was never registered, (c) the handler returns an empty array. `~/.claude.json` being missing would have prevented the handshake from happening at all."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "06-ship-your-own",
+      "siblings": ["01-two-layer-protocol", "02-capability-negotiation", "03-three-primitives", "04-your-first-server", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

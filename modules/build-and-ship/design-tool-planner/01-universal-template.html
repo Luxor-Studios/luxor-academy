@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 01 — The Universal Template · Design-Tool Planner · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#FF7E6B;
+  --primary-soft:#FFA595;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(255,126,107,0.22);
+  --border-strong:rgba(255,126,107,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-coral:0 0 16px rgba(255,126,107,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(255,126,107,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,126,107,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-coral)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+.tform{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.tform .col{display:flex;flex-direction:column;gap:0.6rem}
+.tform h3{font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.25rem}
+.tform label{display:flex;flex-direction:column;gap:0.25rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);letter-spacing:0.06em}
+.tform label .k{color:var(--primary-soft)}
+.tform input,.tform select{background:var(--surface-3);border:1px solid var(--border);color:var(--text);padding:0.45rem 0.6rem;font-family:var(--font-mono);font-size:0.82rem;border-radius:4px;transition:border-color 150ms}
+.tform input:focus,.tform select:focus{outline:none;border-color:var(--accent)}
+.tform .yaml{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;padding:0.9rem 1rem;font-family:var(--font-mono);font-size:0.78rem;line-height:1.55;color:#D4E4F7;white-space:pre-wrap;min-height:260px;box-shadow:var(--glow-coral)}
+.tform .yaml .k{color:var(--primary-soft)}
+.tform .yaml .v{color:var(--accent)}
+.tform .yaml .c{color:var(--text-muted)}
+@media (max-width:620px){.tform{grid-template-columns:1fr}}
+
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-coral)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Cuboctahedron Track glyph">
+    <g fill="none" stroke="#FF7E6B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29"/>
+      <polygon points="50,32 68,50 32,50"/>
+      <polygon points="50,68 32,50 68,50"/>
+      <line x1="50" y1="8" x2="50" y2="32"/>
+      <line x1="86" y1="29" x2="68" y2="50"/>
+      <line x1="86" y1="71" x2="68" y2="50"/>
+      <line x1="50" y1="92" x2="50" y2="68"/>
+      <line x1="14" y1="71" x2="32" y2="50"/>
+      <line x1="14" y1="29" x2="32" y2="50"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Build &amp; Ship · Design-Tool Planner · Module 01 of 05</div>
+    <div class="qname">The Universal Template</div>
+  </div>
+  <div class="stats">
+    <span><strong>+100</strong> XP</span>
+    <span><strong>15</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">The Universal Template</h1>
+<div class="module-subtitle">// Tier: Initiate · Source: DESIGN-TOOL-PLANNER/UNIVERSAL-TEMPLATE-README.md</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>One template, any visual API, any AI generator</h1>
+  <p>The Universal Design Tool Planning Template is not a Canva workflow wearing a disguise. It is a <strong>meta-pattern</strong> — a shape you fill in with your own API names, your own quality targets, and your own user personas. <code>UNIVERSAL-TEMPLATE-README.md</code> calls out the move in its second paragraph: the same five-step pipeline (<code>analyze → research → architect → plan → document</code>) applies whether you are wiring Claude to Figma plus DALL-E, to Sketch plus Stable Diffusion, or to Adobe Express plus Midjourney. The APIs change. The skeleton does not.</p>
+  <p>The skeleton is parameterised by <strong>seven variables</strong>. Four are required (<code>PROJECT_NAME</code>, <code>PRIMARY_API</code>, <code>SECONDARY_SERVICES</code>, <code>TARGET_USERS</code>) and three are optional with defaults (<code>SPEED_TARGET: &lt; 30s</code>, <code>QUALITY_TARGET: 90%+</code>, <code>ARCHITECTURE_PATTERN: two-agent</code>). Pick values that describe your project, and the workflow produces the same six documents every time: <code>PROJECT-OVERVIEW.md</code>, <code>ARCHITECTURE.md</code>, <code>API-INTEGRATION.md</code>, <code>WORKFLOWS.md</code>, <code>README.md</code>, <code>PROJECT-SUMMARY.md</code>.</p>
+  <p>Why does this matter? Because the costly part of planning a design-automation tool is not choosing the API — it is <em>structuring</em> the decision. The template freezes the structure so you can spend your thinking on the variables that actually vary. The CANVA-CODE validation run proved the shape: 22 minutes, 9.18/10 average quality, 91% token efficiency, 3,822 lines of implementation-ready docs. Swap in Figma and DALL-E and you get the same shape.</p>
+  <blockquote class="pullquote">The APIs change. The skeleton does not. Seven variables parameterize every design-automation project; the five-step pipeline is universal.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 320" role="img" aria-label="A diagram showing the universal template as a cuboctahedron frame with seven labeled vertices feeding into a five-step pipeline bar that emits six stacked document rectangles." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#94A3B8}
+          .hd{font-family:'Playfair Display',serif;font-size:13px;fill:#FF7E6B}
+          .vx{fill:#FFA595}
+          .line{stroke:#FF7E6B;stroke-opacity:0.5;stroke-width:1;fill:none}
+          .pipe{fill:#111D33;stroke:#FF7E6B;stroke-opacity:0.6}
+          .step{fill:#162440;stroke:#FF7E6B;stroke-opacity:0.5}
+          .doc{fill:#1C2B47;stroke:#00F5FF;stroke-opacity:0.5}
+          .arr{stroke:#00F5FF;fill:none;stroke-width:1.5}
+        </style>
+        <marker id="a1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+      </defs>
+
+      <text class="hd" x="20" y="20">SEVEN VARIABLES</text>
+      <polygon class="line" points="90,50 140,35 180,55 180,95 140,115 90,95" fill="#111D33"/>
+      <circle class="vx" cx="135" cy="38" r="2.5"/>
+      <text class="lbl" x="90" y="30">PROJECT_NAME</text>
+      <circle class="vx" cx="185" cy="55" r="2.5"/>
+      <text class="lbl" x="188" y="52">PRIMARY_API</text>
+      <circle class="vx" cx="185" cy="95" r="2.5"/>
+      <text class="lbl" x="188" y="98">SECONDARY_SERVICES</text>
+      <circle class="vx" cx="135" cy="112" r="2.5"/>
+      <text class="lbl" x="90" y="128">TARGET_USERS</text>
+      <circle class="vx" cx="85" cy="95" r="2.5"/>
+      <text class="lbl" x="20" y="98" text-anchor="start">SPEED_TARGET</text>
+      <circle class="vx" cx="85" cy="55" r="2.5"/>
+      <text class="lbl" x="20" y="58">QUALITY_TARGET</text>
+      <circle class="vx" cx="135" cy="75" r="2.5"/>
+      <text class="lbl" x="140" y="78">ARCH_PATTERN</text>
+
+      <path class="arr" d="M 200 75 L 225 75" marker-end="url(#a1)"/>
+
+      <text class="hd" x="235" y="20">FIVE-STEP PIPELINE</text>
+      <rect class="pipe" x="230" y="35" width="310" height="80" rx="5"/>
+      <rect class="step" x="238" y="48" width="56" height="56" rx="3"/>
+      <text class="lbl" x="266" y="72" text-anchor="middle">01</text>
+      <text class="lbl" x="266" y="88" text-anchor="middle">analyze</text>
+      <rect class="step" x="298" y="48" width="56" height="56" rx="3"/>
+      <text class="lbl" x="326" y="72" text-anchor="middle">02</text>
+      <text class="lbl" x="326" y="88" text-anchor="middle">research</text>
+      <rect class="step" x="358" y="48" width="56" height="56" rx="3"/>
+      <text class="lbl" x="386" y="72" text-anchor="middle">03</text>
+      <text class="lbl" x="386" y="88" text-anchor="middle">architect</text>
+      <rect class="step" x="418" y="48" width="56" height="56" rx="3"/>
+      <text class="lbl" x="446" y="72" text-anchor="middle">04</text>
+      <text class="lbl" x="446" y="88" text-anchor="middle">plan</text>
+      <rect class="step" x="478" y="48" width="56" height="56" rx="3"/>
+      <text class="lbl" x="506" y="72" text-anchor="middle">05</text>
+      <text class="lbl" x="506" y="88" text-anchor="middle">document</text>
+
+      <path class="arr" d="M 280 140 L 280 170" marker-end="url(#a1)"/>
+
+      <text class="hd" x="20" y="165">SIX DOCUMENTS OUT</text>
+      <rect class="doc" x="40" y="180" width="160" height="20" rx="2"/>
+      <text class="lbl" x="50" y="194">PROJECT-OVERVIEW.md</text>
+      <rect class="doc" x="40" y="205" width="160" height="20" rx="2"/>
+      <text class="lbl" x="50" y="219">ARCHITECTURE.md</text>
+      <rect class="doc" x="40" y="230" width="160" height="20" rx="2"/>
+      <text class="lbl" x="50" y="244">API-INTEGRATION.md</text>
+      <rect class="doc" x="210" y="180" width="160" height="20" rx="2"/>
+      <text class="lbl" x="220" y="194">WORKFLOWS.md</text>
+      <rect class="doc" x="210" y="205" width="160" height="20" rx="2"/>
+      <text class="lbl" x="220" y="219">README.md</text>
+      <rect class="doc" x="210" y="230" width="160" height="20" rx="2"/>
+      <text class="lbl" x="220" y="244">PROJECT-SUMMARY.md</text>
+
+      <text class="lbl" x="280" y="280" text-anchor="middle">Validated: 22 min · 9.18/10 avg · 3,822 lines out (CANVA-CODE)</text>
+    </svg>
+    <p class="visual-caption">Fallback: static diagram. Seven inputs into five stages, six outputs out. No animation required.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Fill the Seven Variables</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Edit the fields on the left. The YAML config on the right updates live to match the shape in <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">UNIVERSAL-TEMPLATE-README.md</code> lines 287-322. <em>No network. No submission. Pure DOM.</em></p>
+  <div class="tform" role="region" aria-label="Template variable form">
+    <div class="col">
+      <h3>Required</h3>
+      <label><span class="k">PROJECT_NAME</span><input id="v_name" type="text" value="FigmaAI"></label>
+      <label><span class="k">PRIMARY_API</span>
+        <select id="v_api">
+          <option>Figma REST API</option>
+          <option>Canva Connect API</option>
+          <option>Adobe Express API</option>
+          <option>Sketch API</option>
+        </select>
+      </label>
+      <label><span class="k">SECONDARY_SERVICES</span>
+        <select id="v_ai">
+          <option>DALL-E 3</option>
+          <option>NanoBanana</option>
+          <option>Midjourney</option>
+          <option>Stable Diffusion</option>
+        </select>
+      </label>
+      <label><span class="k">TARGET_USERS</span><input id="v_users" type="text" value="product designers"></label>
+      <h3 style="margin-top:0.75rem">Optional (with defaults)</h3>
+      <label><span class="k">SPEED_TARGET</span>
+        <select id="v_speed">
+          <option>&lt; 30s</option>
+          <option>&lt; 15s</option>
+          <option>&lt; 60s</option>
+        </select>
+      </label>
+      <label><span class="k">QUALITY_TARGET</span>
+        <select id="v_quality">
+          <option>90%+</option>
+          <option>85%+</option>
+          <option>95%+</option>
+          <option>99%+</option>
+        </select>
+      </label>
+      <label><span class="k">ARCHITECTURE_PATTERN</span>
+        <select id="v_arch">
+          <option>two-agent</option>
+          <option>single-agent</option>
+          <option>multi-agent</option>
+        </select>
+      </label>
+    </div>
+    <div class="col">
+      <h3>Rendered YAML</h3>
+      <div class="yaml" id="yamlOut" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">UNIVERSAL-TEMPLATE-README.md · lines 287–322</span>
+      <a href="https://github.com/manutej/luxor-design-tool-planner/blob/main/UNIVERSAL-TEMPLATE-README.md#L287-L322" target="_blank" rel="noopener noreferrer">view on github →</a>
+    </div>
+<pre><code>### Required Variables
+
+```yaml
+PROJECT_NAME: "Your project name"
+  # Examples: "FigmaAI", "CanvaBot", "SketchAssist"
+
+PRIMARY_API: "Your main visual API"
+  # Options: Canva, Figma, Adobe Express, Sketch, InVision, Miro
+  # Determines: Visual scaffolding capabilities
+
+SECONDARY_SERVICES: "Your AI generation service(s)"
+  # Options: NanoBanana, DALL-E, Midjourney, Stable Diffusion, Leonardo.ai
+  # Determines: Image/icon/design generation quality and speed
+
+TARGET_USERS: "Your designer personas"
+  # Examples: product designers, marketing teams, content creators, freelancers
+  # Determines: Workflow design and success metrics
+```
+
+### Optional Variables
+
+```yaml
+SPEED_TARGET: "Your performance goal"
+  # Default: &lt; 30s
+  # Options: &lt; 15s (fast), &lt; 30s (balanced), &lt; 60s (quality)
+
+QUALITY_TARGET: "Your quality threshold"
+  # Default: 90%+
+  # Options: 85%+ (draft), 90%+ (production), 95%+ (premium), 99%+ (enterprise)
+
+ARCHITECTURE_PATTERN: "Your agent design"
+  # Default: two-agent
+  # Options: single-agent, two-agent, multi-agent
+```</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — Per UNIVERSAL-TEMPLATE-README.md, which four template variables are marked <strong>Required</strong> (as opposed to optional with defaults)?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, SPEED_TARGET</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, TARGET_USERS</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>PRIMARY_API, SECONDARY_SERVICES, SPEED_TARGET, QUALITY_TARGET</span></button>
+    </div>
+    <div class="explanation">UNIVERSAL-TEMPLATE-README.md §Required Variables (lines 287-302) lists exactly four: PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, TARGET_USERS. SPEED_TARGET, QUALITY_TARGET, and ARCHITECTURE_PATTERN are listed in §Optional Variables (lines 304-321) with documented defaults.</div>
+  </div>
+
+  <div class="question" data-correct="1" id="q2">
+    <div class="q">2 — What is the documented default for <code>SPEED_TARGET</code> when a project does not override it?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>&lt; 15s</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>&lt; 30s</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>&lt; 60s</span></button>
+      <button class="choice" type="button" data-i="3"><span class="idx">D</span><span>&lt; 2min</span></button>
+    </div>
+    <div class="explanation">UNIVERSAL-TEMPLATE-README.md line 308 specifies <code># Default: &lt; 30s</code> for SPEED_TARGET. The fast (&lt; 15s) and quality (&lt; 60s) options are alternatives, not defaults.</div>
+  </div>
+
+  <div class="question" data-correct="1" id="q3">
+    <div class="q">3 — The template's core five-step pipeline, as stated in UNIVERSAL-TEMPLATE-README.md line 22, is:</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>research → analyze → design → build → ship</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>analyze → research → architect → plan → document</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>plan → prototype → test → iterate → deploy</span></button>
+    </div>
+    <div class="explanation">UNIVERSAL-TEMPLATE-README.md §Core Pattern (line 22) shows the exact sequence: <code>[analyze-task-space] → [research-apis] → [design-architecture] → [plan-workflows] → [document-everything]</code>. This is the universal spine regardless of which APIs are plugged in.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="#" aria-disabled="true" style="opacity:0.4;pointer-events:none">
+      <span class="label">← previous</span>
+      <span class="title">—</span>
+    </a>
+    <a href="02-two-agent-pattern.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">02 · The Two-Agent Pattern</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* Live YAML renderer — pure DOM, no eval, no network */
+(function(){
+  const ids = ['v_name','v_api','v_ai','v_users','v_speed','v_quality','v_arch'];
+  const out = document.getElementById('yamlOut');
+  const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  function render(){
+    const n = document.getElementById('v_name').value || 'YourProject';
+    const api = document.getElementById('v_api').value;
+    const ai = document.getElementById('v_ai').value;
+    const u = document.getElementById('v_users').value || 'designers';
+    const s = document.getElementById('v_speed').value;
+    const q = document.getElementById('v_quality').value;
+    const a = document.getElementById('v_arch').value;
+    const html =
+      '<span class="c"># Generated from the seven template variables</span>\n' +
+      '<span class="k">PROJECT_NAME</span>: <span class="v">"' + esc(n) + '"</span>\n' +
+      '<span class="k">PRIMARY_API</span>: <span class="v">"' + esc(api) + '"</span>\n' +
+      '<span class="k">SECONDARY_SERVICES</span>: <span class="v">"' + esc(ai) + '"</span>\n' +
+      '<span class="k">TARGET_USERS</span>: <span class="v">"' + esc(u) + '"</span>\n' +
+      '<span class="c"># Optional (defaults shown):</span>\n' +
+      '<span class="k">SPEED_TARGET</span>: <span class="v">"' + esc(s) + '"</span>\n' +
+      '<span class="k">QUALITY_TARGET</span>: <span class="v">"' + esc(q) + '"</span>\n' +
+      '<span class="k">ARCHITECTURE_PATTERN</span>: <span class="v">' + esc(a) + '</span>\n\n' +
+      '<span class="c"># Hand this config to: /orch --workflow design-tool-planning</span>';
+    out.innerHTML = html;
+    try { localStorage.setItem('luxor.academy.interactive.design-tool-planner.01', JSON.stringify({n,api,ai,u,s,q,a})); } catch(e){}
+  }
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', render);
+    el.addEventListener('change', render);
+  });
+  render();
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    let allCorrect = 0, total = document.querySelectorAll('.question').length;
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) { c.classList.add('correct'); } else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+        try { localStorage.setItem('luxor.academy.completed.design-tool-planner.01', '1'); } catch(e){}
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

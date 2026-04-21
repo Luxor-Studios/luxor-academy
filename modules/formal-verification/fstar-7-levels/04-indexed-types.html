@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 04 — L4 — Indexed Types · F* in Seven Levels · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#39FF14;
+  --primary-soft:#7FFF5F;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(57,255,20,0.22);
+  --border-strong:rgba(57,255,20,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-green:0 0 16px rgba(57,255,20,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(57,255,20,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,255,20,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-green)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* Top bar */
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+/* Title */
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+/* Sections */
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+/* Primer */
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.primer pre{background:#050B18;border:1px solid var(--border);border-radius:6px;padding:1rem 1.15rem;margin:1rem 0;overflow-x:auto}
+.primer pre code{background:transparent;color:#D4E4F7;border:none;padding:0;font-size:0.85rem;line-height:1.6}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+/* Visual */
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+/* Interactive */
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-green)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .chrome .state.active{color:var(--primary)}
+.sim .chrome .state.fail{color:var(--danger)}
+.sim .body{padding:1rem 1rem 0.5rem;min-height:220px;color:#D4E4F7;white-space:pre-wrap;line-height:1.55}
+.sim .ps1{color:var(--primary);font-weight:600}
+.sim .ps1 .prefix{color:var(--accent)}
+.sim .input{color:#FFFFFF}
+.sim .out{color:#94A3B8;display:block;margin-bottom:0.3rem}
+.sim .out.good{color:var(--primary)}
+.sim .out.bad{color:var(--danger)}
+.sim .out.cite{color:var(--primary-soft);font-style:italic}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim .controls label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-right:0.4rem}
+.sim .controls input[type="text"],.sim .controls input[type="url"]{background:var(--surface-3);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:0.8rem;padding:0.4rem 0.6rem;border-radius:4px;flex:1;min-width:140px}
+.sim .controls input[type="text"]:focus,.sim .controls input[type="url"]:focus{outline:none;border-color:var(--primary);box-shadow:var(--glow-green)}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text);}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .activate{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .activate:hover,.sim .activate:focus-visible{background:var(--primary-soft);color:var(--background)}
+.sim .activate[disabled]{opacity:0.4;cursor:not-allowed}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(57,255,20,0.12);color:var(--primary);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--primary);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+
+/* Artifact */
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+
+/* Self-check */
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--primary);background:rgba(57,255,20,0.1);color:var(--primary)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.explanation code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.88em}
+
+/* Next */
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-green)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Geodesic sphere — F* in Seven Levels glyph">
+    <g fill="none" stroke="#39FF14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="50" cy="50" r="42"/>
+      <ellipse cx="50" cy="50" rx="42" ry="14" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="14" ry="42" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="28" ry="42" opacity="0.55"/>
+      <polygon points="50,8 78,28 68,62 32,62 22,28" opacity="0.85"/>
+      <polygon points="50,92 22,72 32,38 68,38 78,72" opacity="0.85"/>
+      <circle cx="50" cy="8" r="1.4" fill="#39FF14"/>
+      <circle cx="50" cy="92" r="1.4" fill="#39FF14"/>
+      <circle cx="8" cy="50" r="1.4" fill="#39FF14"/>
+      <circle cx="92" cy="50" r="1.4" fill="#39FF14"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Formal Verification · F* in Seven Levels · Module 04 of 07</div>
+    <div class="qname">L4 — Indexed Types</div>
+  </div>
+  <div class="stats">
+    <span><strong>+220</strong> XP</span>
+    <span><strong>35</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">L4 — Indexed Types</h1>
+<div class="module-subtitle">// Tier: Master · Source: fstar-framework · Level 4/7</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Lists indexed by length — non-structural recursion, tamed</h1>
+  <p>Level 4 starts to pay. An <em>indexed</em> type family attaches a value — typically a length, a height, or a phase — to each instance of a data structure, so shape errors fail at the type level. The Week 2 mini-project is the classic example: verified merge sort, whose recursion splits its argument into two halves and is therefore <strong>not structural</strong> on <code>tl</code>. F* cannot guess the metric; you must hand it one.</p>
+  <p>The predicates are indexed by a list. The sortedness check walks pairs:</p>
+  <pre><code class="lang-fstar">let rec sorted (xs:list int) : bool =
+  match xs with
+  | [] -&gt; true
+  | [x] -&gt; true
+  | x :: y :: rest -&gt; x &lt;= y &amp;&amp; sorted (y :: rest)</code></pre>
+  <p>And termination of <code>merge_sort</code> itself relies on the <strong>length-indexed view</strong> of the list. The mini-project spells it out in bold: the recursion is not structural, so you must supply <code>decreases (length xs)</code>. F* then verifies that <code>split</code> produces two strictly-shorter sublists — an obligation on <code>length</code>, not on the list constructor — and closes the proof. The <em>index</em> (length) is the termination metric; the <em>data</em> (the list) is the computational content; F* keeps them separate and synchronised through the type.</p>
+  <p>That is the L4 shift in attitude. At L3 you proved termination of <code>fibonacci</code> on a raw <code>nat</code>. At L4 you prove it on a measure <em>over</em> the data — a function from your structure into a well-founded ordering. The indexed family is the pattern: length-indexed vectors, height-indexed trees, phase-indexed state machines, merge-sort-indexed-by-list-length. Once you can see the index, you can see why the recursion terminates, and F* will see it with you.</p>
+  <blockquote class="pullquote">At L4 the termination metric is a *measure* over the data, not the data itself: <code>decreases (length xs)</code> turns non-structural divide-and-conquer into a termination proof F* can check.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    
+    <svg viewBox="0 0 540 280" role="img" aria-label="merge_sort recursion tree indexed by list length." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#39FF14}
+          .box{fill:#111D33;stroke:#39FF14;stroke-opacity:0.4}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2}
+          .idx{fill:#39FF14;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700}
+        </style>
+      </defs>
+      <text class="head" x="20" y="20">decreases (length xs) — index is the metric</text>
+
+      <rect class="box" x="200" y="30" width="140" height="28" rx="3"/>
+      <text class="label" x="210" y="48">[3;1;4;1;5;9;2;6]</text>
+      <text class="idx" x="315" y="48">_8</text>
+
+      <rect class="box" x="60" y="90" width="130" height="28" rx="3"/>
+      <text class="label" x="70" y="108">[3;4;5;2]</text>
+      <text class="idx" x="170" y="108">_4</text>
+
+      <rect class="box" x="350" y="90" width="130" height="28" rx="3"/>
+      <text class="label" x="360" y="108">[1;1;9;6]</text>
+      <text class="idx" x="460" y="108">_4</text>
+
+      <rect class="box" x="10" y="150" width="80" height="24" rx="3"/>
+      <text class="label" x="20" y="166">[3;5]</text>
+      <text class="idx" x="75" y="166">_2</text>
+
+      <rect class="box" x="110" y="150" width="80" height="24" rx="3"/>
+      <text class="label" x="120" y="166">[4;2]</text>
+      <text class="idx" x="175" y="166">_2</text>
+
+      <rect class="box" x="350" y="150" width="80" height="24" rx="3"/>
+      <text class="label" x="360" y="166">[1;9]</text>
+      <text class="idx" x="415" y="166">_2</text>
+
+      <rect class="box" x="450" y="150" width="80" height="24" rx="3"/>
+      <text class="label" x="460" y="166">[1;6]</text>
+      <text class="idx" x="515" y="166">_2</text>
+
+      <path class="arrow" d="M250 58 L150 90"/>
+      <path class="arrow" d="M290 58 L400 90"/>
+      <path class="arrow" d="M105 118 L50 150"/>
+      <path class="arrow" d="M150 118 L150 150"/>
+      <path class="arrow" d="M400 118 L390 150"/>
+      <path class="arrow" d="M450 118 L485 150"/>
+
+      <text class="label" x="20" y="210">F* proves split xs produces strictly-shorter sublists.</text>
+      <text class="label" x="20" y="226">The index 8 &gt; 4 &gt; 2 &gt; 1 is well-founded.</text>
+      <text class="label" x="20" y="250">At L4 the metric is a measure over data, not the data itself.</text>
+    </svg>
+    <p class="visual-caption">A diagram of merge_sort's recursion tree for the list [3;1;4;1;5;9;2;6]. Each node is annotated with its list length as a subscript — <code>[3;1;4;1;5;9;2;6]_8</code> at the root, branching into <code>[3;4;5;2]_4</code> and <code>[1;1;9;6]_4</code>, which each split again into length-2 and length-1 sublists. An arrow labeled <code>decreases (length xs)</code> runs down the left margin pointing at the shrinking index. A footnote shows the companion predicate <code>sorted (xs:list int) : bool</code> walking adjacent pairs, and notes that <code>split</code> is the function F* must prove produces strictly-shorter sublists.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Pick the `decreases` Metric</h2>
+  
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Pick the correct <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">decreases</code> expression for <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">merge_sort</code>. Only one lets F* verify the non-structural recursion. <em>Static readout — no real F* executes.</em></p>
+  <div class="sim" role="region" aria-label="Decreases-metric picker">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>fstar — merge_sort termination</span>
+      <span class="state" id="simstate">pick a metric</span>
+    </div>
+    <div class="body" id="simbody"></div>
+    <div class="controls">
+      <button class="cmd" type="button" data-metric="xs">decreases xs</button>
+      <button class="cmd" type="button" data-metric="length_xs">decreases (length xs)</button>
+      <button class="cmd" type="button" data-metric="length_xs_plus_1">decreases (length xs + 1)</button>
+      <button class="cmd" type="button" data-metric="none">no clause</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you identified decreases (length xs) as the correct metric.</div>
+
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">exercises/week_02/mini_project_merge_sort.fst</span>
+      <a href="file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/exercises/week_02/mini_project_merge_sort.fst" target="_blank" rel="noopener noreferrer">open source file →</a>
+    </div>
+<pre><code>let rec sorted (xs:list int) : bool =
+  match xs with
+  | [] -&gt; true
+  | [x] -&gt; true
+  | x :: y :: rest -&gt; x &lt;= y &amp;&amp; sorted (y :: rest)
+
+let rec split (#a:Type) (xs:list a) : (list a * list a) =
+  match xs with
+  | [] -&gt; ([], [])
+  | [x] -&gt; ([x], [])
+  | x :: y :: rest -&gt;
+      let (left, right) = split rest in
+      (x :: left, y :: right)
+
+val merge: xs:list int -&gt; ys:list int -&gt; list int
+val merge_sort: xs:list int -&gt; list int
+
+val merge_sorted:
+  xs:list int -&gt; ys:list int -&gt;
+  Lemma (requires sorted xs /\ sorted ys)
+        (ensures sorted (merge xs ys))</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="0" id="q1">
+    <div class="q">1 — The mini-project README says the recursion in <code>merge_sort</code> is NOT structural. What does that mean, and why does it matter for termination?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Structural recursion recurses on an immediate sub-constructor of the input; <code>merge_sort</code> recurses on <code>split xs</code> — a function call, not a constructor — so F* cannot see 'smaller' without an explicit <code>decreases</code> metric.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Structural recursion is a compile flag; <code>merge_sort</code> was compiled without it.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>merge_sort</code> is not structural because it uses polymorphism over <code>#a:Type</code>.</span></button>
+    </div>
+    <div class="explanation">Structural recursion recurses on an immediate sub-constructor of the input — e.g., <code>tl</code> of a <code>hd :: tl</code> match. <code>merge_sort</code> recurses on <code>split xs</code>, which is a function call, not a constructor. F* cannot see 'smaller' just by looking at the pattern, so without an explicit <code>decreases</code> clause over a well-founded measure it refuses to admit the definition into the total effect.</div>
+  </div>
+
+  <div class="question" data-correct="1" id="q2">
+    <div class="q">2 — Which <code>decreases</code> clause does the mini-project tell you to use for <code>merge_sort</code>?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>decreases xs</code> — the list itself.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>decreases (length xs)</code> — the length of the list, with F* verifying <code>split</code> produces strictly-shorter sublists.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>No clause is needed; F* auto-infers termination for divide-and-conquer.</span></button>
+    </div>
+    <div class="explanation">Per the mini_project_merge_sort.fst hint block: 'What metric decreases with each recursive call? Answer: length of the list! Use: decreases (length xs). F* will verify that split produces shorter sublists.' The length of the list is the index that shrinks; the list itself is not.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q3">
+    <div class="q">3 — The lemma <code>merge_sorted</code> is stated with <code>requires sorted xs /\ sorted ys</code> and <code>ensures sorted (merge xs ys)</code>. What role does this lemma play in proving that <code>merge_sort</code> produces sorted output?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>A test fixture that runs during <code>fstar --test</code>.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>A documentation comment formalising the intended behaviour.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>A helper lemma used at the inductive step of the main theorem — after both recursive calls return sorted sublists, <code>merge_sorted</code> is what lets F* conclude that merging them preserves the invariant.</span></button>
+    </div>
+    <div class="explanation">It is a **helper lemma**. The main theorem (<code>merge_sort</code> produces a sorted list) is proved by induction on <code>length xs</code> and uses <code>merge_sorted</code> at the inductive step: after the two recursive calls return sorted sublists, <code>merge_sorted</code> is what lets F* conclude that merging them preserves the invariant. The indexed-family pattern composes: prove per-index invariants, then compose them.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="03-dependent-types.html"><span class="label">← previous</span><span class="title">module 03</span></a>
+    <a href="05-effect-polymorphism.html" class="next"><span class="label">next module →</span><span class="title">05 · L5 · Effect Polymorphism</span></a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* 04-indexed-types interactive — pure DOM, no eval, no network. */
+(function(){
+  const body = document.getElementById('simbody');
+  const state = document.getElementById('simstate');
+  const resetBtn = document.getElementById('resetBtn');
+  const successPill = document.getElementById('successPill');
+  let sawCorrect = false;
+
+  function write(cls, txt){
+    const el = document.createElement('span');
+    el.className = 'out ' + cls;
+    el.textContent = txt;
+    body.appendChild(el);
+  }
+
+  function pick(metric){
+    body.innerHTML = '';
+    const intro = document.createElement('span');
+    intro.className = 'out cite';
+    intro.textContent = '# citation: exercises/week_02/mini_project_merge_sort.fst — decreases hint block';
+    body.appendChild(intro);
+
+    write('out', 'val merge_sort: xs:list int -> list int');
+    switch (metric) {
+      case 'xs':
+        write('bad', 'let rec merge_sort xs   decreases xs   = ...');
+        write('bad', '✗ termination check failed: cannot prove (fst (split xs)) is structurally smaller than xs');
+        state.textContent = 'wrong — split is not a constructor';
+        state.classList.remove('active'); state.classList.add('fail');
+        break;
+      case 'length_xs':
+        write('good', 'let rec merge_sort xs   decreases (length xs)   = ...');
+        write('good', '✓ Tot (list int) — verified');
+        write('good', '    proof obligation: length (fst (split xs)) < length xs   ✓');
+        write('good', '    proof obligation: length (snd (split xs)) < length xs   ✓');
+        state.textContent = 'correct — length is a well-founded measure';
+        state.classList.remove('fail'); state.classList.add('active');
+        sawCorrect = true;
+        break;
+      case 'length_xs_plus_1':
+        write('good', 'let rec merge_sort xs   decreases (length xs + 1)   = ...');
+        write('good', '✓ verified (wasteful: any strictly-decreasing measure works, +1 adds no information)');
+        state.textContent = 'works but wasteful';
+        state.classList.remove('fail'); state.classList.add('active');
+        break;
+      case 'none':
+        write('bad', 'let rec merge_sort xs   (* no clause *)   = ...');
+        write('bad', '✗ termination check failed: no metric supplied — divide-and-conquer is not structural');
+        state.textContent = 'wrong — no metric supplied';
+        state.classList.remove('active'); state.classList.add('fail');
+        break;
+    }
+    checkSuccess();
+  }
+
+  function reset(){
+    body.innerHTML = '';
+    sawCorrect = false;
+    successPill.classList.remove('visible');
+    state.textContent = 'pick a metric';
+    state.classList.remove('active', 'fail');
+    seed();
+  }
+  function seed(){
+    const intro = document.createElement('span');
+    intro.className = 'out cite';
+    intro.textContent = '# click a decreases candidate above to test it';
+    body.appendChild(intro);
+  }
+  function checkSuccess(){
+    if (sawCorrect) {
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.fstar-7-levels.04', '1'); } catch(e){}
+    }
+  }
+
+  document.querySelectorAll('.sim .cmd[data-metric]').forEach(btn => {
+    btn.addEventListener('click', () => pick(btn.dataset.metric));
+  });
+  resetBtn.addEventListener('click', reset);
+  seed();
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) {
+          c.classList.add('correct');
+        } else {
+          c.classList.add('wrong');
+          choices[correct].classList.add('correct');
+        }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+/* XP export (sovereignty clause) */
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

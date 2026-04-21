@@ -1,12 +1,12 @@
 {
   "id": "cmp-foundations",
-  "version": "v0.1.0-draft",
+  "version": "v0.1.0",
   "track": "categorical-meta-prompting",
   "title": "Categorical Meta-Prompting: Foundations",
   "title_es": "Meta-prompting categórico: fundamentos",
   "subtitle": "Objects, morphisms, and composition — meta-prompting as a category you can reason about.",
   "subtitle_es": "Objetos, morfismos y composición — el meta-prompting como una categoría sobre la que se puede razonar.",
-  "tier": "Adept",
+  "tier": "Master",
   "glyph": "icosahedron",
   "glyph_src": "atlas/icons/synergetics/icosahedron.svg",
   "description": "Six modules drawn from the categorical-meta-prompting project, which treats prompts as morphisms and composition operators as first-class mathematical structure. You will install the vocabulary (objects, morphisms, composition), reframe prompts as morphisms between context types, use natural transformations to swap strategies under the hood, pick up the CMP Query Language DSL, meet recursive meta-prompting as a fixed-point operator, and then ship your own composition.",
@@ -18,7 +18,7 @@
     "license": "internal",
     "readme_permalink": null
   },
-  "status": "drafted",
+  "status": "authored",
   "modules_planned": [
     {
       "id": "01-objects-morphisms-composition",
@@ -81,7 +81,16 @@
       "source_hint": "docs/EXAMPLES-LIBRARY.md"
     }
   ],
+  "modules": [
+    "01-objects-morphisms-composition",
+    "02-prompts-as-morphisms",
+    "03-natural-transformations",
+    "04-cmp-query-language",
+    "05-recursive-meta-prompting",
+    "06-ship-your-own-composition"
+  ],
   "module_count": 6,
+  "total_xp": 1150,
   "total_xp_planned": 1150,
   "estimated_minutes": 195,
   "canonical_last_module": "06-ship-your-own-composition",

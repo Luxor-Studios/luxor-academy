@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "04-cmp-query-language",
+    "version": "v0.1.0",
+    "track": "categorical-meta-prompting",
+    "quest": "cmp-foundations",
+    "title": "The CMP Query Language (DSL)",
+    "xp_reward": 200,
+    "estimated_minutes": 35,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/categorical-meta-prompting"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# The DSL that lets you write prompt compositions like Unix pipes\n\nThe `meta-prompting-composition` skill (CMP Query Language) gives you a small, typed DSL for saying *what you want* at a high level and having it compile down, through several layers, to actual LLM calls. At the top layer you write a pipeline like `ASSESS → TRANSFORM → RMP^3 → OUTPUT FOR \"optimize database queries\"`. At the bottom layer, that compiles to `/blocks` (atomic block composition), which compiles to `/meta` / `/rmp` command invocations, which finally execute prompts.\n\nThe grammar is deliberately tiny: a pipeline is a sequence of stages joined by the four categorical operators you already know — `→` (sequence), `||` (parallel), `>=>` (Kleisli, quality-gated), `⊗` (tensor). Stages are either **macros** (uppercase, expand to block compositions: `ASSESS`, `TRANSFORM`, `EXECUTE`, `QUALITY`, `REFINE`, `CONVERGE`, `ITERATE`, `RMP`, `FULL`), **atomic blocks** (lowercase: `assess_difficulty`, `select_tier`, `execute_prompt`, etc.), or parenthesized groups. `ITERATE` expands to `EXECUTE → QUALITY >=> REFINE` — a single RMP iteration — and `RMP^3` repeats that three times.\n\nWhy a DSL instead of hand-written commands? Because composition needs to be *typed* to be trustworthy. The CMP language is parsed, validated against the macro expansion table, and compiled to commands whose categorical laws are already verified. If you write `TRANSFORM → ITERATE^3 FOR \"build robust API\"`, the compiler produces `/rmp @quality:0.8 @max_iterations:3 \"build robust API\"` — and the mathematical guarantee (monad associativity, Kleisli improvement law) propagates from the generated command back up to your pipeline. Unix pipes let you compose `grep | awk | sort`; CMP lets you compose `ASSESS | TRANSFORM | RMP` — with quality algebra instead of byte streams.",
+      "word_count": 275,
+      "key_insight": "CMP is a small typed DSL whose four operators are exactly the four categorical composition operators. High-level macros compile down to verified block pipelines — so the mathematical laws your pipeline inherits come from the compiler, not from your care."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/icosahedron.svg",
+      "alt": "Four-layer compilation stack: LAYER 4 (CMP Query Language, example '/cmp ASSESS → TRANSFORM → RMP^3 → OUTPUT') on top; LAYER 3 (Block Composition, '/blocks [assess_difficulty → assess_domain → select_tier → ... ]') below; LAYER 2 (Command Invocation, '/meta @tier:L4 @mode:active' and '/rmp @quality:0.85 @max_iterations:3') below that; LAYER 1 (Prompt Execution — actual LLM calls) at the bottom. Each layer has a down-arrow labelled compile, expand, execute.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/icosahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "04-cmp-query-language.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner types a CMP query (e.g. `TRANSFORM → ITERATE^3 FOR \"build robust API\"`) into the input field, and the simulator shows the three-stage compilation: (1) macro expansion into a block pipeline, (2) block pipeline into a /meta or /rmp command invocation, (3) the unified syntax with its modifier defaults (@quality:0.8, @max_iterations:3). Toggling a macro name reveals its canonical expansion from the table.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": ".claude/skills/meta-prompting-composition/skill.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/.claude/skills/meta-prompting-composition/skill.md#L53-L95",
+      "excerpt": "cmp_query     ::= pipeline (\"FOR\" task)?\npipeline      ::= stage (operator stage)*\nstage         ::= macro | block | group | iteration\nmacro         ::= MACRO_NAME                          # High-level macros\nblock         ::= BLOCK_NAME (\":\" config)?            # Atomic blocks\ngroup         ::= \"(\" pipeline \")\"                    # Grouping\niteration     ::= stage \"^\" NUMBER                    # Repeat N times\noperator      ::= \"→\" | \"||\" | \">=>\" | \"⊗\"           # Composition operators\n\nMacro Expansion Table:\n  ASSESS    → [assess_difficulty → assess_domain → select_tier]\n  TRANSFORM → [select_strategy → build_template → apply_transform]\n  EXECUTE   → [execute_prompt]\n  QUALITY   → [assess_quality]\n  REFINE    → [extract_improvement → apply_refinement]\n  ITERATE   → [execute_prompt → assess_quality >=> extract_improvement → apply_refinement]\n  RMP^3     → [ITERATE → ITERATE → ITERATE → aggregate_iterations]\n  FULL      → [ASSESS → TRANSFORM → EXECUTE → QUALITY → CONVERGE]",
+      "language": "ebnf"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "According to the CMP macro expansion table, the `ITERATE` macro expands to what sequence of atomic blocks?",
+          "correct": 1,
+          "explanation": "`ITERATE → [execute_prompt → assess_quality >=> extract_improvement → apply_refinement]`. This is the canonical form of a single RMP iteration: execute, then quality-gate (`>=>` Kleisli — only proceed if quality is below threshold), then extract and apply refinement. See `meta-prompting-composition/skill.md §Macro Expansion Table`."
+        },
+        {
+          "prompt": "In the CMP grammar, which operator indicates a quality-gated Kleisli composition that only proceeds if the preceding stage's quality is below threshold?",
+          "correct": 2,
+          "explanation": "`>=>` is the Kleisli operator. Its semantics (from the framework): at each stage, evaluate quality; if below threshold, refine before moving on. Distinct from `→` (plain sequence, no gate), `||` (parallel), and `⊗` (tensor). This is the operator that `ITERATE` uses between `assess_quality` and `extract_improvement → apply_refinement`."
+        },
+        {
+          "prompt": "Why does CMP compile through four layers (Query Language → Blocks → Commands → Prompts) instead of generating LLM prompts directly?",
+          "correct": 0,
+          "explanation": "Because each intermediate layer has independently verified properties. The atomic block layer guarantees the composition laws hold; the command layer guarantees the modifiers (@quality, @tier, @mode) parse correctly; the prompt layer is the only place with LLM non-determinism. Keeping the layers separate means a failure at the LLM layer cannot corrupt the algebraic guarantees above it. It is the same reason Unix pipes do not let `awk` rewrite your shell grammar."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "05-recursive-meta-prompting",
+      "siblings": ["01-objects-morphisms-composition", "02-prompts-as-morphisms", "03-natural-transformations", "05-recursive-meta-prompting", "06-ship-your-own-composition"],
+      "ship_your_own": false
+    }
+  }
+}

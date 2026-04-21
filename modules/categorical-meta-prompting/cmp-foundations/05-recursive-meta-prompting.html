@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 05 — Recursive Meta-Prompting · CMP Foundations · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--background:#0A1628;--surface-1:#111D33;--surface-2:#162440;--surface-3:#1C2B47;--primary:#A78BFA;--primary-soft:#C4B5FD;--accent:#00F5FF;--text:#FFFFFF;--text-dim:#94A3B8;--text-muted:#64748B;--border:rgba(167,139,250,0.22);--border-strong:rgba(167,139,250,0.6);--danger:#FF3B3B;--success:#22C55E;--glow-violet:0 0 16px rgba(167,139,250,0.45);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:var(--background);background-image:linear-gradient(rgba(167,139,250,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,0.025) 1px,transparent 1px);background-size:32px 32px;color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-violet)}
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-violet)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .body{padding:1rem;min-height:220px;color:#D4E4F7;line-height:1.55}
+.sim .row{display:flex;flex-wrap:wrap;gap:0.6rem;align-items:center;margin-bottom:0.7rem}
+.sim label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
+.sim select,.sim input[type=number]{font-family:var(--font-mono);font-size:0.8rem;background:var(--surface-3);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0.35rem 0.6rem;width:90px}
+.sim .output{background:var(--surface-1);border:1px dashed var(--border);border-radius:4px;padding:0.75rem 0.9rem;margin-top:0.6rem;color:var(--primary-soft);font-size:0.82rem;white-space:pre-wrap}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text)}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .go{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .go:hover,.sim .go:focus-visible{background:var(--primary-soft)}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(34,197,94,0.12);color:var(--success);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--success);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18;white-space:pre-wrap}
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-violet)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+@media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Icosahedron Master-tier glyph">
+    <g fill="none" stroke="#A78BFA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 89,36 74,82 26,82 11,36"/><polygon points="50,38 71,50 64,72 36,72 29,50"/>
+      <line x1="50" y1="8" x2="50" y2="38"/><line x1="89" y1="36" x2="71" y2="50"/>
+      <line x1="74" y1="82" x2="64" y2="72"/><line x1="26" y1="82" x2="36" y2="72"/>
+      <line x1="11" y1="36" x2="29" y2="50"/><line x1="50" y1="8" x2="71" y2="50"/>
+      <line x1="50" y1="8" x2="29" y2="50"/><line x1="89" y1="36" x2="64" y2="72"/>
+      <line x1="11" y1="36" x2="36" y2="72"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Categorical Meta-Prompting · CMP Foundations · Module 05 of 06</div>
+    <div class="qname">Recursive Meta-Prompting</div>
+  </div>
+  <div class="stats">
+    <span><strong>+210</strong> XP</span>
+    <span><strong>35</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Recursive Meta-Prompting: The Fixed Point</h1>
+<div class="module-subtitle">// Tier: Master · Source: categorical-meta-prompting/.claude/skills/recursive-meta-prompting/skill.md</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>A prompt that rewrites itself until it stops changing</h1>
+  <p>Recursive Meta-Prompting (RMP) is the framework's name for <em>quality-gated iteration</em>: you start with a prompt <code>p₀</code>, evaluate its quality <code>q₀ ∈ [0,1]</code>, and if <code>q₀</code> is below your threshold θ, you apply an improvement morphism to get <code>p₁</code>, evaluate <code>q₁</code>, and continue. You stop when either <code>qₙ ≥ θ</code> (success) or you hit <code>max_iterations</code> (give up). The categorical reading of this loop is exactly a <strong>fixed-point computation</strong>: you are searching for a <code>p*</code> such that <code>improve(p*) = p*</code> — the prompt that does not change any more, because the quality threshold has been met.</p>
+  <p>Structurally, RMP is the <strong>Monad M</strong> of the framework: <code>M: Prompt →ⁿ Prompt</code>, with <code>return</code> lifting a raw prompt into the refinement context, <code>&gt;&gt;=</code> (bind) chaining an improvement step, and <code>join</code> flattening a nested refinement. The three monad laws — <strong>left identity</strong> (<code>return &gt;=&gt; f = f</code>), <strong>right identity</strong> (<code>f &gt;=&gt; return = f</code>), and <strong>associativity</strong> (<code>(f &gt;=&gt; g) &gt;=&gt; h = f &gt;=&gt; (g &gt;=&gt; h)</code>) — are what guarantee that rearranging the order in which you group refinement stages does not change the final prompt. The <code>recursive-meta-prompting</code> skill notes that all 15 of its monad-law tests pass.</p>
+  <p>There is a second structure here: <strong>Comonad W</strong>, which handles the <em>history</em> half of the loop. <code>extract: W(a) → a</code> returns the current best prompt; <code>duplicate: W(a) → W(W(a))</code> gives you the history-of-histories so you can observe <em>why</em> quality plateaued; <code>extend: (W(a) → b) → W(a) → W(b)</code> applies a history-aware refinement. The monad writes forward; the comonad reads backward. Together they give RMP its two essential moves: refine with memory, converge on a fixed point. That is exactly what <code>/rmp @quality:0.85 "optimize algorithm"</code> does when you invoke it.</p>
+  <blockquote class="pullquote">RMP is a fixed-point operator on the category of prompts: iterate improve() until improve(p*) = p*. The Monad M provides the iteration; the Comonad W provides the history-awareness that lets you detect plateau versus real progress.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 320" role="img" aria-label="RMP loop: p₀ → evaluate q₀ → (q ≥ θ?) → YES converged / NO improve → p₁ → loop. Quality trajectory graph to the right." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .node{fill:#111D33;stroke:#A78BFA;stroke-opacity:0.6;stroke-width:1.5}
+          .nlabel{font-family:'JetBrains Mono',monospace;font-size:12px;fill:#FFFFFF;font-weight:700}
+          .diamond{fill:#162440;stroke:#A78BFA;stroke-opacity:0.6;stroke-width:1.5}
+          .arr{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .arr-ok{stroke:#22C55E;fill:none;stroke-width:1.5}
+          .arr-bad{stroke:#FF3B3B;fill:none;stroke-width:1.5}
+          .op{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#C4B5FD}
+          .law{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:12px;fill:#C4B5FD;font-weight:700}
+          .axis{stroke:#94A3B8;fill:none;stroke-width:1}
+          .point{fill:#A78BFA}
+        </style>
+        <marker id="arrV" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+        <marker id="arrG" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#22C55E"/>
+        </marker>
+        <marker id="arrR" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#FF3B3B"/>
+        </marker>
+      </defs>
+
+      <text class="head" x="20" y="22">RMP loop — fixed-point search</text>
+
+      <rect class="node" x="20" y="40" width="80" height="40" rx="6"/>
+      <text class="nlabel" x="60" y="64" text-anchor="middle">p₀</text>
+
+      <path class="arr" d="M100 60 L145 60" marker-end="url(#arrV)"/>
+
+      <rect class="node" x="145" y="40" width="90" height="40" rx="6"/>
+      <text class="nlabel" x="190" y="64" text-anchor="middle">evaluate q</text>
+
+      <path class="arr" d="M235 60 L275 60" marker-end="url(#arrV)"/>
+
+      <polygon class="diamond" points="320,60 275,80 230,60 275,40"/>
+      <text class="nlabel" x="275" y="63" text-anchor="middle">q ≥ θ?</text>
+
+      <path class="arr-ok" d="M320 60 L370 60" marker-end="url(#arrG)"/>
+      <text class="op" x="345" y="54" text-anchor="middle">YES</text>
+
+      <rect class="node" x="370" y="40" width="100" height="40" rx="6"/>
+      <text class="nlabel" x="420" y="64" text-anchor="middle">CONVERGED</text>
+
+      <path class="arr-bad" d="M275 80 L275 130 L145 130 L145 80" marker-end="url(#arrR)"/>
+      <text class="op" x="210" y="124" text-anchor="middle">NO — improve(pₙ) → pₙ₊₁</text>
+
+      <text class="head" x="20" y="180">Quality trajectory</text>
+      <path class="axis" d="M40 280 L200 280"/>
+      <path class="axis" d="M40 200 L40 280"/>
+      <text class="law" x="20" y="204">1.0</text>
+      <text class="law" x="20" y="284">0.0</text>
+      <text class="law" x="44" y="292">iter 0</text>
+      <text class="law" x="180" y="292">n</text>
+      <path class="arr" d="M40 260 L80 240 L120 220 L160 212" fill="none"/>
+      <circle class="point" cx="40" cy="260" r="3"/>
+      <circle class="point" cx="80" cy="240" r="3"/>
+      <circle class="point" cx="120" cy="220" r="3"/>
+      <circle class="point" cx="160" cy="212" r="3"/>
+      <text class="op" x="164" y="208">q* ≥ θ  ✓</text>
+
+      <text class="head" x="250" y="180">Monad laws (all 3 hold)</text>
+      <text class="law" x="250" y="204">left identity:   return &gt;=&gt; f = f</text>
+      <text class="law" x="250" y="222">right identity:  f &gt;=&gt; return = f</text>
+      <text class="law" x="250" y="240">associativity:   (f &gt;=&gt; g) &gt;=&gt; h = f &gt;=&gt; (g &gt;=&gt; h)</text>
+      <text class="law" x="250" y="268">comonad W provides history:</text>
+      <text class="law" x="250" y="286">extract · duplicate · extend</text>
+    </svg>
+    <p class="visual-caption">Fallback: static diagram. Loop converges when q ≥ θ. Monad M iterates forward, Comonad W reads backward across history.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · RMP Trajectory Simulator</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Set a quality threshold θ and a max_iterations cap, then click <strong>run</strong> to step through a scripted RMP trajectory. Toggle the <em>plateau</em> scenario to see how the comonadic <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">quality_trend()</code> distinguishes real progress from stalling. <em>Static readable example in Phase 1.</em></p>
+  <div class="sim" role="region" aria-label="RMP simulator">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>/rmp — cmp-foundations</span>
+      <span class="state" id="simstate">ready</span>
+    </div>
+    <div class="body">
+      <div class="row">
+        <label>@quality:</label>
+        <input type="number" id="qIn" value="0.85" step="0.01" min="0" max="1"/>
+        <label>@max_iterations:</label>
+        <input type="number" id="nIn" value="5" step="1" min="1" max="10"/>
+        <label>scenario:</label>
+        <select id="pickScenario">
+          <option value="improving">steady improvement</option>
+          <option value="plateau">plateau</option>
+        </select>
+      </div>
+      <div class="output" id="simout">// set threshold and iterations, then click run</div>
+    </div>
+    <div class="controls">
+      <button class="go" type="button" id="runBtn">run</button>
+      <button class="cmd" type="button" id="trendBtn">quality_trend()</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you stepped an RMP trajectory and observed the comonadic quality_trend.</div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">.claude/skills/recursive-meta-prompting/skill.md · §Core Categorical Structure</span>
+      <a href="file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/.claude/skills/recursive-meta-prompting/skill.md" target="_blank" rel="noopener noreferrer">open local →</a>
+    </div>
+<pre><code>Monad M (Iterative Refinement)
+
+M: Prompt →^n Prompt     (Monad - iterative refinement)
+
+Laws:
+- Left identity:  return &gt;=&gt; f = f
+- Right identity: f &gt;=&gt; return = f
+- Associativity:  (f &gt;=&gt; g) &gt;=&gt; h = f &gt;=&gt; (g &gt;=&gt; h)
+
+Fixed-Point Semantics
+
+RMP treats prompt improvement as a fixed-point computation:
+
+  F: Prompt → Prompt
+  Fix(F) = p where F(p) = p (converged prompt)
+
+The monad structure ensures:
+- Return: Initial prompt enters refinement context
+- Bind (&gt;=&gt;): Quality assessment chains to improvement
+- Join: Nested refinements flatten to single improvement</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — RMP is described categorically as a 'fixed-point computation'. Which equation defines the fixed point p* that the loop is searching for?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>improve(p*) = 0</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>improve(p*) = p*</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>improve(p*) ≠ p*</span></button>
+    </div>
+    <div class="explanation">The fixed point is <code>p*</code> such that <code>improve(p*) = p*</code> — applying the improvement morphism one more time does not change the prompt. In RMP this is operationalised as <code>quality(p*) ≥ θ</code>, at which point further iteration would either not change p or exceed budget. The skill states: <code>Fix(F) = p where F(p) = p (converged prompt)</code>.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — Which of the following is NOT one of the three monad laws that RMP is required to satisfy?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Left identity:  return &gt;=&gt; f = f</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Associativity: (f &gt;=&gt; g) &gt;=&gt; h = f &gt;=&gt; (g &gt;=&gt; h)</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Commutativity: f &gt;=&gt; g = g &gt;=&gt; f</span></button>
+    </div>
+    <div class="explanation">The three monad laws are <strong>left identity</strong> (<code>return &gt;=&gt; f = f</code>), <strong>right identity</strong> (<code>f &gt;=&gt; return = f</code>), and <strong>associativity</strong> (<code>(f &gt;=&gt; g) &gt;=&gt; h = f &gt;=&gt; (g &gt;=&gt; h)</code>). Commutativity (<code>f &gt;=&gt; g = g &gt;=&gt; f</code>) is NOT a monad law — monads are deliberately non-commutative because order of effects matters (refining-then-evaluating is not the same as evaluating-then-refining). Confusing associativity with commutativity is a classic slip.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q3">
+    <div class="q">3 — The RMPContext comonad exposes a <code>quality_trend()</code> method that classifies the history as RAPID_IMPROVEMENT, STEADY_IMPROVEMENT, PLATEAU, or DEGRADING. Why does RMP need a comonad for this, rather than just a monad?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Because the monad writes forward (accumulates effects, produces the next prompt) but the comonad reads backward (extracts patterns from history). Detecting PLATEAU requires looking at the whole trajectory q₀, q₁, ..., qₙ — that is a co-Kleisli arrow W(History) → Classification.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Because comonads are faster than monads.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Because monads cannot produce floats.</span></button>
+    </div>
+    <div class="explanation">Monads write forward (accumulate effects, produce the next prompt). Comonads read backward (extract patterns from the history). Detecting PLATEAU vs STEADY_IMPROVEMENT requires looking at the entire quality trajectory q₀, q₁, ..., qₙ — that is a co-Kleisli arrow <code>W(History) → Classification</code>, not a Kleisli arrow. The skill's RMPContext class uses <code>duplicate</code> to access the full quality history and <code>extend</code> to apply a history-aware transformation.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="04-cmp-query-language.html">
+      <span class="label">← previous</span>
+      <span class="title">04 · The CMP Query Language</span>
+    </a>
+    <a href="06-ship-your-own-composition.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">06 · Ship Your Own Composition</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+(function(){
+  const state = document.getElementById('simstate');
+  const out = document.getElementById('simout');
+  const runBtn = document.getElementById('runBtn');
+  const trendBtn = document.getElementById('trendBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const qIn = document.getElementById('qIn');
+  const nIn = document.getElementById('nIn');
+  const pickScenario = document.getElementById('pickScenario');
+  const successPill = document.getElementById('successPill');
+  let ran = false, trended = false, lastQs = [];
+
+  function run(){
+    const theta = parseFloat(qIn.value);
+    const maxIter = parseInt(nIn.value, 10);
+    const scenario = pickScenario.value;
+    const qs = scenario === 'improving'
+      ? [0.62, 0.74, 0.83, 0.88, 0.91]
+      : [0.70, 0.71, 0.71, 0.71, 0.72];
+    const trajectory = qs.slice(0, maxIter);
+    lastQs = trajectory;
+    const lines = [
+      '// RMP loop  ·  @quality:' + theta.toFixed(2) + '  @max_iterations:' + maxIter,
+      '// scenario: ' + scenario,
+      ''
+    ];
+    let converged = false;
+    for (let i = 0; i < trajectory.length; i++) {
+      const q = trajectory[i];
+      const ok = q >= theta;
+      lines.push('  iter ' + i + ':  p' + i + '  q=' + q.toFixed(2) + (ok ? '  ≥ θ  →  CONVERGED  ✓' : '  < θ  →  improve'));
+      if (ok) { converged = true; break; }
+    }
+    if (!converged) {
+      lines.push('');
+      lines.push('  max_iterations reached without convergence');
+      lines.push('  (see quality_trend() to decide: PLATEAU or try budget=more)');
+    }
+    out.textContent = lines.join('\n');
+    state.textContent = converged ? 'converged' : 'max iter';
+    state.style.color = converged ? 'var(--success)' : 'var(--danger)';
+    ran = true;
+    checkSuccess();
+  }
+
+  function trend(){
+    if (lastQs.length < 2) {
+      out.textContent = '// run a trajectory first, then the comonad can classify it';
+      return;
+    }
+    const deltas = [];
+    for (let i = 1; i < lastQs.length; i++) deltas.push(lastQs[i] - lastQs[i-1]);
+    const avg = deltas.reduce((a,b)=>a+b, 0) / deltas.length;
+    let label;
+    if (avg > 0.1) label = 'RAPID_IMPROVEMENT';
+    else if (avg > 0.02) label = 'STEADY_IMPROVEMENT';
+    else if (avg > -0.02) label = 'PLATEAU';
+    else label = 'DEGRADING';
+    const lines = [
+      '// RMPContext.quality_trend()   (comonadic observation)',
+      '',
+      'qualities: [' + lastQs.map(q => q.toFixed(2)).join(', ') + ']',
+      'deltas:    [' + deltas.map(d => (d >= 0 ? '+' : '') + d.toFixed(2)).join(', ') + ']',
+      'avg delta: ' + (avg >= 0 ? '+' : '') + avg.toFixed(3),
+      '',
+      'classification: ' + label
+    ];
+    out.textContent = lines.join('\n');
+    state.textContent = 'W extracted';
+    state.style.color = 'var(--success)';
+    trended = true;
+    checkSuccess();
+  }
+
+  function reset(){
+    out.textContent = '// set threshold and iterations, then click run';
+    state.textContent = 'ready';
+    state.style.color = '';
+    ran = false; trended = false; lastQs = [];
+    successPill.classList.remove('visible');
+  }
+
+  function checkSuccess(){
+    if (ran && trended) {
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.cmp-foundations.05', '1'); } catch(e){}
+    }
+  }
+
+  runBtn.addEventListener('click', run);
+  trendBtn.addEventListener('click', trend);
+  resetBtn.addEventListener('click', reset);
+})();
+
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) { c.classList.add('correct'); }
+        else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

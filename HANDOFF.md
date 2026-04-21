@@ -16,6 +16,7 @@
 | **Blockers** | None |
 | **Human gate pending** | `phase-1` (awaiting Manu review of 4 forge-barque modules rendered in browser) |
 | **Live deploy** | <https://luxor-academy.vercel.app> · Forge BARQUE quest: <https://luxor-academy.vercel.app/novice/build-and-ship/forge-barque/> · deploy recipe: `docs/DEPLOY.md` |
+| **Phase B in flight** | 7 parallel subagents forging 40 full module.json + .html files across all remaining quests (design-tool-planner · hello-agent · mercurio-for-decisions · mars-systems · mcp-from-zero · cmp-foundations · fstar-7-levels). Each module: EN + ES manifest, self-contained HTML with track-accent color, 6-slot validator PASS required. |
 
 ## Resume command
 

@@ -1,6 +1,6 @@
 {
   "id": "mercurio-for-decisions",
-  "version": "v0.1.0-draft",
+  "version": "v0.1.0",
   "track": "orchestration",
   "title": "MERCURIO for High-Stakes Decisions",
   "title_es": "MERCURIO para decisiones de alto riesgo",
@@ -19,61 +19,17 @@
     "readme_permalink": null
   },
   "status": "drafted",
-  "modules_planned": [
-    {
-      "id": "01-three-plane-analysis",
-      "title": "Three-Plane Analysis",
-      "title_es": "Analisis en tres planos",
-      "teaser": "Mental, Physical, Spiritual: read the real agent definition that splits every decision into three lenses.",
-      "teaser_es": "Mental, Fisico, Espiritual: lee la definicion real del agente que separa toda decision en tres lentes.",
-      "estimated_minutes": 18,
-      "xp_reward": 125,
-      "source_hint": "MERCURIO_AGENT_DEFINITION.md"
-    },
-    {
-      "id": "02-convergence-methods",
-      "title": "Four Convergence Methods",
-      "title_es": "Cuatro metodos de convergencia",
-      "teaser": "Weighted voting, consensus, Delphi, dialectical synthesis: pick the right one for your decision shape.",
-      "teaser_es": "Votacion ponderada, consenso, Delphi, sintesis dialectica: escoge el adecuado segun la forma de tu decision.",
-      "estimated_minutes": 20,
-      "xp_reward": 125,
-      "source_hint": "mercurio-synthesizer.md"
-    },
-    {
-      "id": "03-confidence-thresholds",
-      "title": "Confidence Thresholds",
-      "title_es": "Umbrales de confianza",
-      "teaser": "Six bands from 'execute now' (90%+) to 'halt and gather data' (<50%): calibrate yours before you commit.",
-      "teaser_es": "Seis bandas desde 'ejecuta ya' (90%+) hasta 'detente y recopila datos' (<50%): calibra la tuya antes de comprometerte.",
-      "estimated_minutes": 16,
-      "xp_reward": 100,
-      "source_hint": "mercurio-pragmatist.md"
-    },
-    {
-      "id": "04-expert-selection",
-      "title": "Expert Selection",
-      "title_es": "Seleccion de expertos",
-      "teaser": "Three to seven diverse agents with domain-weighted votes: the real playbook for assembling your panel.",
-      "teaser_es": "De tres a siete agentes diversos con votos ponderados por dominio: el manual real para armar tu panel.",
-      "estimated_minutes": 18,
-      "xp_reward": 125,
-      "source_hint": "mercurio-agent/docs/PHYSICAL-PLANE-PLAYBOOK.md"
-    },
-    {
-      "id": "05-ship-your-own",
-      "title": "Ship Your Own Decision",
-      "title_es": "Lanza tu propia decision",
-      "teaser": "Frame a real decision you owe, run the full MoE loop, publish the convergence doc with a confidence score.",
-      "teaser_es": "Plantea una decision real que te toca tomar, ejecuta el bucle MoE completo y publica el documento de convergencia con una puntuacion de confianza.",
-      "estimated_minutes": 25,
-      "xp_reward": 150,
-      "source_hint": "mercurio-orchestrator.md"
-    }
-  ],
   "module_count": 5,
   "total_xp_planned": 625,
   "estimated_minutes": 97,
   "canonical_last_module": "05-ship-your-own",
-  "license": "CC-BY-SA-4.0"
+  "license": "CC-BY-SA-4.0",
+  "modules": [
+    "01-three-plane-analysis",
+    "02-convergence-methods",
+    "03-confidence-thresholds",
+    "04-expert-selection",
+    "05-ship-your-own"
+  ],
+  "total_xp": 625
 }

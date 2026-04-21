@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "04-your-first-server",
+    "version": "v0.1.0",
+    "track": "mcp-integration",
+    "quest": "mcp-from-zero",
+    "title": "Your First MCP Server",
+    "xp_reward": 170,
+    "estimated_minutes": 30,
+    "tier": "Adept",
+    "license": "MIT",
+    "source_repo": "https://github.com/manutej/meta-prompting-plugin"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Install, restart, verify — then register one tool\n\nA working MCP server is a three-step loop, and the meta-prompting-plugin's `docs/QUICKSTART.md` shows the shape of that loop cleanly for any Claude Code extension: clone, run `INSTALL.sh`, restart Claude Code, then verify with a single command. An MCP server follows exactly that rhythm — you scaffold, you wire it into the client, you restart, and you send one request to confirm the handshake succeeded.\n\nThe TypeScript scaffold is three concrete moves. First, construct a `Server` with an `{ capabilities: { tools: {} } }` declaration (Module 02 already taught you why). Second, register a `ListToolsRequestSchema` handler that returns one `analyze` tool with a `zod`-compatible `inputSchema`. Third, register a `CallToolRequestSchema` handler that pattern-matches on the tool name and returns `content: [{ type: \"text\", text: ... }]`. Bind a `StdioServerTransport`, call `server.connect(transport)`, and you are done — that is a complete, shippable server in roughly thirty lines.\n\nThe QUICKSTART verification step translates directly: you wire the server into Claude Code's `~/.claude.json`, restart the client, and run a single test command (for a plugin that is `/meta --help`; for an MCP server it is whatever tool you registered — in the skill's example, `analyze`). If the client lists your tool, your `initialize` handshake worked, your capability bag was accepted, and your `ListToolsRequestSchema` handler fired. Three concentric contracts — transport, handshake, schema — all passed in a single round-trip.",
+      "word_count": 244,
+      "key_insight": "Every MCP server ships in the same three-step loop: install / restart / verify. If `listTools` returns your registered tool, all three protocol layers are working."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/jitterbug.svg",
+      "alt": "A loop diagram with three labelled stations: `INSTALL` (a terminal icon running `./INSTALL.sh` and writing to `~/.claude.json`), `RESTART` (a Claude Code window icon cycling), and `VERIFY` (a terminal icon showing a single successful `tools/list` response with one tool entry). Curved arrows connect the three stations into a closed loop; a fourth arrow from `VERIFY` back to `INSTALL` is dashed and labelled `iterate — add more tools`.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/jitterbug.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "04-your-first-server.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner steps through a simulated server build: click `init` to scaffold, `register tool` to add a tool handler, `connect stdio` to bind the transport, then `verify` to simulate a `tools/list` round-trip. The success pill appears once the four buttons have been clicked in order and the simulator returns a populated tools array.",
+      "interactive_kind_is_static_readable_in_phase_1": false
+    },
+    "artifact": {
+      "source_path": "docs/QUICKSTART.md",
+      "permalink": "https://github.com/manutej/meta-prompting-plugin/blob/main/docs/QUICKSTART.md#L1-L22",
+      "excerpt": "# Quickstart\n\nGet productive in 5 minutes.\n\n## Install\n\n```bash\ngit clone https://github.com/manutej/meta-prompting-plugin ~/.claude/plugins/meta-prompting\ncd ~/.claude/plugins/meta-prompting\n./INSTALL.sh\n```\n\nRestart Claude Code.\n\n## Verify\n\n```\n/meta --help\n```\n\nYou should see the command frontmatter. If not, check that `~/.claude/commands/meta.md` is a symlink pointing into `~/.claude/plugins/meta-prompting/commands/meta.md`.",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "`docs/QUICKSTART.md` gives a three-step install loop for any Claude Code extension. Which step comes immediately after running the installer?",
+          "correct": 1,
+          "explanation": "QUICKSTART.md line 13: `Restart Claude Code.` The client only re-reads its extension registry on startup, so install-then-verify without a restart in the middle will fail every time — for plugins and for MCP servers alike."
+        },
+        {
+          "prompt": "In the `mcp-categorical` TypeScript scaffold, which handler does the client invoke during the `initialize` verification round-trip to enumerate available tools?",
+          "correct": 2,
+          "explanation": "`ListToolsRequestSchema`. The mcp-categorical SKILL.md registers it at lines 37-52; the client calls `tools/list` once the handshake completes, and the handler returns the tool array. `CallToolRequestSchema` is only invoked later, when a specific tool is executed."
+        },
+        {
+          "prompt": "The `analyze` tool in the skill's example returns its output as `content: [{ type: \"text\", text: \"Analyzed: ...\" }]`. Why the `content` array rather than a bare string?",
+          "correct": 0,
+          "explanation": "MCP tool results are a list of typed content parts (`text`, `image`, `resource`, etc.), not a single string, so clients can render mixed-media output. A bare string would collapse that structure and break any tool that wants to attach, say, an image or a resource reference alongside its text answer."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "05-client-integration-claude-code",
+      "siblings": ["01-two-layer-protocol", "02-capability-negotiation", "03-three-primitives", "05-client-integration-claude-code", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

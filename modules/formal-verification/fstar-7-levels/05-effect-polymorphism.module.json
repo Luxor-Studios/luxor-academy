@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "05-effect-polymorphism",
+    "version": "v0.1.0",
+    "track": "formal-verification",
+    "quest": "fstar-7-levels",
+    "title": "L5 — Effect Polymorphism",
+    "xp_reward": 240,
+    "estimated_minutes": 40,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/fstar-framework"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Effects as types — stateful code, still verified\n\nAt Level 5 the type system gains a whole new axis. Alongside `int`, `list a`, and refinements, every computation now carries an **effect label** — `Tot` for total, `Dv` for divergent, `ST` for stateful, `GTot` for erasable ghost code. The effect *is part of the type*. F* can talk about state, exceptions, and divergence inside the same logic that proved `clamp` and `fibonacci`, and it can *mix* them through effect polymorphism and lifting.\n\nThe canonical L4/L5 example in the fstar-framework is `swap`, written in the `ST` (state) effect with an explicit Hoare triple:\n\n```fstar\nlet swap (#a: Type) (r1 r2: ref a) : ST unit\n  (requires (fun h -> True))\n  (ensures (fun h0 _ h1 ->\n    sel h1 r1 == sel h0 r2 &&\n    sel h1 r2 == sel h0 r1 &&\n    modifies (only r1 ++ only r2) h0 h1))\n=\n  let tmp = !r1 in\n  r1 := !r2;\n  r2 := tmp\n```\n\nThree new things are loud in that signature. **Requires** names the precondition on the incoming heap `h`. **Ensures** names the postcondition as a relation between pre-heap `h0`, return value, and post-heap `h1`. And **modifies** names a *frame* — the set of references that can change. F* requires you to prove that *nothing outside the frame is touched*, which is how effect polymorphism composes: if `f : ST _ _ _ (modifies S0)` and `g : ST _ _ _ (modifies S1)`, then sequencing them gives a combined `modifies (S0 ++ S1)`, and the rest of the heap is provably untouched.\n\nThe skeleton extrapolates. `ST` is one effect in a lattice — `Tot ⊂ Ghost ⊂ ML ⊂ Dv`, with `ST` sitting orthogonally over the heap. Write your algorithm once over an effect variable; instantiate it for `Tot` when you want a pure extraction, for `ST` when you need real memory. Same code, different effect, same proofs.",
+      "word_count": 316,
+      "key_insight": "At L5 the effect is part of the type. `ST unit (requires ...) (ensures ...)` is a Hoare triple embedded in F*'s type system, and the `modifies` clause is the frame condition that makes effect polymorphism compositional."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/geodesic-sphere.svg",
+      "alt": "A diagram of the `swap` Hoare triple. On the left, the pre-heap `h0` with references `r1 -> A`, `r2 -> B`, and `r3 -> C` (outside the frame). An arrow labeled `swap r1 r2` runs to the right side, where the post-heap `h1` shows `r1 -> B`, `r2 -> A`, and `r3 -> C` unchanged. A red dashed rectangle labeled `frame: {r1, r2}` encloses the two affected refs in both heaps; the note reads `modifies (only r1 ++ only r2)`. Above: a small effect-lattice diagram showing `Tot ⊂ Ghost ⊂ ML`, with `ST` branching off to carry the heap.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/geodesic-sphere.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "05-effect-polymorphism.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner inspects the annotated `swap` signature and toggles the `modifies (only r1 ++ only r2)` clause. With it present, the simulator reports `ST unit — verified (frame respected)`. Remove it (replace with `modifies no_refs`) and a third ref `r3` in the example heap is reported as an unproven obligation: `could not prove r3 unchanged`. Success fires when the learner has seen both states.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "FSTAR_META_PROMPTING_FRAMEWORK.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/FSTAR_META_PROMPTING_FRAMEWORK.md",
+      "excerpt": "let swap (#a: Type) (r1 r2: ref a) : ST unit\n  (requires (fun h -> True))\n  (ensures (fun h0 _ h1 ->\n    sel h1 r1 == sel h0 r2 &&\n    sel h1 r2 == sel h0 r1 &&\n    modifies (only r1 ++ only r2) h0 h1))\n=\n  let tmp = !r1 in\n  r1 := !r2;\n  r2 := tmp",
+      "language": "fstar"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In the `swap` signature, `sel h1 r1 == sel h0 r2` appears in the `ensures` clause. What do `h0` and `h1` refer to, and what is `sel`?",
+          "correct": 1,
+          "explanation": "`h0` is the **pre-heap** (state before the call), `h1` is the **post-heap** (state after), and `sel h r` reads the value stored at reference `r` in heap `h`. The ensures clause is therefore the relational statement 'the value of r1 after the call equals the value r2 held before the call' — the core correctness of a swap."
+        },
+        {
+          "prompt": "The `modifies (only r1 ++ only r2) h0 h1` clause is the **frame condition**. Why does F* require it?",
+          "correct": 0,
+          "explanation": "Effect polymorphism is only compositional if you can talk about what a computation *does not* touch. The frame condition names the set of references `{r1, r2}` that `swap` may write to, and F* then proves every other reference in the heap is unchanged — so when you sequence `swap r1 r2; do_something_with r3`, the solver knows `r3`'s value survived intact."
+        },
+        {
+          "prompt": "The framework document places `ST` in a lattice of effects. What is the practical consequence of `Tot ⊂ ST` in that lattice?",
+          "correct": 2,
+          "explanation": "Every total (pure) computation can be **lifted** into the stateful effect for free — the heap is simply unchanged. That is what lets you write a library function once in `Tot` and call it safely from `ST` code. The subsumption is one direction only: you cannot silently demote an `ST` computation to `Tot`, because that would lose the heap reasoning."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "06-categorical-proofs",
+      "siblings": ["01-novice-proofs", "02-refinement-types", "03-dependent-types", "04-indexed-types", "06-categorical-proofs", "07-ship-your-own-framework"],
+      "ship_your_own": false
+    }
+  }
+}

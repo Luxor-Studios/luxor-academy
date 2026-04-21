@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "id": "02-two-agent-pattern",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "design-tool-planner",
+    "title": "The Two-Agent Pattern",
+    "xp_reward": 125,
+    "estimated_minutes": 20,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-design-tool-planner"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Planner plus Executor: the validated shape\n\nA single Claude agent trying to both *decide* what to build and *do* the building is a common first instinct — and a common first failure mode. The Agent Builder Guide (lines 218-227) flags the alternative: split the work. A **Planning Agent** (strategic, 5-10 seconds, 2048-token budget) parses intent, picks templates, and emits a `DesignPlan` as structured JSON. An **Execution Agent** (tactical, 20-25 seconds, 8192-token budget) receives that plan and only has to *follow it*, generating assets and assembling the design via MCP tools.\n\nThis is the pattern the guide stars with `⭐ RECOMMENDED` — and the only pattern with a validated quality number: **9.5/10 on the CANVA-CODE run**, the highest step-score in the whole workflow. Total wall time came in around 28 seconds against a 30-second target; token cost settled at about $0.32 per design against a $0.50 ceiling; first-try quality hit 92%; brand consistency hit 99%+. Those are not aspirational figures — they are line-517 of the guide, next to the word *Validated*.\n\nWhy does the split work? Three reasons stated in `docs/ARCHITECTURE.md` lines 74-78: clear separation of concerns (*what* vs *how*), per-role optimization (different system prompts, different token budgets, different tools), and better error recovery (a failed execution does not corrupt the plan). Iterations become cheap — you refine the design without re-planning it. For 3-10 API calls per request, this is the pattern. Fewer calls, go single-agent. More than ten, go multi-agent. In between — which is most real projects — the two-agent pattern is the quiet winner.",
+      "markdown_es": "# Planificador más Ejecutor: la forma validada\n\nUn solo agente Claude que intenta a la vez *decidir* qué construir y *construirlo* es un primer instinto común — y una primera forma común de fallar. La Guía del Constructor de Agentes (líneas 218-227) señala la alternativa: separa el trabajo. Un **Agente Planificador** (estratégico, 5-10 segundos, presupuesto de 2048 tokens) interpreta la intención, elige plantillas y emite un `DesignPlan` como JSON estructurado. Un **Agente Ejecutor** (táctico, 20-25 segundos, presupuesto de 8192 tokens) recibe ese plan y sólo tiene que *seguirlo*, generando activos y ensamblando el diseño mediante herramientas MCP.\n\nEste es el patrón que la guía marca con `⭐ RECOMENDADO` — y el único con un número de calidad validado: **9.5/10 en la corrida de CANVA-CODE**, la puntuación más alta del flujo completo. El tiempo total quedó cerca de 28 segundos contra un objetivo de 30; el costo en tokens rondó los $0.32 por diseño contra un techo de $0.50; la calidad al primer intento alcanzó 92%; la consistencia de marca superó el 99%.\n\n¿Por qué funciona la división? Tres razones indicadas en `docs/ARCHITECTURE.md` líneas 74-78: separación clara de responsabilidades (*qué* vs *cómo*), optimización por rol (prompts distintos, presupuestos distintos, herramientas distintas) y mejor recuperación ante errores (una ejecución fallida no corrompe el plan).",
+      "word_count": 268,
+      "key_insight": "Two agents, two budgets, two jobs. The Planning Agent decides (5-10s, strategic); the Execution Agent builds (20-25s, tactical). Validated at 9.5/10 quality on CANVA-CODE.",
+      "key_insight_es": "Dos agentes, dos presupuestos, dos tareas. El Planificador decide (5-10s, estratégico); el Ejecutor construye (20-25s, táctico). Validado en calidad 9.5/10 en CANVA-CODE."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/cuboctahedron.svg",
+      "alt": "A left-to-right flow diagram of the two-agent pattern. On the left, a Planning Agent box labeled 'Strategic · 5-10s · 2048 tokens' with three tool-chip badges (task_decomposition, template_selection, brand_analysis). An arrow labeled 'DesignPlan (JSON Schema)' crosses the center. On the right, an Execution Agent box labeled 'Tactical · 20-25s · 8192 tokens' with three tool-chip badges (PRIMARY_API, SECONDARY_SERVICES, state_manager). Below, a metrics bar shows validated numbers: total 28s, cost $0.32, quality 92%, brand 99%+, score 9.5/10.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/cuboctahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "02-two-agent-pattern.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the annotated two-agent flow, inspects the Planning Agent's system prompt (lines 343-359) alongside the Execution Agent's system prompt (lines 385-404), and matches each responsibility (parse intent, select template, generate assets, export design) to the correct agent in a static drag-free matching quiz.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "CLAUDE-SDK-AGENT-BUILDER-GUIDE.md",
+      "permalink": "https://github.com/manutej/luxor-design-tool-planner/blob/main/CLAUDE-SDK-AGENT-BUILDER-GUIDE.md#L512-L525",
+      "excerpt": "### Performance Characteristics (Validated)\n\n| Metric | Target | Actual (CANVA-CODE) |\n|--------|--------|---------------------|\n| **Total Time** | < 30s | ~28s ✅ |\n| **Planning Time** | 5-10s | ~7s |\n| **Execution Time** | 20-25s | ~21s |\n| **Token Usage** | 10,000-15,000 | 12,500 avg |\n| **Cost per Design** | < $0.50 | $0.32 ✅ |\n| **Quality (first try)** | 90%+ | 92% ✅ |\n| **Brand Consistency** | 98%+ | 99%+ ✅ |\n\n**Validated on**: CANVA-CODE project (2025-12-15)\n**Quality Score**: 9.5/10 (highest in workflow)",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "According to the CLAUDE-SDK-AGENT-BUILDER-GUIDE.md decision matrix, when should you choose the two-agent pattern over single-agent or multi-agent?",
+          "options": [
+            "When you have fewer than 3 API calls per request",
+            "When you have 3-10 API calls per request",
+            "When you have more than 10 API calls per request"
+          ],
+          "correct": 1,
+          "explanation": "The Agent Architecture Decision Matrix (lines 17-26) maps API-call volume to pattern: `< 3` → Single, `3-10` → Two, `> 10` → Multi. The guide marks the Two-Agent row with the star and the validated 9.5/10 quality score (line 25)."
+        },
+        {
+          "prompt": "In the TwoAgentDesignSystem TypeScript example, what `max_tokens` budget does the Planning Agent use versus the Execution Agent?",
+          "options": [
+            "Planning: 8192, Execution: 2048",
+            "Planning: 4096, Execution: 4096 (same)",
+            "Planning: 2048, Execution: 8192"
+          ],
+          "correct": 2,
+          "explanation": "Lines 362-363 set the Planning Agent to `max_tokens: 2048` (strategic, short); lines 408-409 set the Execution Agent to `max_tokens: 8192` (tactical, long-running with tool iteration). The smaller planner budget enforces the structural output discipline."
+        },
+        {
+          "prompt": "Per the validated CANVA-CODE numbers in CLAUDE-SDK-AGENT-BUILDER-GUIDE.md lines 512-520, what was the actual cost-per-design and how did it compare to the target?",
+          "options": [
+            "$0.50 actual, matched target exactly",
+            "$0.32 actual, under the < $0.50 target",
+            "$0.75 actual, over the < $0.50 target"
+          ],
+          "correct": 1,
+          "explanation": "Line 520: `Cost per Design | < $0.50 | $0.32 ✅`. The two-agent pattern came in at $0.32 per design, 36% under the $0.50 ceiling. This is one of the reasons the pattern carries the ⭐ RECOMMENDED marker."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "03-mcp-protocol-layer",
+      "siblings": ["01-universal-template", "02-two-agent-pattern", "03-mcp-protocol-layer", "04-five-step-pipeline", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 06 — Ship Your Own Composition · CMP Foundations · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--background:#0A1628;--surface-1:#111D33;--surface-2:#162440;--surface-3:#1C2B47;--primary:#A78BFA;--primary-soft:#C4B5FD;--accent:#00F5FF;--text:#FFFFFF;--text-dim:#94A3B8;--text-muted:#64748B;--border:rgba(167,139,250,0.22);--border-strong:rgba(167,139,250,0.6);--danger:#FF3B3B;--success:#22C55E;--glow-violet:0 0 16px rgba(167,139,250,0.45);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:var(--background);background-image:linear-gradient(rgba(167,139,250,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,0.025) 1px,transparent 1px);background-size:32px 32px;color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-violet)}
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-violet)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .body{padding:1rem;min-height:240px;color:#D4E4F7;line-height:1.55}
+.sim .row{display:flex;flex-wrap:wrap;gap:0.6rem;align-items:center;margin-bottom:0.7rem}
+.sim label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
+.sim select,.sim input[type=text]{font-family:var(--font-mono);font-size:0.8rem;background:var(--surface-3);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0.35rem 0.6rem}
+.sim input[type=text]{min-width:280px}
+.sim .macro-grid{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.7rem}
+.sim .macro-chip{background:var(--surface-3);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0.35rem 0.6rem;font-family:var(--font-mono);font-size:0.78rem;cursor:pointer;transition:all 150ms}
+.sim .macro-chip:hover,.sim .macro-chip:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .macro-chip.selected{background:var(--primary);color:var(--background);border-color:var(--primary)}
+.sim .output{background:var(--surface-1);border:1px dashed var(--border);border-radius:4px;padding:0.75rem 0.9rem;margin-top:0.6rem;color:var(--primary-soft);font-size:0.82rem;white-space:pre-wrap}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text)}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .go{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .go:hover,.sim .go:focus-visible{background:var(--primary-soft)}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(34,197,94,0.12);color:var(--success);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--success);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18;white-space:pre-wrap}
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-violet)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+@media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Icosahedron Master-tier glyph">
+    <g fill="none" stroke="#A78BFA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 89,36 74,82 26,82 11,36"/><polygon points="50,38 71,50 64,72 36,72 29,50"/>
+      <line x1="50" y1="8" x2="50" y2="38"/><line x1="89" y1="36" x2="71" y2="50"/>
+      <line x1="74" y1="82" x2="64" y2="72"/><line x1="26" y1="82" x2="36" y2="72"/>
+      <line x1="11" y1="36" x2="29" y2="50"/><line x1="50" y1="8" x2="71" y2="50"/>
+      <line x1="50" y1="8" x2="29" y2="50"/><line x1="89" y1="36" x2="64" y2="72"/>
+      <line x1="11" y1="36" x2="36" y2="72"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Categorical Meta-Prompting · CMP Foundations · Module 06 of 06</div>
+    <div class="qname">Ship Your Own Composition</div>
+  </div>
+  <div class="stats">
+    <span><strong>+240</strong> XP</span>
+    <span><strong>40</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Ship Your Own Composition</h1>
+<div class="module-subtitle">// Tier: Master · Source: categorical-meta-prompting/docs/EXAMPLES-LIBRARY.md §5 Composite Examples</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Pick a real task. Decompose it. Compose the morphisms. Ship the composition.</h1>
+  <p>This module is the canonical last module of the CMP Foundations quest. You have installed the vocabulary (objects, morphisms, composition), accepted that prompts are typed arrows, met natural transformations as strategy-swaps, learned the CMP Query Language, and seen RMP as a fixed-point operator. Now you are going to ship a composition of your own.</p>
+  <p>The <code>EXAMPLES-LIBRARY.md</code> in <code>categorical-meta-prompting</code> shows the shape. A composite like <code>F → M</code> — transform a task into a prompt, then iteratively refine — is written in CMP as <code>ASSESS → TRANSFORM → ITERATE^3 FOR "implement LRU cache"</code>, and it compiles to <code>/chain [/meta @tier:L3 → /rmp @quality:0.85] "implement LRU cache"</code>. The example library records a quality journey of <code>0.68 → 0.75 → 0.87 ✓</code> for that exact composition. A <code>W → F</code> composite is different shape: <code>CONTEXT → TRANSFORM FOR "add validation to user model"</code> which extracts file-focused context first, then generates a context-aware implementation. Each composite is a real specimen — a morphism built from smaller morphisms, with measured quality.</p>
+  <p>Your assignment: pick a task from your own work, decompose it into typed stages using the operators <code>→</code>, <code>||</code>, <code>&gt;=&gt;</code>, <code>⊗</code> and the macros <code>ASSESS</code>, <code>TRANSFORM</code>, <code>ITERATE</code>, <code>RMP</code>, <code>FULL</code>; write the composition as a CMP query; and submit it as your quest proof. What you get back is a permalink to your composition, attributed to you, slotted into the public library of categorical compositions. You are no longer a consumer of the framework. You are a contributor to its specimen collection. That is the sovereignty clause of LUXOR Academy — you own the composition your work produced, and the composition teaches the next learner what you just built.</p>
+  <blockquote class="pullquote">The Quest ends not with a quiz but with a specimen. Your own real task, decomposed into typed morphisms, compiled through the CMP DSL, ships as a permalink that teaches the next learner what you built.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 310" role="img" aria-label="Flow: learner task → decompose into stages → compose with operators → CMP pipeline → compile to blocks, then commands → execute → output + quality trajectory → permalink ribbon." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .box{fill:#111D33;stroke:#A78BFA;stroke-opacity:0.5;stroke-width:1.3}
+          .nlabel{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#D4E4F7}
+          .title{font-family:'Playfair Display',serif;font-size:12px;fill:#C4B5FD;font-weight:700}
+          .arr{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .ribbon{fill:#A78BFA;stroke:none}
+          .ribbon-text{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#0A1628;font-weight:700}
+          .q{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+        </style>
+        <marker id="arrV" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+      </defs>
+
+      <rect class="box" x="20" y="30" width="120" height="36" rx="5"/>
+      <text class="nlabel" x="80" y="53" text-anchor="middle">your task</text>
+
+      <path class="arr" d="M140 48 L175 48" marker-end="url(#arrV)"/>
+
+      <rect class="box" x="175" y="30" width="150" height="36" rx="5"/>
+      <text class="nlabel" x="250" y="53" text-anchor="middle">decompose → stages</text>
+
+      <path class="arr" d="M325 48 L360 48" marker-end="url(#arrV)"/>
+
+      <rect class="box" x="360" y="30" width="180" height="36" rx="5"/>
+      <text class="nlabel" x="450" y="53" text-anchor="middle">CMP pipeline (macros + ops)</text>
+
+      <path class="arr" d="M250 66 L250 100" marker-end="url(#arrV)"/>
+
+      <rect class="box" x="160" y="100" width="180" height="36" rx="5"/>
+      <text class="nlabel" x="250" y="123" text-anchor="middle">/blocks [...]</text>
+
+      <path class="arr" d="M250 136 L250 170" marker-end="url(#arrV)"/>
+
+      <rect class="box" x="160" y="170" width="180" height="36" rx="5"/>
+      <text class="nlabel" x="250" y="193" text-anchor="middle">/meta or /rmp</text>
+
+      <path class="arr" d="M250 206 L250 236" marker-end="url(#arrV)"/>
+
+      <rect class="box" x="160" y="236" width="180" height="36" rx="5"/>
+      <text class="nlabel" x="250" y="259" text-anchor="middle">execute → output</text>
+
+      <text class="title" x="375" y="140">Example (EXAMPLES-LIBRARY):</text>
+      <text class="q" x="375" y="160">ASSESS → TRANSFORM → ITERATE^3</text>
+      <text class="q" x="375" y="178">FOR "implement LRU cache"</text>
+      <text class="q" x="375" y="200">quality journey:</text>
+      <text class="q" x="375" y="218">0.68  →  0.75  →  0.87  ✓</text>
+
+      <polygon class="ribbon" points="140,280 540,280 520,295 540,310 140,310 160,295"/>
+      <text class="ribbon-text" x="340" y="299" text-anchor="middle">permalink · attributed to you · filed in the specimen library</text>
+    </svg>
+    <p class="visual-caption">Fallback: static diagram. Your own task flows through the same compilation pipeline the framework uses for its own examples. The output is a specimen + permalink.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Ship Your Composition</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Write your task, pick 2–4 macros from the palette, pick an operator to join them with, and the widget validates your CMP query and shows the compiled pipeline. Phase 1 stores the composition locally for Phase 3 permalink minting. <em>Submit button is a visual stub in Phase 1.</em></p>
+  <div class="sim" role="region" aria-label="Ship your composition">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>ship — cmp-foundations</span>
+      <span class="state" id="simstate">ready</span>
+    </div>
+    <div class="body">
+      <div class="row">
+        <label>your task:</label>
+        <input type="text" id="taskIn" value="build robust API endpoint"/>
+      </div>
+      <label style="display:block;margin-bottom:0.4rem">macros (click to toggle):</label>
+      <div class="macro-grid" id="macroGrid">
+        <button class="macro-chip" type="button" data-m="ASSESS">ASSESS</button>
+        <button class="macro-chip" type="button" data-m="TRANSFORM">TRANSFORM</button>
+        <button class="macro-chip" type="button" data-m="EXECUTE">EXECUTE</button>
+        <button class="macro-chip" type="button" data-m="QUALITY">QUALITY</button>
+        <button class="macro-chip" type="button" data-m="REFINE">REFINE</button>
+        <button class="macro-chip" type="button" data-m="ITERATE">ITERATE</button>
+        <button class="macro-chip" type="button" data-m="RMP">RMP</button>
+        <button class="macro-chip" type="button" data-m="FULL">FULL</button>
+      </div>
+      <div class="row">
+        <label>join with:</label>
+        <select id="pickOp">
+          <option value="→">→ sequence</option>
+          <option value="||">|| parallel</option>
+          <option value=">=>">&gt;=&gt; Kleisli (quality-gated)</option>
+          <option value="⊗">⊗ tensor</option>
+        </select>
+      </div>
+      <div class="output" id="simout">// pick macros and an operator, then click build</div>
+    </div>
+    <div class="controls">
+      <button class="go" type="button" id="buildBtn">build CMP query</button>
+      <button class="cmd" type="button" id="submitBtn">submit (Phase 3 stub)</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — your composition is queued. Phase 3 will mint the permalink.</div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">docs/EXAMPLES-LIBRARY.md · §5.1 F → M (Transform then Refine)</span>
+      <a href="file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/docs/EXAMPLES-LIBRARY.md" target="_blank" rel="noopener noreferrer">open local →</a>
+    </div>
+<pre><code>### Example 5.1: F → M (Transform then Refine)
+
+Use Case: Generate implementation then refine to quality threshold
+
+/chain [/meta @tier:L3 → /rmp @quality:0.85] "implement LRU cache"
+
+Stage 1: F(Task) → Prompt
+  [Initial implementation from /meta — quality 0.68]
+
+Stage 2: M(Prompt) →^n Prompt (quality: 0.68 → 0.87)
+  [Thread-safe LRUCache with OrderedDict, Lock, generics, O(1) ops]
+
+Quality Journey: 0.68 → 0.75 → 0.87 ✓</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — Why is the canonical last module of every LUXOR Academy quest a 'Ship Your Own' step rather than a summary quiz?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Because quizzes are harder to grade.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Sovereignty — the Academy's canonical-last-module pattern requires every quest to end with a permalink to the learner's own work, not a score. Quizzes train for the quest; Ship-Your-Own trains for the next repo.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Because the LLM cannot reliably evaluate quiz answers.</span></button>
+    </div>
+    <div class="explanation">Sovereignty — the Academy's canonical-last-module pattern requires every quest to end with the learner holding a permalink to their own work, not a score. A summary quiz trains for the quest; Ship-Your-Own trains for the next repo. In CMP Foundations specifically, your own composition becomes a specimen in the framework's public library, attributed to you.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q2">
+    <div class="q">2 — Looking at Example 5.1 in EXAMPLES-LIBRARY.md (F → M composition for 'implement LRU cache'), which CMP operator is used between /meta and /rmp?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>→ (sequence)</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>|| (parallel)</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>&gt;=&gt; (Kleisli)</span></button>
+    </div>
+    <div class="explanation"><code>→</code> (sequence). The example is written as <code>/chain [/meta @tier:L3 → /rmp @quality:0.85] "implement LRU cache"</code> — plain sequential composition. Stage 1 produces a prompt, Stage 2 refines it. The Kleisli <code>&gt;=&gt;</code> would additionally quality-gate between stages; <code>||</code> would run them in parallel (which would not make sense here because Stage 2 consumes Stage 1's output). <code>⊗</code> is tensor, for combining independent contexts.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q3">
+    <div class="q">3 — You submit the composition <code>(ASSESS:security || ASSESS:performance) → TRANSFORM → RMP^3 FOR "review critical endpoint"</code>. What does this say categorically about how the two ASSESS stages relate to each other?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>They compose sequentially — security first, then performance.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>They form a tensor product that combines independent contexts.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>They run in parallel — independent on the same input — and their results aggregate as mean(q_security, q_performance).</span></button>
+    </div>
+    <div class="explanation"><code>||</code> is parallel composition — the two ASSESS stages (security and performance) run independently on the same input, and their results are aggregated. The quality rule is <code>mean(q_security, q_performance)</code> (from <code>CATEGORICAL-ONTOLOGY.md §3.1</code>). They do not compose sequentially (that would be <code>→</code>) and they are not tensored (that would be <code>⊗</code>). Independence plus mean-aggregation is exactly what <code>||</code> encodes.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="05-recursive-meta-prompting.html">
+      <span class="label">← previous</span>
+      <span class="title">05 · Recursive Meta-Prompting</span>
+    </a>
+    <a href="#" aria-disabled="true" style="opacity:0.4;pointer-events:none" class="next">
+      <span class="label">quest complete</span>
+      <span class="title">— canonical last module —</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+(function(){
+  const state = document.getElementById('simstate');
+  const out = document.getElementById('simout');
+  const buildBtn = document.getElementById('buildBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const taskIn = document.getElementById('taskIn');
+  const pickOp = document.getElementById('pickOp');
+  const macroGrid = document.getElementById('macroGrid');
+  const successPill = document.getElementById('successPill');
+  let built = false, submitted = false;
+  const selected = [];
+
+  macroGrid.querySelectorAll('.macro-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const m = chip.dataset.m;
+      const idx = selected.indexOf(m);
+      if (idx >= 0) {
+        selected.splice(idx, 1);
+        chip.classList.remove('selected');
+      } else if (selected.length < 4) {
+        selected.push(m);
+        chip.classList.add('selected');
+      }
+    });
+  });
+
+  function build(){
+    const task = taskIn.value.trim() || '(task)';
+    const op = pickOp.value;
+    if (selected.length < 2) {
+      out.textContent = '// pick at least 2 macros — a composition needs at least two stages';
+      state.textContent = 'need ≥ 2';
+      state.style.color = 'var(--danger)';
+      return;
+    }
+    const pipeline = selected.join(' ' + op + ' ');
+    let cmd;
+    if (op === '→' && selected.join(',') === 'ASSESS,TRANSFORM,ITERATE') {
+      cmd = '/rmp @quality:0.85 @max_iterations:3 "' + task + '"';
+    } else if (op === '||') {
+      cmd = '/chain @merge:weighted [' + selected.map(s => '/' + s.toLowerCase()).join(' || ') + '] "' + task + '"';
+    } else if (op === '>=>') {
+      cmd = '/rmp @quality:0.85 [' + selected.join(' >=> ') + '] "' + task + '"';
+    } else {
+      cmd = '/chain [' + selected.map(s => '/' + s.toLowerCase()).join(' ' + op + ' ') + '] "' + task + '"';
+    }
+    const lines = [
+      '// your CMP query',
+      '/cmp ' + pipeline + ' FOR "' + task + '"',
+      '',
+      '// compiled command',
+      cmd,
+      '',
+      '// quality rule along the pipeline:',
+      (op === '||') ? '// mean(q_' + selected.join(', q_') + ')'
+        : (op === '→' || op === '⊗') ? '// min(q_' + selected.join(', q_') + ')'
+        : '// converges iteratively (>=> Kleisli)'
+    ];
+    out.textContent = lines.join('\n');
+    state.textContent = 'built';
+    state.style.color = 'var(--success)';
+    built = true;
+    checkSuccess();
+  }
+
+  function submit(){
+    if (!built) {
+      out.textContent = '// build a CMP query first';
+      return;
+    }
+    try {
+      localStorage.setItem('luxor.academy.cmp-foundations.composition', JSON.stringify({
+        task: taskIn.value,
+        macros: selected,
+        operator: pickOp.value,
+        queued_at: new Date().toISOString()
+      }));
+    } catch(e){}
+    const lines = [
+      '// Phase 1 capture  ·  composition queued locally',
+      '',
+      '  task:      "' + taskIn.value + '"',
+      '  macros:    [' + selected.join(', ') + ']',
+      '  operator:  ' + pickOp.value,
+      '  status:    queued for Phase 3 permalink minting',
+      '',
+      '// in Phase 3 the pipeline runs live and returns a permalink to your specimen.'
+    ];
+    out.textContent = lines.join('\n');
+    state.textContent = 'queued';
+    state.style.color = 'var(--success)';
+    submitted = true;
+    checkSuccess();
+  }
+
+  function reset(){
+    out.textContent = '// pick macros and an operator, then click build';
+    state.textContent = 'ready';
+    state.style.color = '';
+    built = false; submitted = false;
+    selected.length = 0;
+    macroGrid.querySelectorAll('.macro-chip').forEach(c => c.classList.remove('selected'));
+    successPill.classList.remove('visible');
+  }
+
+  function checkSuccess(){
+    if (built && submitted) {
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.cmp-foundations.06', '1'); } catch(e){}
+    }
+  }
+
+  buildBtn.addEventListener('click', build);
+  submitBtn.addEventListener('click', submit);
+  resetBtn.addEventListener('click', reset);
+})();
+
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) { c.classList.add('correct'); }
+        else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

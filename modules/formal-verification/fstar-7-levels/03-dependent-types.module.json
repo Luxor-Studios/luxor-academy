@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "03-dependent-types",
+    "version": "v0.1.0",
+    "track": "formal-verification",
+    "quest": "fstar-7-levels",
+    "title": "L3 — Dependent Types",
+    "xp_reward": 210,
+    "estimated_minutes": 35,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/fstar-framework"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Types that depend on values — termination proofs as first-class\n\nLevel 3 is where the type system starts to *compute*. A refinement type lets a type depend on a predicate; a full dependent type lets a type depend on a value — a length, a bound, a proof term. The first step onto that ladder is the humble `decreases` clause: a value-level expression that appears inside a function's type and that F* uses to prove termination.\n\nFibonacci is the clean case, because it recurses twice:\n\n```fstar\nlet rec fibonacci (n:nat) : nat\n  decreases n\n=\n  if n = 0 then 0\n  else if n = 1 then 1\n  else fibonacci (n - 1) + fibonacci (n - 2)\n```\n\n`decreases n` says: \"at every recursive call, the value of `n` gets strictly smaller in the natural-number ordering.\" F* checks this by hand: `fibonacci (n - 1)` needs `n - 1 < n` (true when `n >= 2`, which is exactly the branch we are in); `fibonacci (n - 2)` needs `n - 2 < n` (same). Both succeed and F* accepts the function under the `Tot` (total) effect.\n\nThree quiet things just happened. First, `n:nat` is itself a refinement — `nat = x:int{x >= 0}` — so the dependent type `nat -> nat` is carrying a value-level invariant. Second, the metric `n` is a term of `nat`; it is literally a value that the type system consults. Third, the presence of `decreases` is what promotes the definition from *possibly non-terminating* (`Dv` effect) to *total* (`Tot` effect). Remove it and F* rejects the function outright — not because it is wrong, but because F* refuses to believe in termination without evidence.",
+      "word_count": 269,
+      "key_insight": "`decreases n` is a dependent type feature hiding in plain sight: a value-level term that becomes part of the function's type, and the gate that lets a recursive definition live in the total (`Tot`) effect."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/geodesic-sphere.svg",
+      "alt": "A two-panel diagram. Left panel shows the fibonacci type `nat -> nat` with `decreases n` annotated, and arrows from the two recursive calls `fibonacci (n-1)` and `fibonacci (n-2)` pointing back at the metric box `n`, each labeled with the proof obligation `n-1 < n` and `n-2 < n` in the context `n >= 2`. Right panel shows the same function with `decreases n` removed and the compile error `termination check failed: no decreasing metric supplied`, plus a note that without the clause F* demotes the effect from `Tot` to `Dv`.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/geodesic-sphere.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "03-dependent-types.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner inspects the annotated fibonacci signature and toggles the `decreases n` clause on and off. With the clause, the simulator reports `Tot nat — verified (both recursive calls satisfy n' < n)`. Without it, `termination check failed`. Success fires when the learner has seen the effect flip between `Tot` and the rejection state.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "instructor_guide/solutions/week_02_all_solutions.fst",
+      "permalink": "file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/instructor_guide/solutions/week_02_all_solutions.fst",
+      "excerpt": "// Solution:\nlet rec fibonacci (n:nat) : nat\n  decreases n\n=\n  if n = 0 then 0\n  else if n = 1 then 1\n  else fibonacci (n - 1) + fibonacci (n - 2)\n\n// Test cases\nlet test_fib_0 = fibonacci 0   // Result: 0\nlet test_fib_1 = fibonacci 1   // Result: 1\nlet test_fib_2 = fibonacci 2   // Result: 1\nlet test_fib_5 = fibonacci 5   // Result: 5\nlet test_fib_10 = fibonacci 10 // Result: 55\n\n// ALTERNATIVE SOLUTION (tail-recursive with accumulator):\nlet rec fibonacci_acc (n:nat) (a:nat) (b:nat) : nat\n  decreases n\n=\n  if n = 0 then a\n  else fibonacci_acc (n - 1) b (a + b)",
+      "language": "fstar"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "What does the `decreases n` clause on `fibonacci` promise, and how does F* check it?",
+          "correct": 0,
+          "explanation": "It promises that at every recursive call site, the value of the argument `n` is strictly smaller than it was at the caller, measured in the natural-number ordering. F* discharges this by proving `n-1 < n` and `n-2 < n` under the branch context `n >= 2` — both follow trivially once the base cases have been peeled off."
+        },
+        {
+          "prompt": "If the `decreases` clause is removed from `fibonacci`, which effect does F* fall back to?",
+          "correct": 2,
+          "explanation": "Per the Week 2 solutions answer key: without a termination argument F* will not admit the function into `Tot` (total). You can explicitly annotate it with `Dv` (divergence) — e.g., `let rec bad_fib (n:int) : Dv int = bad_fib n` — to tell F* 'I know this might not terminate, accept it anyway.' The clause is what promotes a definition from `Dv` to `Tot`."
+        },
+        {
+          "prompt": "Why does F* accept `fibonacci : nat -> nat` but refuse `fibonacci : int -> int` under the same body?",
+          "correct": 1,
+          "explanation": "`nat = x:int{x >= 0}` is already a refinement. Inside the recursive branch `n >= 2`, the arguments `n-1` and `n-2` are both non-negative, so they still inhabit `nat`. If the type were `int -> int`, the call `fibonacci (n-1)` in an expansion of `fib 1` would hand `-1` to itself — and the solver has no way to refute that unless the type carries the `>= 0` invariant. The dependent refinement is what keeps the metric honest."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "04-indexed-types",
+      "siblings": ["01-novice-proofs", "02-refinement-types", "04-indexed-types", "05-effect-polymorphism", "06-categorical-proofs", "07-ship-your-own-framework"],
+      "ship_your_own": false
+    }
+  }
+}

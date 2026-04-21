@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "04-indexed-types",
+    "version": "v0.1.0",
+    "track": "formal-verification",
+    "quest": "fstar-7-levels",
+    "title": "L4 — Indexed Types",
+    "xp_reward": 220,
+    "estimated_minutes": 35,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/fstar-framework"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Lists indexed by length — non-structural recursion, tamed\n\nLevel 4 starts to pay. An *indexed* type family attaches a value — typically a length, a height, or a phase — to each instance of a data structure, so shape errors fail at the type level. The Week 2 mini-project is the classic example: verified merge sort, whose recursion splits its argument into two halves and is therefore **not structural** on `tl`. F* cannot guess the metric; you must hand it one.\n\nThe predicates are indexed by a list. The sortedness check walks pairs:\n\n```fstar\nlet rec sorted (xs:list int) : bool =\n  match xs with\n  | [] -> true\n  | [x] -> true\n  | x :: y :: rest -> x <= y && sorted (y :: rest)\n```\n\nAnd termination of `merge_sort` itself relies on the **length-indexed view** of the list. The mini-project spells it out in bold: the recursion is not structural, so you must supply `decreases (length xs)`. F* then verifies that `split` produces two strictly-shorter sublists — an obligation on `length`, not on the list constructor — and closes the proof. The *index* (length) is the termination metric; the *data* (the list) is the computational content; F* keeps them separate and synchronised through the type.\n\nThat is the L4 shift in attitude. At L3 you proved termination of `fibonacci` on a raw `nat`. At L4 you prove it on a measure *over* the data — a function from your structure into a well-founded ordering. The indexed family is the pattern: length-indexed vectors, height-indexed trees, phase-indexed state machines, merge-sort-indexed-by-list-length. Once you can see the index, you can see why the recursion terminates, and F* will see it with you.",
+      "word_count": 273,
+      "key_insight": "At L4 the termination metric is a *measure* over the data, not the data itself: `decreases (length xs)` turns non-structural divide-and-conquer into a termination proof F* can check."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/geodesic-sphere.svg",
+      "alt": "A diagram of merge_sort's recursion tree for the list [3;1;4;1;5;9;2;6]. Each node is annotated with its list length as a subscript — `[3;1;4;1;5;9;2;6]_8` at the root, branching into `[3;4;5;2]_4` and `[1;1;9;6]_4`, which each split again into length-2 and length-1 sublists. An arrow labeled `decreases (length xs)` runs down the left margin pointing at the shrinking index. A footnote shows the companion predicate `sorted (xs:list int) : bool` walking adjacent pairs, and notes that `split` is the function F* must prove produces strictly-shorter sublists.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/geodesic-sphere.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "04-indexed-types.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner picks a `decreases` expression for `merge_sort` from a list of candidates: `decreases xs` (fails — not structural), `decreases (length xs)` (verifies), `decreases (length xs + 1)` (verifies but wasteful), `no clause` (fails — termination check unmet). Success fires when the learner has identified `decreases (length xs)` as the correct metric and the simulator reports VERIFIED.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "exercises/week_02/mini_project_merge_sort.fst",
+      "permalink": "file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/exercises/week_02/mini_project_merge_sort.fst",
+      "excerpt": "let rec sorted (xs:list int) : bool =\n  match xs with\n  | [] -> true\n  | [x] -> true\n  | x :: y :: rest -> x <= y && sorted (y :: rest)\n\nlet rec split (#a:Type) (xs:list a) : (list a * list a) =\n  match xs with\n  | [] -> ([], [])\n  | [x] -> ([x], [])\n  | x :: y :: rest ->\n      let (left, right) = split rest in\n      (x :: left, y :: right)\n\nval merge: xs:list int -> ys:list int -> list int\nval merge_sort: xs:list int -> list int\n\nval merge_sorted:\n  xs:list int -> ys:list int ->\n  Lemma (requires sorted xs /\\ sorted ys)\n        (ensures sorted (merge xs ys))",
+      "language": "fstar"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "The mini-project README says the recursion in `merge_sort` is NOT structural. What does that mean, and why does it matter for termination?",
+          "correct": 0,
+          "explanation": "Structural recursion recurses on an immediate sub-constructor of the input — e.g., `tl` of a `hd :: tl` match. `merge_sort` recurses on `split xs`, which is a function call, not a constructor. F* cannot see 'smaller' just by looking at the pattern, so without an explicit `decreases` clause over a well-founded measure it refuses to admit the definition into the total effect."
+        },
+        {
+          "prompt": "Which `decreases` clause does the mini-project tell you to use for `merge_sort`?",
+          "correct": 1,
+          "explanation": "Per the mini_project_merge_sort.fst hint block: 'What metric decreases with each recursive call? Answer: length of the list! Use: decreases (length xs). F* will verify that split produces shorter sublists.' The length of the list is the index that shrinks; the list itself is not."
+        },
+        {
+          "prompt": "The lemma `merge_sorted` is stated with `requires sorted xs /\\ sorted ys` and `ensures sorted (merge xs ys)`. What role does this lemma play in proving that `merge_sort` produces sorted output?",
+          "correct": 2,
+          "explanation": "It is a **helper lemma**. The main theorem (`merge_sort` produces a sorted list) is proved by induction on `length xs` and uses `merge_sorted` at the inductive step: after the two recursive calls return sorted sublists, `merge_sorted` is what lets F* conclude that merging them preserves the invariant. The indexed-family pattern composes: prove per-index invariants, then compose them."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "05-effect-polymorphism",
+      "siblings": ["01-novice-proofs", "02-refinement-types", "03-dependent-types", "05-effect-polymorphism", "06-categorical-proofs", "07-ship-your-own-framework"],
+      "ship_your_own": false
+    }
+  }
+}

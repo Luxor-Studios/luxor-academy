@@ -1,12 +1,12 @@
 {
   "id": "fstar-7-levels",
-  "version": "v0.1.0-draft",
+  "version": "v0.1.0",
   "track": "formal-verification",
   "title": "F* in Seven Levels",
   "title_es": "F* en siete niveles",
   "subtitle": "Novice proofs to shipping your own 7-level meta-prompting framework — all in F*.",
   "subtitle_es": "De pruebas principiantes a publicar tu propio framework de meta-prompting de 7 niveles — todo en F*.",
-  "tier": "Adept",
+  "tier": "Master",
   "glyph": "geodesic",
   "glyph_src": "atlas/icons/synergetics/geodesic-sphere.svg",
   "description": "Seven modules, one per level, drawn from the fstar-framework project's 7-level categorical meta-prompting ladder. You will climb from simple SMT-discharged proofs at L1, through refinement types, dependent types, indexed types, effect polymorphism, and categorical proofs — and finish by shipping your own 7-level framework for a verification domain of your choice.",
@@ -19,6 +19,15 @@
     "readme_permalink": null
   },
   "status": "drafted",
+  "modules": [
+    "01-novice-proofs",
+    "02-refinement-types",
+    "03-dependent-types",
+    "04-indexed-types",
+    "05-effect-polymorphism",
+    "06-categorical-proofs",
+    "07-ship-your-own-framework"
+  ],
   "modules_planned": [
     {
       "id": "01-novice-proofs",
@@ -28,7 +37,7 @@
       "teaser_es": "Tu primera prueba en F*. Escribe una función, declara su especificación y deja que el SMT cierre el hueco.",
       "estimated_minutes": 25,
       "xp_reward": 150,
-      "source_hint": "exercises/week_01/exercise_1_1.fst"
+      "source_hint": "instructor_guide/solutions/week_01_all_solutions.fst"
     },
     {
       "id": "02-refinement-types",
@@ -38,7 +47,7 @@
       "teaser_es": "Estrecha un tipo con un predicado. Codifica invariantes como `nat` o `non_empty_list` para que el sistema de tipos cargue con tus obligaciones de prueba.",
       "estimated_minutes": 30,
       "xp_reward": 180,
-      "source_hint": "exercises/week_01/exercise_1_2.fst"
+      "source_hint": "instructor_guide/solutions/week_01_all_solutions.fst"
     },
     {
       "id": "03-dependent-types",
@@ -48,7 +57,7 @@
       "teaser_es": "Tipos que dependen de valores. Usa Π-tipos para llevar longitudes, cotas y pruebas dentro del propio tipo.",
       "estimated_minutes": 35,
       "xp_reward": 210,
-      "source_hint": "exercises/week_02/exercise_2_1.fst"
+      "source_hint": "instructor_guide/solutions/week_02_all_solutions.fst"
     },
     {
       "id": "04-indexed-types",
@@ -68,7 +77,7 @@
       "teaser_es": "Estado, excepciones, divergencia — todo como efectos de F*. Escríbelo una vez sobre una variable de efecto e instáncialo de muchas formas.",
       "estimated_minutes": 40,
       "xp_reward": 240,
-      "source_hint": "exercises/week_03/exercise_3_1.fst"
+      "source_hint": "FSTAR_META_PROMPTING_FRAMEWORK.md"
     },
     {
       "id": "06-categorical-proofs",
@@ -78,7 +87,7 @@
       "teaser_es": "Funtorialidad, naturalidad, adjunción — demostradas en F*. Aquí el framework de 7 niveles se gana su apellido categórico.",
       "estimated_minutes": 40,
       "xp_reward": 260,
-      "source_hint": "FSTAR_META_PROMPTING_FRAMEWORK.md"
+      "source_hint": "instructor_guide/solutions/week_02_all_solutions.fst"
     },
     {
       "id": "07-ship-your-own-framework",
@@ -88,12 +97,20 @@
       "teaser_es": "Elige un dominio de verificación — cripto, parsing, sistemas distribuidos — y publica una escalera de meta-prompting de 7 niveles para él. Entrega el repo.",
       "estimated_minutes": 40,
       "xp_reward": 300,
-      "source_hint": "COURSE_SPECIFICATION_GOLD.md"
+      "source_hint": "FSTAR_META_PROMPTING_FRAMEWORK.md"
     }
   ],
   "module_count": 7,
+  "total_xp": 1560,
   "total_xp_planned": 1560,
+  "total_xp_deferred": 150,
+  "total_xp_deferred_unlocks_at": "phase-3-pipeline-live-permalink-minted",
   "estimated_minutes": 245,
+  "live_interactive_module": "01-novice-proofs",
   "canonical_last_module": "07-ship-your-own-framework",
+  "acceptance": {
+    "complete_when": "All seven modules unlocked; XP ledger shows 1560 vested (150/300 for module 07 until Phase 3 mints the permalink unlocking the remaining 150); learner has submitted a repo URL + domain tag in Module 07.",
+    "exportable_progress": true
+  },
   "license": "CC-BY-SA-4.0"
 }

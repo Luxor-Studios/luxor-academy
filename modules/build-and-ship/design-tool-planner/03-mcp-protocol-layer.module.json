@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "id": "03-mcp-protocol-layer",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "design-tool-planner",
+    "title": "The MCP Protocol Layer",
+    "xp_reward": 125,
+    "estimated_minutes": 18,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-design-tool-planner"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# One tool interface to hold every visual API\n\nThe agents (Module 02) do not call Canva or Figma or Adobe directly. They call **tools** — objects that conform to the Model Context Protocol. Every tool, regardless of what API it wraps, has the same three-part shape: a `name`, a `description` that teaches the LLM when to reach for it, and an `input_schema` that constrains what arguments it will accept. The agent-builder guide makes this literal in lines 644-662: the `MCPTool` TypeScript interface has exactly those fields plus an `execute(params)` method that returns a `ToolResult`.\n\nThe payoff is fungibility. When you swap Canva for Figma, you do not edit the agent — you edit one tool file. The guide's example at lines 664-711 shows a `CanvaAPI` class implementing `MCPTool`: its `execute` method is a plain `fetch()` to `https://api.canva.com/rest/v1/designs`. Replace that URL and body with Figma's and you have a Figma tool that the exact same agent can use. The agent never knew there was a difference.\n\nThis is why the Universal Template generalises across Canva + NanoBanana, Figma + DALL-E, Adobe + Midjourney, and Sketch + Stable Diffusion. Each combination is a different *set of tools* — but the same *set of agents*, the same system prompts, the same decision matrix, the same quality gates. The `canva-sdk-two-agent-spec.yaml` formalises this at lines 109-136: the planner gets a short list of tools (`canva_list_templates`, `canva_get_brand_kit`, `analyze_design_requirements`) while the executor gets the action tools (`nanobanana_generate`, `canva_create_design`, `canva_add_elements`, `canva_export_design`). Swap the prefix and the pattern still holds.",
+      "markdown_es": "# Una interfaz de herramientas que contiene a toda API visual\n\nLos agentes (Módulo 02) no llaman a Canva, Figma ni Adobe directamente. Llaman a **herramientas** — objetos que cumplen con el Model Context Protocol. Cada herramienta, independientemente de la API que envuelva, tiene la misma forma de tres partes: un `name`, una `description` que le enseña al LLM cuándo usarla, y un `input_schema` que restringe los argumentos. La guía del constructor de agentes lo vuelve literal en las líneas 644-662: la interfaz TypeScript `MCPTool` tiene exactamente esos campos más un método `execute(params)` que retorna un `ToolResult`.\n\nEl beneficio es la intercambiabilidad. Cuando sustituyes Canva por Figma, no editas el agente — editas un archivo de herramienta. El ejemplo de la guía en las líneas 664-711 muestra una clase `CanvaAPI` que implementa `MCPTool`: su método `execute` es un simple `fetch()` a `https://api.canva.com/rest/v1/designs`. Reemplaza esa URL y ese cuerpo por los de Figma y tienes una herramienta Figma que el mismo agente puede usar. El agente nunca supo que había una diferencia.\n\nPor eso la Plantilla Universal se generaliza a Canva + NanoBanana, Figma + DALL-E, Adobe + Midjourney y Sketch + Stable Diffusion. Cada combinación es un *conjunto distinto de herramientas* — pero el mismo *conjunto de agentes*, los mismos prompts del sistema, la misma matriz de decisión, las mismas compuertas de calidad.",
+      "word_count": 289,
+      "key_insight": "MCP is the seam. Swap the tool file, keep the agent. That is why one template covers Canva + NanoBanana, Figma + DALL-E, and every pair after.",
+      "key_insight_es": "MCP es la costura. Cambia el archivo de herramienta, conserva el agente. Por eso una plantilla cubre Canva + NanoBanana, Figma + DALL-E, y cada par siguiente."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/cuboctahedron.svg",
+      "alt": "A layered diagram with three horizontal tiers. Top tier: two agent boxes labeled 'Planning Agent' and 'Execution Agent' (same as Module 02). Middle tier: a single rectangle labeled 'MCP Tool Layer' containing four tool chips, each showing the trio (name / description / input_schema). Bottom tier: four concrete API swimlanes (Canva, Figma, Adobe Express, Sketch) each connected by dashed lines to a matching tool chip above. A caption reads: 'Swap the lane, keep the layer.'",
+      "reduced_motion_fallback": "atlas/icons/synergetics/cuboctahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "03-mcp-protocol-layer.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the MCPTool TypeScript interface (lines 644-662), then a concrete Canva implementation (lines 664-711), then a drop-in Figma rewrite shown side-by-side. Learner confirms they can identify the three invariant MCP fields (name, description, input_schema) and the one variable part (the body of execute()).",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "CLAUDE-SDK-AGENT-BUILDER-GUIDE.md",
+      "permalink": "https://github.com/manutej/luxor-design-tool-planner/blob/main/CLAUDE-SDK-AGENT-BUILDER-GUIDE.md#L644-L662",
+      "excerpt": "### MCP Tool Interface\n\n```typescript\ninterface MCPTool {\n  name: string;\n  description: string;\n  input_schema: {\n    type: 'object';\n    properties: Record<string, any>;\n    required: string[];\n  };\n  execute(params: object): Promise<ToolResult>;\n}\n\ninterface ToolResult {\n  success: boolean;\n  data?: any;\n  error?: string;\n}\n```",
+      "language": "typescript"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per the MCPTool interface in CLAUDE-SDK-AGENT-BUILDER-GUIDE.md lines 646-655, which field carries the description an agent reads to decide *when* to call the tool?",
+          "options": [
+            "name",
+            "description",
+            "input_schema",
+            "execute"
+          ],
+          "correct": 1,
+          "explanation": "The interface declares `description: string` alongside `name` and `input_schema`. The agent selects tools by reading `description` text; `name` is only the identifier used when actually issuing the tool-use call. `input_schema` constrains arguments, not intent."
+        },
+        {
+          "prompt": "In `canva-sdk-two-agent-spec.yaml` (lines 113-136), the planner and executor agents are given *different* tool lists. Which tool is assigned to the executor and NOT to the planner?",
+          "options": [
+            "canva_list_templates",
+            "canva_get_brand_kit",
+            "nanobanana_generate",
+            "analyze_design_requirements"
+          ],
+          "correct": 2,
+          "explanation": "The spec at line 127 lists `nanobanana_generate` as an executor tool (it generates assets — a tactical action). The planner's tools (lines 113-116) are read-only discovery tools: list templates, fetch brand kit, analyze requirements. The split mirrors the strategic-vs-tactical division from Module 02."
+        },
+        {
+          "prompt": "The CanvaAPI example at CLAUDE-SDK-AGENT-BUILDER-GUIDE.md lines 667-677 declares `name = 'canva_create_design'` and an `input_schema` requiring which two fields?",
+          "options": [
+            "design_id and content",
+            "template_id and title",
+            "url and body",
+            "prompt and style"
+          ],
+          "correct": 1,
+          "explanation": "Lines 670-677: the input_schema declares properties `template_id` and `title`, and `required: ['template_id', 'title']`. These are the two arguments the LLM must supply on every tool call. The implementation then posts them to the Canva REST endpoint at line 684."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "04-five-step-pipeline",
+      "siblings": ["01-universal-template", "02-two-agent-pattern", "03-mcp-protocol-layer", "04-five-step-pipeline", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

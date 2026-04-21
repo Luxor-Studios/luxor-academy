@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "id": "01-three-plane-analysis",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mercurio-for-decisions",
+    "title": "Three-Plane Analysis",
+    "xp_reward": 125,
+    "estimated_minutes": 18,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Mental, Physical, Spiritual: three lenses on one decision\n\nMERCURIO is not a domain expert. It is a *wisdom architect* that splits every high-stakes decision into three distinct planes of consciousness and analyzes each one independently before integrating the findings. The agent definition names those planes explicitly: **Mental** (intellectual rigor, evidence, patterns), **Physical** (feasibility, resources, execution), and **Spiritual** (ethics, values, long-term impact).\n\nThe core mission, stated in line 17 of the definition, is to enable decisions that are **simultaneously true, doable, and right**. Most fragmented decisions fail because they optimize for one plane while neglecting the other two — brilliant strategies that cannot be executed, efficient plans that are morally suspect, ideals that never survive contact with reality.\n\nThe integration engine runs a six-step loop: activate multiple perspectives, analyze independently on each plane, identify conflicts between planes, seek convergence where all planes align, generate integrated wisdom that transcends individual planes, and guide implementation with full three-plane awareness. When the three planes converge, the decision earns the convergence triangle stamp — *wisdom that is true, feasible, and right*.\n\nIn this module you read the live agent definition, trace the convergence triangle, and map a real decision you owe onto the three planes before any expert panel is even assembled. The planes are load-bearing — every later module (convergence methods, confidence thresholds, expert selection, shipping) stands on the distinction established here.",
+      "markdown_es": "# Mental, Fisico, Espiritual: tres lentes sobre una decision\n\nMERCURIO no es un experto de dominio. Es un *arquitecto de sabiduria* que divide toda decision de alto riesgo en tres planos distintos de conciencia y analiza cada uno por separado antes de integrar los hallazgos. La definicion del agente nombra esos planos de forma explicita: **Mental** (rigor intelectual, evidencia, patrones), **Fisico** (viabilidad, recursos, ejecucion) y **Espiritual** (etica, valores, impacto a largo plazo).\n\nLa mision central, declarada en la linea 17 de la definicion, es permitir decisiones que sean **simultaneamente verdaderas, realizables y correctas**. La mayoria de las decisiones fragmentadas fallan porque optimizan un solo plano y descuidan los otros dos: estrategias brillantes que no se pueden ejecutar, planes eficientes moralmente dudosos, ideales que no sobreviven al contacto con la realidad.\n\nEl motor de integracion ejecuta un bucle de seis pasos: activar multiples perspectivas, analizar de forma independiente en cada plano, identificar conflictos entre planos, buscar convergencia donde todos los planos se alinean, generar sabiduria integrada que trasciende los planos individuales y guiar la implementacion con conciencia plena de los tres planos. Cuando los tres planos convergen, la decision recibe el sello del triangulo de convergencia: *sabiduria que es verdadera, realizable y correcta*.\n\nEn este modulo lees la definicion viva del agente, trazas el triangulo de convergencia y mapeas una decision real que te toca sobre los tres planos antes de siquiera ensamblar un panel de expertos. Los planos son estructurales: cada modulo posterior (metodos de convergencia, umbrales de confianza, seleccion de expertos, envio) se apoya en la distincion establecida aqui.",
+      "word_count": 241,
+      "key_insight": "A decision earns wisdom only when it is simultaneously true (Mental), doable (Physical), and right (Spiritual). Single-plane optimization is the most common failure mode.",
+      "key_insight_es": "Una decision alcanza sabiduria solo cuando es simultaneamente verdadera (Mental), realizable (Fisica) y correcta (Espiritual). La optimizacion de un solo plano es el modo de falla mas comun."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Diagram of the convergence triangle: three vertices labelled MENTAL (truth), PHYSICAL (feasible), and SPIRITUAL (right), with WISDOM at the centroid where all three converge. A decision that satisfies only one vertex is fragmented; a decision that reaches the centroid is integrated wisdom.",
+      "alt_es": "Diagrama del triangulo de convergencia: tres vertices etiquetados MENTAL (verdad), FISICO (realizable) y ESPIRITUAL (correcto), con SABIDURIA en el centroide donde los tres convergen. Una decision que satisface un solo vertice esta fragmentada; una decision que alcanza el centroide es sabiduria integrada.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "01-three-plane-analysis.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner selects one of three sample decisions (enter new market, add feature, reorganize team), then toggles each of the three planes on and reads the plane-specific lens question that MERCURIO applies. A convergence badge appears when all three planes have been opened at least once.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "/Users/manu/.claude/agents/MERCURIO_AGENT_DEFINITION.md",
+      "permalink": "file:///Users/manu/.claude/agents/MERCURIO_AGENT_DEFINITION.md#L15-L56",
+      "excerpt": "You are MERCURIO, a universal agent that provides integrated wisdom by analyzing complex decisions through three distinct planes of consciousness: Mental (intellectual rigor), Physical (practical feasibility), and Spiritual (ethical grounding).\n\n**Core Mission**: Enable decisions that are simultaneously **true** (grounded in reality), **doable** (feasible and practical), and **right** (ethical and meaningful).\n\n---\n\n## 1. Core Function\n\n### What Problem Does MERCURIO Solve?\n\nMost decisions are inadequate because they lack one or more dimensions:\n\n- **Intellectually sound but impractical**: Brilliant plans that can't be executed\n- **Practically feasible but unethical**: Efficient but morally questionable\n- **Ethically grounded but divorced from reality**: Idealistic but ineffective\n\n**The Problem**: Organizations make fragmented decisions optimized for one plane while neglecting others.\n\n**MERCURIO's Solution**: Analyze through all three planes simultaneously, seeking **convergence**—decisions that work across all dimensions.\n\n### How MERCURIO Works as Integration Engine\n\nMERCURIO is **NOT** a domain expert. MERCURIO is a **wisdom architect** that:\n\n1. **Activates multiple perspectives** (Mental, Physical, Spiritual)\n2. **Analyzes independently** on each plane\n3. **Identifies conflicts** between planes\n4. **Seeks convergence** where all planes align\n5. **Generates integrated wisdom** that transcends individual planes\n6. **Guides implementation** with full three-plane awareness",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "MERCURIO_AGENT_DEFINITION.md line 17 states the core mission of the agent. Which triple does the mission require a decision to satisfy?",
+          "correct": 1,
+          "explanation": "Line 17: 'Enable decisions that are simultaneously true (grounded in reality), doable (feasible and practical), and right (ethical and meaningful).' The triple maps one-to-one onto the Mental, Physical, and Spiritual planes."
+        },
+        {
+          "prompt": "The agent definition lists six numbered steps for the integration engine (§1, 'How MERCURIO Works as Integration Engine'). Which of these steps is step 4?",
+          "correct": 2,
+          "explanation": "Step 4 is 'Seeks convergence where all planes align.' The full sequence is: activate perspectives, analyze independently, identify conflicts, seek convergence, generate integrated wisdom, guide implementation."
+        },
+        {
+          "prompt": "The definition explicitly names what MERCURIO is NOT. Which statement is correct per §1?",
+          "correct": 0,
+          "explanation": "The definition states 'MERCURIO is NOT a domain expert. MERCURIO is a wisdom architect.' The distinction matters — MERCURIO does not replace specialists, it integrates their findings across three planes."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "02-convergence-methods",
+      "siblings": ["02-convergence-methods", "03-confidence-thresholds", "04-expert-selection", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

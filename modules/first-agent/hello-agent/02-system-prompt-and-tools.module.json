@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "id": "02-system-prompt-and-tools",
+    "version": "v0.1.0",
+    "track": "first-agent",
+    "quest": "hello-agent",
+    "title": "System Prompt + Your First Tool",
+    "xp_reward": 100,
+    "estimated_minutes": 18,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Two knobs: who the agent is, and what it can do\n\nA raw `messages.create` call gives Claude a user turn and nothing else. Two small fields in that call turn it into something worth calling an agent. The first is `system` — a string (or structured block) that sets the agent's identity, constraints, and tone *before* any user turn. The TypeScript GUIDE shows it on lines 184-189: pass `system: \"You are a helpful TypeScript expert. Provide concise, practical answers.\"` and every reply now inherits that character. The `system` field is the only persona the agent ever has; the user cannot override it mid-conversation.\n\nThe second field is `tools`. A tool is not code — it is a *schema* Claude reads to decide whether and how to call a function you own. The GUIDE defines one on lines 319-354: a `get_weather` tool with a `name`, a `description`, and an `input_schema` (JSON Schema describing the shape of `location` and `unit`). You hand the array of tool schemas to `messages.create` and Claude, if it judges the tool relevant, responds with a `tool_use` content block containing a concrete `input` object.\n\nThe trick is that this module stops *one step short* of actually executing the tool. That closing step — running the function, returning a `tool_result`, looping — is the subject of Module 04. Here you only learn to declare the schema and watch Claude choose to call it. That half alone is the entire contract: description quality drives call quality, and schemas are the agent's only view into your code.",
+      "word_count": 256,
+      "key_insight": "`system` is who the agent *is*. `tools` is what the agent can *choose to reach for*. Both are declared on the same `messages.create` call; neither exists without it."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/tetrahedron.svg",
+      "alt": "A messages.create call visualized as a box with four input slots stacked vertically: model, max_tokens, system (highlighted in gold with the text 'You are a TypeScript expert'), tools (highlighted in gold, an array holding a card with name=get_weather, description, input_schema). A fifth slot messages holds the user turn. An arrow exits the box carrying a response whose content array contains a tool_use block with name=get_weather and input={location: 'London'}.",
+      "alt_es": "Una llamada a messages.create visualizada como una caja con cuatro slots de entrada apilados: model, max_tokens, system (resaltado en oro con el texto 'Eres un experto en TypeScript'), tools (resaltado en oro, un array con una tarjeta con name=get_weather, description, input_schema). Un quinto slot messages contiene el turno de usuario. Una flecha sale de la caja llevando una respuesta cuyo content array contiene un bloque tool_use con name=get_weather e input={location: 'London'}.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/tetrahedron.svg"
+    },
+    "interactive": {
+      "kind": "code-sandbox",
+      "entry": "02-system-prompt-and-tools.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the annotated tool schema, identifies the three required fields (`name`, `description`, `input_schema`), and can explain why `description` matters for the model's tool-selection decision.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "typescript/GUIDE.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform/typescript/GUIDE.md#L319-L354",
+      "excerpt": "const tools = [\n  {\n    name: \"get_weather\",\n    description: \"Get the current weather for a location\",\n    input_schema: {\n      type: \"object\",\n      properties: {\n        location: {\n          type: \"string\",\n          description: \"City name, e.g., 'San Francisco'\",\n        },\n        unit: {\n          type: \"string\",\n          enum: [\"celsius\", \"fahrenheit\"],\n          description: \"Temperature unit\",\n        },\n      },\n      required: [\"location\"],\n    },\n  },\n  {\n    name: \"calculate\",\n    description: \"Perform mathematical calculations\",\n    input_schema: {\n      type: \"object\",\n      properties: {\n        expression: {\n          type: \"string\",\n          description: \"Mathematical expression to evaluate\",\n        },\n      },\n      required: [\"expression\"],\n    },\n  },\n];",
+      "language": "typescript"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In typescript/GUIDE.md lines 319-354, each tool object has exactly three required top-level fields before the schema is complete. Which trio?",
+          "correct": 0,
+          "options": [
+            "`name`, `description`, `input_schema`",
+            "`name`, `function`, `args`",
+            "`id`, `params`, `execute`"
+          ],
+          "explanation": "GUIDE.md lines 321-323 (get_weather) and lines 341-343 (calculate) show the same three fields. `name` is the identifier Claude returns in `tool_use.name`; `description` drives whether Claude decides to call it; `input_schema` is the JSON Schema the returned `tool_use.input` must match."
+        },
+        {
+          "prompt": "typescript/GUIDE.md shows `system` prompts on lines 184-189. What does the `system` field define?",
+          "correct": 2,
+          "options": [
+            "The user's first message.",
+            "The list of available tools.",
+            "The agent's persistent identity and constraints, applied before any user turn."
+          ],
+          "explanation": "GUIDE.md lines 184-198: `system: \"You are a helpful TypeScript expert. Provide concise, practical answers.\"` fixes the agent's role. The user turn (line 188: `messages: [{ role: \"user\", content: userMessage }]`) runs under that system prompt. The user cannot override `system` mid-conversation."
+        },
+        {
+          "prompt": "A tool's `input_schema` uses JSON Schema. The `get_weather` schema on GUIDE.md lines 324-338 lists `location` and `unit` under `properties`, but `required: [\"location\"]`. What does this mean for Claude's call?",
+          "correct": 1,
+          "options": [
+            "Claude must always supply both `location` and `unit`.",
+            "Claude must supply `location`; `unit` is optional and may be omitted.",
+            "Claude must supply `unit`; `location` is derived automatically."
+          ],
+          "explanation": "GUIDE.md line 337: `required: [\"location\"]`. Only `location` is mandatory. `unit` (lines 331-335) is optional and constrained to the enum `[\"celsius\", \"fahrenheit\"]` when present. JSON Schema's `required` list is the exact same contract as in any other JSON Schema consumer."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "03-streaming",
+      "siblings": ["01-scaffold", "03-streaming", "04-tool-use-loop", "05-prompt-caching", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

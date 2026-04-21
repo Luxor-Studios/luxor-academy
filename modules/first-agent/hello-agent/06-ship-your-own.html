@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Ship Your Own CLI Agent · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#0A1628;--surface-1:#111D33;--surface-2:#162440;--primary:#E9B949;--accent:#E9B949;--text:#fff;--text-dim:#94A3B8;--border:rgba(233,185,73,0.22);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh;background-image:linear-gradient(rgba(233,185,73,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(233,185,73,0.025) 1px,transparent 1px);background-size:32px 32px;padding:2rem 1.25rem 4rem}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:0 0 16px rgba(233,185,73,0.45)}
+.shell{max-width:720px;margin:0 auto}
+.topbar{border-bottom:1px solid var(--border);padding-bottom:1.5rem;margin-bottom:2.5rem}
+.crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase}
+h1{font-family:var(--font-display);font-size:2.25rem;margin:0.5rem 0;color:var(--text);line-height:1.1}
+.subtitle{color:var(--text-dim);font-style:italic;font-size:1.05rem}
+.meta{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--text-dim);text-transform:uppercase;margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap}
+.meta span{display:inline-flex;align-items:center;gap:0.4rem}
+h2{font-family:var(--font-display);font-size:1.5rem;margin-bottom:1rem;color:var(--accent);font-weight:700}
+section{margin-bottom:3rem}
+.primer p,.primer h3,.primer h4,.primer h5{margin-bottom:1rem}
+.primer code{background:var(--surface-1);padding:0.1em 0.4em;border-radius:3px;font-family:var(--font-mono);font-size:0.9em;color:var(--accent)}
+.key-insight{border-left:3px solid var(--accent);padding:0.5rem 1rem;margin:1.5rem 0;color:#F5D06B;font-style:italic;background:rgba(233,185,73,0.04)}
+.artifact .source{color:var(--text-dim);font-family:var(--font-mono);font-size:0.75rem;margin-bottom:0.5rem}
+.artifact .source code{color:var(--primary)}
+.artifact pre{background:var(--surface-1);border:1px solid var(--border);padding:1rem;border-radius:6px;overflow-x:auto;font-family:var(--font-mono);font-size:0.85rem;line-height:1.5}
+.mcq{list-style:none}
+.mcq li.q{background:var(--surface-1);padding:1.5rem;border-radius:8px;margin-bottom:1rem;border:1px solid var(--border)}
+.mcq .prompt{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.mcq .options{list-style:none;margin-left:0}
+.mcq .options li{padding:0.5rem 0.75rem;border-left:2px solid transparent;cursor:pointer;transition:all 150ms;font-size:0.95rem}
+.mcq .options li:hover{border-left-color:var(--accent);background:rgba(255,255,255,0.02)}
+.mcq details{margin-top:0.75rem;color:var(--text-dim);font-size:0.9rem;padding:0.75rem;border-left:2px solid var(--border)}
+.mcq summary{cursor:pointer;color:var(--accent);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase}
+.ship-your-own-form{background:var(--surface-1);padding:1.5rem;border-radius:8px;border:1px solid var(--accent)}
+.ship-your-own-form label{display:block;font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem}
+.ship-your-own-form input{width:100%;padding:0.75rem;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;font-family:var(--font-mono);margin-bottom:1rem;font-size:0.9rem}
+.ship-your-own-form input:focus{outline:none;border-color:var(--accent)}
+.ship-your-own-form button{background:var(--accent);color:var(--bg);padding:0.75rem 1.5rem;border:none;border-radius:4px;font-family:var(--font-mono);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-size:0.85rem}
+.ship-your-own-form .hint{margin-top:1rem;color:var(--text-dim);font-size:0.85rem;line-height:1.5}
+.ship-your-own-form .hint code{background:var(--bg);padding:0.1em 0.4em;border-radius:3px;font-family:var(--font-mono);font-size:0.85em;color:var(--accent)}
+.next-link{font-family:var(--font-mono);color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;font-size:0.85rem}
+.back{display:inline-block;color:var(--text-dim);text-decoration:none;font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;margin-top:3rem;border-top:1px solid var(--border);padding-top:1.5rem;width:100%}
+.back:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="topbar">
+<div class="crumb">← hello-agent · Initiate</div>
+<h1>Ship Your Own CLI Agent</h1>
+<p class="subtitle">The last module of every Quest is not a summary. It is a handoff: you paste your repo URL, the pipeline runs the same six-slot contract on it, and you walk away with a permalink that teaches the thing you just built.</p>
+<div class="meta"><span>◆ 150 XP</span><span>◆ 25 min</span><span>◆ Initiate</span></div>
+</div>
+<section class="primer">
+<h2>Primer</h2>
+<h3>You have scaffolded, prompted, streamed, looped, and cached. Now wrap it and ship.</h3>
+<p>The five modules before this one handed you every part of an agent: a package and key (01), a persona and a tool schema (02), a token-by-token renderer (03), a <code>while (true)</code> loop keyed on <code>stop_reason</code> (04), and a <code>cache_control</code> annotation that makes the loop affordable (05). There is nothing left to teach about <em>how to build</em> an agent. What is left is to wrap the thing in a CLI shell and publish it.</p>
+<p>The cookbooks/RESEARCH-AGENT.md example on lines 222-262 shows the archetype: a small class (<code>ResearchOrchestrator</code>) that composes three agent helpers (<code>PlanningAgent</code>, <code>ResearchAgent</code>, <code>SynthesisAgent</code>), exposes one public method (<code>conductResearch(topic)</code>), and runs from a top-level <code>async function main()</code> that reads from <code>process.env.ANTHROPIC_API_KEY</code> and prints the result. That is a shippable CLI. Rename the class, swap the helpers for your own, add a <code>#!/usr/bin/env node</code> shebang plus a <code>bin</code> entry in <code>package.json</code>, and you have a published command.</p>
+<p>This module is the canonical last module of every LUXOR Academy Quest. You paste a URL to your own repo — your research agent, your code reviewer, your email triager, your weather bot — and the Academy&#39;s codebase-to-course pipeline extracts the same six slots from <em>your</em> code: a primer anchored in your README, a visual traced from your architecture, an interactive sandbox pointed at your real CLI, an artifact deep-link into your canonical file, a self-check derived from your tests, and a next-step that routes a future learner through <em>your</em> codebase.</p>
+<p>What you get back is a permalink. Not a certificate. Not a badge. A URL that teaches someone else the agent you just built, with your name on the attribution line. Phase 1 of LUXOR Academy captures your repo URL and queues it for the pipeline. XP vests in two steps — <strong>150 XP lands the moment you queue your repo URL</strong> here in Phase 1; a Phase 3 bonus unlocks when the pipeline mints the permalink for your generated Quest.</p>
+<blockquote class="key-insight">The last module of every Quest is not a summary. It is a handoff: you paste your repo URL, the pipeline runs the same six-slot contract on it, and you walk away with a permalink that teaches the thing you just built.</blockquote>
+</section>
+<section class="artifact">
+<h2>Artifact</h2>
+<div class="source"><code>cookbooks/RESEARCH-AGENT.md</code> · <a href="file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform/cookbooks/RESEARCH-AGENT.md#L222-L262" target="_blank" rel="noopener noreferrer">commit permalink ↗</a></div>
+<pre><code class="language-typescript">class ResearchOrchestrator {
+  private planner: PlanningAgent;
+  private researcher: ResearchAgent;
+  private synthesizer: SynthesisAgent;
+
+  constructor(apiKey: string) {
+    this.planner = new PlanningAgent(apiKey);
+    this.researcher = new ResearchAgent(apiKey);
+    this.synthesizer = new SynthesisAgent(apiKey);
+  }
+
+  async conductResearch(topic: string): Promise&lt;string&gt; {
+    console.log(`Planning research for: ${topic}`);
+
+    // Step 1: Plan
+    const subtopics = await this.planner.planResearch(topic);
+    console.log(`Identified ${subtopics.length} subtopics`);
+
+    // Step 2: Research (parallel)
+    console.log(&quot;Conducting research...&quot;);
+    const researchPromises = subtopics.map((subtopic) =&gt;
+      this.researcher.research(subtopic)
+    );
+    const results = await Promise.all(researchPromises);
+
+    // Build findings map
+    const findings: Record&lt;string, string&gt; = {};
+    subtopics.forEach((subtopic, i) =&gt; {
+      findings[subtopic] = results[i];
+    });
+
+    // Step 3: Synthesize
+    console.log(&quot;Synthesizing findings...&quot;);
+    const report = await this.synthesizer.synthesize(topic, findings);
+
+    return report;
+  }
+}</code></pre>
+</section>
+<section class="self-check">
+<h2>Self-check</h2>
+<ol class="mcq">
+<li class="q" data-correct="0">
+      <p class="prompt"><strong>Q1.</strong> In cookbooks/RESEARCH-AGENT.md lines 222-262, the <code>ResearchOrchestrator</code> composes three helper agents in its constructor. What are they, in order?</p>
+      <ul class="options"><li data-i="0"><code>PlanningAgent</code>, <code>ResearchAgent</code>, <code>SynthesisAgent</code>.</li><li data-i="1"><code>ToolAgent</code>, <code>StreamAgent</code>, <code>CacheAgent</code>.</li><li data-i="2"><code>PromptAgent</code>, <code>LoopAgent</code>, <code>ShipAgent</code>.</li></ul>
+      <details><summary>Show explanation</summary><p>RESEARCH-AGENT.md lines 228-230: <code>this.planner = new PlanningAgent(apiKey); this.researcher = new ResearchAgent(apiKey); this.synthesizer = new SynthesisAgent(apiKey);</code>. The three-stage orchestration — plan, research in parallel, synthesize — is the shape of most shippable agents. Rename the stages and you have your own CLI.</p></details>
+    </li><li class="q" data-correct="1">
+      <p class="prompt"><strong>Q2.</strong> Why is the canonical last module of every LUXOR Academy Quest a &#39;Ship Your Own&#39; step rather than a summary quiz?</p>
+      <ul class="options"><li data-i="0">Because summary quizzes are harder to grade automatically.</li><li data-i="1">Because learners should end every Quest holding a permalink to their own work, not a score — the Quest trains for the <em>next</em> repo, not for itself.</li><li data-i="2">Because the XP award is larger for shipping than for testing.</li></ul>
+      <details><summary>Show explanation</summary><p>The sovereignty clause. Per the Academy meta-prompt and MERCURIO&#39;s canonical-last-module pattern, each Quest ends by running the same six-slot contract on the learner&#39;s own repo and emitting a permalink back. Summary quizzes train for the Quest. Ship-Your-Own trains for the next repo.</p></details>
+    </li><li class="q" data-correct="2">
+      <p class="prompt"><strong>Q3.</strong> <code>ResearchOrchestrator.conductResearch(topic)</code> on RESEARCH-AGENT.md lines 234-259 runs the three research helpers with one specific concurrency shape. Which?</p>
+      <ul class="options"><li data-i="0">All three stages run sequentially, one after the other.</li><li data-i="1">All three stages run in parallel with <code>Promise.all</code>.</li><li data-i="2">Plan runs first, then the research calls for every subtopic run in parallel via <code>Promise.all</code>, then synthesis runs last on the gathered findings.</li></ul>
+      <details><summary>Show explanation</summary><p>RESEARCH-AGENT.md lines 238-246: <code>subtopics = await this.planner.planResearch(topic)</code> runs first (sequential), then <code>Promise.all(subtopics.map(...))</code> fans out the research calls in parallel, and finally <code>this.synthesizer.synthesize(topic, findings)</code> runs sequentially on the joined results. This plan-fanout-join shape generalises to almost any multi-stage agent CLI you will ship.</p></details>
+    </li>
+</ol>
+</section>
+<section class="next">
+<h2>Next</h2>
+<form class="ship-your-own-form" onsubmit="event.preventDefault();alert('Queued — your repo URL will enter the Phase 3 pipeline when it is live.');this.reset();">
+    <label for="repoUrl">Paste your repo URL</label>
+    <input type="url" id="repoUrl" name="repoUrl" placeholder="https://github.com/your/repo" required>
+    <button type="submit">Queue for the pipeline</button>
+    <p class="hint">Your submission is stored in-browser only (Phase 1). When the <code>codebase-to-course</code> pipeline goes live (Phase 3), it runs through your URL and mints a permalink quest with your name on the attribution line.</p>
+  </form>
+</section>
+<a href="/novice/first-agent/hello-agent/" class="back">← Back to quest</a>
+</div>
+<script>
+document.querySelectorAll('.mcq li.q').forEach(q => {
+  const correct = Number(q.dataset.correct);
+  q.querySelectorAll('.options li').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const i = Number(opt.dataset.i);
+      opt.style.background = (i === correct) ? 'rgba(57,255,20,0.15)' : 'rgba(255,59,59,0.10)';
+      opt.style.borderLeftColor = (i === correct) ? '#39FF14' : '#FF3B3B';
+      const d = q.querySelector('details'); if (d) d.setAttribute('open', '');
+    });
+  });
+});
+</script>
+</body>
+</html>

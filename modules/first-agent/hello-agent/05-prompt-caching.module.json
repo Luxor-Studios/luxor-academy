@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "id": "05-prompt-caching",
+    "version": "v0.1.0",
+    "track": "first-agent",
+    "quest": "hello-agent",
+    "title": "Prompt Caching for Real",
+    "xp_reward": 125,
+    "estimated_minutes": 18,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# The `cache_control` annotation is a one-line cost lever\n\nEvery request to the Messages API sends your full system prompt and tool schemas over the wire and re-processes them on Anthropic's side. For an agent with a 1,500-token system prompt and four elaborate tool schemas, that is the same ~4 KB of context being tokenised on *every* turn. Prompt caching trades that for a cache read at roughly a tenth of the input-token cost, provided the content is marked with `cache_control`.\n\nThe typescript/GUIDE.md caching example on lines 686-709 shows the shape. Instead of passing `system` as a bare string, you pass it as an array of structured blocks: `system: [{ type: \"text\", text: systemPrompt, cache_control: { type: \"ephemeral\" } }]`. That `cache_control: { type: \"ephemeral\" }` annotation tells the server to write a 5-minute cache entry keyed on the exact block content. The first request pays full input cost and populates the cache; every subsequent request whose prefix hashes identically reads from the cache and pays the discounted `cache_read_input_tokens` rate.\n\nThree things to know before you turn this on. First, the cache is **prefix-sensitive**: cached blocks must appear in the same order, earlier in the request, than the non-cached blocks. Second, you observe cache activity via the response's `usage` object — `cache_creation_input_tokens` on the first hit, `cache_read_input_tokens` on each reuse. Those two counters are how you prove the optimisation is actually firing. Third, tool schemas benefit the most: a large schema block marked with `cache_control` saves the same tokens every loop iteration, which matters exactly as much as your agent loops. Module 04's loop is where caching pays off.",
+      "word_count": 274,
+      "key_insight": "`cache_control: { type: \"ephemeral\" }` on a structured system or tools block is a one-line cost cut. The proof lives in `response.usage.cache_read_input_tokens` — if that number is nonzero on turn two, the cache is real."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/tetrahedron.svg",
+      "alt": "A two-turn comparison diagram. Turn 1 (labelled 'cache miss'): a large system prompt block flagged with a small gold cache_control badge flows into the API and is processed at full cost; the response carries `usage.cache_creation_input_tokens = 1508`. Turn 2 (labelled 'cache hit'): the same system prompt block (identical bytes) flows into the API, which routes to a cache lookup box instead of the tokenizer; the response carries `usage.cache_read_input_tokens = 1508` and `usage.input_tokens` is only the new user turn. A price tag annotation shows the cache-read rate at roughly 0.1x the uncached rate.",
+      "alt_es": "Un diagrama de comparacion de dos turnos. Turno 1 (etiquetado 'cache miss'): un bloque grande de system prompt con una pequena insignia dorada cache_control fluye hacia la API y se procesa a costo completo; la respuesta lleva `usage.cache_creation_input_tokens = 1508`. Turno 2 (etiquetado 'cache hit'): el mismo bloque de system prompt (bytes identicos) fluye hacia la API, que enruta a una caja de busqueda en cache en lugar del tokenizador; la respuesta lleva `usage.cache_read_input_tokens = 1508` y `usage.input_tokens` es solo el nuevo turno de usuario. Una etiqueta de precio muestra la tarifa de lectura de cache a aproximadamente 0.1x la tarifa sin cache.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/tetrahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "05-prompt-caching.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the annotated `sendWithCache` block, identifies the exact position of `cache_control: { type: \"ephemeral\" }`, and can explain which `usage` counter proves the cache fired on the second request.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "typescript/GUIDE.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform/typescript/GUIDE.md#L686-L709",
+      "excerpt": "async function sendWithCache(\n  client: Anthropic,\n  systemPrompt: string,\n  userMessage: string\n): Promise<string> {\n  const response = await client.messages.create({\n    model: \"claude-sonnet-4-5-20250929\",\n    max_tokens: 1024,\n    system: [\n      {\n        type: \"text\",\n        text: systemPrompt,\n        cache_control: { type: \"ephemeral\" },\n      },\n    ],\n    messages: [{ role: \"user\", content: userMessage }],\n  });\n\n  return response.content[0].text;\n}\n\n// Subsequent requests with same system prompt will use cache",
+      "language": "typescript"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "typescript/GUIDE.md lines 686-709 shows how to pass the system prompt for caching. What structural change must you make relative to the non-cached version?",
+          "correct": 2,
+          "options": [
+            "Wrap the prompt in `JSON.stringify(...)`.",
+            "Move the prompt into the `messages` array as the first user turn.",
+            "Replace the bare `system: \"...\"` string with an array of typed blocks: `system: [{ type: \"text\", text: systemPrompt, cache_control: { type: \"ephemeral\" } }]`."
+          ],
+          "explanation": "GUIDE.md lines 694-701: the `system` field becomes an array of structured content blocks. Each block may carry a `cache_control` annotation. Only the structured form accepts `cache_control`; the plain-string shortcut from Module 02 does not."
+        },
+        {
+          "prompt": "What value is passed to the `cache_control` field on GUIDE.md line 699?",
+          "correct": 0,
+          "options": [
+            "`{ type: \"ephemeral\" }`",
+            "`{ type: \"persistent\", ttl: 3600 }`",
+            "`true`"
+          ],
+          "explanation": "GUIDE.md line 699: `cache_control: { type: \"ephemeral\" }`. `ephemeral` is the currently supported cache type — a short-lived (~5 minute) cache entry keyed on exact block content. There is no `persistent` variant in the block-level `cache_control` API, and a bare boolean is rejected."
+        },
+        {
+          "prompt": "You wire up `sendWithCache` exactly as GUIDE.md shows and call it twice in a row with the same `systemPrompt`. On the second response, which `usage` field tells you the cache fired?",
+          "correct": 1,
+          "options": [
+            "`usage.output_tokens` — it drops by a factor of ten.",
+            "`usage.cache_read_input_tokens` — it is nonzero and equals the token count of the cached system block.",
+            "`usage.cached: true` — a boolean flag the SDK sets."
+          ],
+          "explanation": "The `usage` object on the response exposes `cache_creation_input_tokens` on the first (miss) request and `cache_read_input_tokens` on subsequent (hit) requests. GUIDE.md calls this behaviour out in the comment on line 708: 'Subsequent requests with same system prompt will use cache.' The counter is how you verify it actually fired — a stubborn zero means something in the prefix differed between calls."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "06-ship-your-own",
+      "siblings": ["01-scaffold", "02-system-prompt-and-tools", "03-streaming", "04-tool-use-loop", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

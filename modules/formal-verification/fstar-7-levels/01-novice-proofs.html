@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 01 — L1 — Novice Proofs · F* in Seven Levels · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#39FF14;
+  --primary-soft:#7FFF5F;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(57,255,20,0.22);
+  --border-strong:rgba(57,255,20,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-green:0 0 16px rgba(57,255,20,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(57,255,20,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,255,20,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-green)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* Top bar */
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+/* Title */
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+/* Sections */
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+/* Primer */
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.primer pre{background:#050B18;border:1px solid var(--border);border-radius:6px;padding:1rem 1.15rem;margin:1rem 0;overflow-x:auto}
+.primer pre code{background:transparent;color:#D4E4F7;border:none;padding:0;font-size:0.85rem;line-height:1.6}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+/* Visual */
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+/* Interactive */
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-green)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .chrome .state.active{color:var(--primary)}
+.sim .chrome .state.fail{color:var(--danger)}
+.sim .body{padding:1rem 1rem 0.5rem;min-height:220px;color:#D4E4F7;white-space:pre-wrap;line-height:1.55}
+.sim .ps1{color:var(--primary);font-weight:600}
+.sim .ps1 .prefix{color:var(--accent)}
+.sim .input{color:#FFFFFF}
+.sim .out{color:#94A3B8;display:block;margin-bottom:0.3rem}
+.sim .out.good{color:var(--primary)}
+.sim .out.bad{color:var(--danger)}
+.sim .out.cite{color:var(--primary-soft);font-style:italic}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim .controls label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-right:0.4rem}
+.sim .controls input[type="text"],.sim .controls input[type="url"]{background:var(--surface-3);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:0.8rem;padding:0.4rem 0.6rem;border-radius:4px;flex:1;min-width:140px}
+.sim .controls input[type="text"]:focus,.sim .controls input[type="url"]:focus{outline:none;border-color:var(--primary);box-shadow:var(--glow-green)}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text);}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .activate{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .activate:hover,.sim .activate:focus-visible{background:var(--primary-soft);color:var(--background)}
+.sim .activate[disabled]{opacity:0.4;cursor:not-allowed}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(57,255,20,0.12);color:var(--primary);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--primary);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+
+/* Artifact */
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+
+/* Self-check */
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--primary);background:rgba(57,255,20,0.1);color:var(--primary)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.explanation code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.88em}
+
+/* Next */
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-green)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Geodesic sphere — F* in Seven Levels glyph">
+    <g fill="none" stroke="#39FF14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="50" cy="50" r="42"/>
+      <ellipse cx="50" cy="50" rx="42" ry="14" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="14" ry="42" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="28" ry="42" opacity="0.55"/>
+      <polygon points="50,8 78,28 68,62 32,62 22,28" opacity="0.85"/>
+      <polygon points="50,92 22,72 32,38 68,38 78,72" opacity="0.85"/>
+      <circle cx="50" cy="8" r="1.4" fill="#39FF14"/>
+      <circle cx="50" cy="92" r="1.4" fill="#39FF14"/>
+      <circle cx="8" cy="50" r="1.4" fill="#39FF14"/>
+      <circle cx="92" cy="50" r="1.4" fill="#39FF14"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Formal Verification · F* in Seven Levels · Module 01 of 07</div>
+    <div class="qname">L1 — Novice Proofs</div>
+  </div>
+  <div class="stats">
+    <span><strong>+150</strong> XP</span>
+    <span><strong>25</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">L1 — Novice Proofs</h1>
+<div class="module-subtitle">// Tier: Master · Source: fstar-framework · Level 1/7</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Your first F* proof: let Z3 close the gap</h1>
+  <p>A &quot;proof&quot; in F* does not always look like a proof. At Level 1 of the 7-level ladder, a proof looks like a <em>type</em>. You write a function, you annotate its argument with a refinement predicate, and when F* typechecks the file it hands the resulting logical obligation to the Z3 SMT solver. If Z3 returns <code>unsat</code> on the negation of your postcondition, F* accepts the function as verified. You never wrote <code>theorem</code> or <code>QED</code>. You wrote a type.</p>
+  <p>The canonical Week 1 example is safe division. <code>int / 0</code> is undefined, so we carve out the subset of integers that are not zero and call that <code>nonzero</code>:</p>
+  <pre><code class="lang-fstar">type nonzero = x:int{x &lt;&gt; 0}
+
+let safe_divide (a:int) (b:nonzero) : int = a / b</code></pre>
+  <p>Two things happen here. First, the refinement <code>{x &lt;&gt; 0}</code> is syntactic sugar for a <strong>predicate subtype</strong>: <code>nonzero</code> contains every integer <code>x</code> for which <code>x &lt;&gt; 0</code> holds. Second, any call site that passes <code>0</code> where <code>nonzero</code> is expected fails at <em>compile time</em> with <code>Could not prove refinement: 0 &lt;&gt; 0</code>. The solver attempted the check and Z3 handed back <code>sat</code> with the witness <code>x = 0</code>. That counterexample is the error.</p>
+  <p>Extracted to OCaml, the refinement evaporates — the shipped code is just <code>let safe_divide a b = a / b</code>, no runtime guard, because the proof already ran at build time. That is the whole pedagogy of L1: write tight types, let the SMT solver discharge them, ship boring code that is provably safe.</p>
+  <blockquote class="pullquote">At L1, the proof IS the type. A refinement <code>{x &lt;&gt; 0}</code> is a predicate subtype — Z3 discharges the obligation at typecheck time and the check erases on extraction.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    
+    <svg viewBox="0 0 540 260" role="img" aria-label="F* to Z3 verification pipeline for safe_divide." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#39FF14}
+          .box{fill:#111D33;stroke:#39FF14;stroke-opacity:0.35}
+          .boxfail{stroke:#FF3B3B;stroke-opacity:0.6}
+          .boxok{stroke:#39FF14;stroke-opacity:0.8}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .xmark{fill:#FF3B3B;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+          .check{fill:#39FF14;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+        </style>
+        <marker id="a1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+      </defs>
+      <text class="head" x="20" y="20">F* SOURCE</text>
+      <rect class="box" x="20" y="30" width="220" height="64" rx="3"/>
+      <text class="label" x="32" y="48">type nonzero = x:int{x &lt;&gt; 0}</text>
+      <text class="label" x="32" y="66">let safe_divide (a:int)</text>
+      <text class="label" x="32" y="82">  (b:nonzero) : int = a / b</text>
+
+      <text class="head" x="300" y="20">Z3 SMT QUERY</text>
+      <rect class="box" x="300" y="30" width="220" height="64" rx="3"/>
+      <text class="label" x="312" y="48">(assert (not (&lt;&gt; 0 0)))</text>
+      <text class="label" x="312" y="66">(check-sat)</text>
+      <text class="label" x="312" y="82">=&gt; sat, model x=0</text>
+
+      <path class="arrow" d="M240 62 L300 62" marker-end="url(#a1)"/>
+
+      <rect class="box boxfail" x="20" y="120" width="220" height="44" rx="3"/>
+      <text class="label" x="32" y="138">safe_divide 10 0</text>
+      <text class="xmark" x="32" y="158">✗ Could not prove 0 &lt;&gt; 0</text>
+
+      <rect class="box boxok" x="300" y="120" width="220" height="44" rx="3"/>
+      <text class="label" x="312" y="138">safe_divide 10 2</text>
+      <text class="check" x="312" y="158">✓ verified, erased on extraction</text>
+
+      <text class="label" x="20" y="200">Type check time: compile</text>
+      <text class="label" x="20" y="216">Runtime cost: zero</text>
+      <text class="label" x="300" y="200">Extracted OCaml:</text>
+      <text class="label" x="300" y="216">let safe_divide a b = a / b</text>
+    </svg>
+    <p class="visual-caption">A diagram of the F* -&gt; Z3 -&gt; verdict pipeline: on the left, F* source defines <code>type nonzero = x:int{x &lt;&gt; 0}</code> and a call site <code>safe_divide 10 0</code>. An arrow labeled <code>SMT query</code> flows to a Z3 box that asserts <code>(&gt; 0 &lt;&gt; 0)</code> is unsat. Z3 returns <code>sat</code> with model <code>x = 0</code>, and the compiler emits <code>Could not prove refinement: 0 &lt;&gt; 0</code>. Below, a second path shows the well-typed call <code>safe_divide 10 2</code> passing cleanly through to extracted OCaml code <code>let safe_divide a b = a / b</code> with the refinement erased.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · F* REPL Simulator</h2>
+  
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Type a divisor into the simulated F* REPL. Any non-zero integer returns <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">VERIFIED</code>. Type <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">0</code> and F* will reject with the exact message from week_01_all_solutions.fst. <em>No real F* is running; pure DOM.</em></p>
+  <div class="sim" role="region" aria-label="F* REPL simulator">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>fstar — novice-proofs</span>
+      <span class="state" id="simstate">idle</span>
+    </div>
+    <div class="body" id="simbody"></div>
+    <div class="controls">
+      <label>safe_divide 10</label>
+      <input type="text" id="divisorInput" value="2" aria-label="Divisor">
+      <button class="activate" type="button" id="runBtn">typecheck</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you saw both a verified call and F* rejecting zero.</div>
+
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">instructor_guide/solutions/week_01_all_solutions.fst</span>
+      <a href="file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/instructor_guide/solutions/week_01_all_solutions.fst" target="_blank" rel="noopener noreferrer">open source file →</a>
+    </div>
+<pre><code>// Solution:
+type nonzero = x:int{x &lt;&gt; 0}
+
+let safe_divide (a:int) (b:nonzero) : int = a / b
+
+// Test cases
+let test1_1 = safe_divide 10 2     // Result: 5
+let test1_2 = safe_divide 100 (-5) // Result: -20
+let test1_3 = safe_divide 7 1      // Result: 7
+
+// These should be TYPE ERRORS:
+// let test_fail1 = safe_divide 10 0
+// Error: &quot;Expected type nonzero, got type int&quot;
+//
+// let test_fail2 : nonzero = 0
+// Error: &quot;Could not prove refinement: 0 &lt;&gt; 0&quot;</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — In the definition <code>type nonzero = x:int{x &lt;&gt; 0}</code>, what exactly does the brace-enclosed predicate do?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>It is a runtime assertion inserted by the F* compiler at every use of the type.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>It defines a predicate subtype: <code>nonzero</code> is the set of integers <code>x</code> for which <code>x &lt;&gt; 0</code> holds, checked at typecheck time by Z3.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>It is a documentation comment that F* ignores during verification.</span></button>
+    </div>
+    <div class="explanation">It defines a **predicate subtype** (also called a refinement type): <code>nonzero</code> is the set of integers <code>x</code> for which <code>x &lt;&gt; 0</code> holds. Membership is checked at typecheck time by Z3, not at runtime. Extraction erases the refinement, so the OCaml output is just <code>int</code>.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — A learner writes <code>let test_fail1 = safe_divide 10 0</code> and F* refuses to compile. Which error message is the one F* actually emits, per week_01_all_solutions.fst?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>bad interpreter: no such file or directory</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>TypeError: int is not nonzero</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>Could not prove refinement: 0 &lt;&gt; 0</code></span></button>
+    </div>
+    <div class="explanation">The inline comment in the solutions file names it exactly: <code>Could not prove refinement: 0 &lt;&gt; 0</code>. F* handed Z3 the obligation <code>0 &lt;&gt; 0</code>; Z3 returned <code>sat</code> (the witness is <code>x = 0</code> itself), so the refinement is unprovable and the call is rejected at compile time.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q3">
+    <div class="q">3 — After F* extracts <code>safe_divide</code> to OCaml, what happens to the <code>nonzero</code> refinement at runtime?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>The refinement is erased — extracted OCaml is just <code>let safe_divide a b = a / b</code> with no runtime check.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>The refinement becomes a runtime <code>assert</code> in the extracted OCaml.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>The refinement is compiled into a Z3 query that runs every time <code>safe_divide</code> is called.</span></button>
+    </div>
+    <div class="explanation">Refinement types are **erased** during extraction. The OCaml code is just <code>let safe_divide a b = a / b</code> with no runtime check — F* already proved safety at compile time, so there is nothing left to check when the program runs. Week 1 teaching notes call this out as the Level-1 payoff.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="#" aria-disabled="true" style="opacity:0.4;pointer-events:none"><span class="label">← previous</span><span class="title">—</span></a>
+    <a href="02-refinement-types.html" class="next"><span class="label">next module →</span><span class="title">02 · L2 · Refinement Types</span></a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* 01-novice-proofs interactive — pure DOM, no eval, no network. */
+(function(){
+  const body = document.getElementById('simbody');
+  const state = document.getElementById('simstate');
+  const input = document.getElementById('divisorInput');
+  const runBtn = document.getElementById('runBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const successPill = document.getElementById('successPill');
+  let sawVerified = false;
+  let sawReject = false;
+
+  function prompt(){ return '<span class="ps1"><span class="prefix">(fstar) </span>$ </span>'; }
+
+  function write(cmd, out, cls){
+    const line = document.createElement('div');
+    line.innerHTML = prompt() + '<span class="input">' + cmd + '</span>';
+    body.appendChild(line);
+    if (out) {
+      const o = document.createElement('span');
+      o.className = 'out' + (cls ? ' ' + cls : '');
+      o.textContent = out;
+      body.appendChild(o);
+    }
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function run(){
+    const raw = input.value.trim();
+    const n = parseInt(raw, 10);
+    if (raw === '' || Number.isNaN(n)) {
+      write('safe_divide 10 ' + raw, 'parse error: expected an integer', 'bad');
+      state.textContent = 'parse error';
+      state.classList.remove('active');
+      state.classList.add('fail');
+      return;
+    }
+    if (n === 0) {
+      write('safe_divide 10 0', 'Error: Could not prove refinement: 0 <> 0', 'bad');
+      state.textContent = 'rejected (0 <> 0 unprovable)';
+      state.classList.remove('active');
+      state.classList.add('fail');
+      sawReject = true;
+    } else {
+      const result = Math.trunc(10 / n);
+      write('safe_divide 10 ' + n, 'VERIFIED : int = ' + result, 'good');
+      state.textContent = 'verified — ' + n + ' : nonzero';
+      state.classList.remove('fail');
+      state.classList.add('active');
+      sawVerified = true;
+    }
+    checkSuccess();
+  }
+
+  function reset(){
+    body.innerHTML = '';
+    sawVerified = false; sawReject = false;
+    successPill.classList.remove('visible');
+    state.textContent = 'idle';
+    state.classList.remove('active', 'fail');
+    seed();
+  }
+
+  function seed(){
+    const intro = document.createElement('span');
+    intro.className = 'out cite';
+    intro.textContent = '# citation: instructor_guide/solutions/week_01_all_solutions.fst — "Error: Could not prove refinement: 0 <> 0"';
+    body.appendChild(intro);
+  }
+
+  function checkSuccess(){
+    if (sawVerified && sawReject) {
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.fstar-7-levels.01', '1'); } catch(e){}
+    }
+  }
+
+  runBtn.addEventListener('click', run);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
+  resetBtn.addEventListener('click', reset);
+  seed();
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) {
+          c.classList.add('correct');
+        } else {
+          c.classList.add('wrong');
+          choices[correct].classList.add('correct');
+        }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+/* XP export (sovereignty clause) */
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

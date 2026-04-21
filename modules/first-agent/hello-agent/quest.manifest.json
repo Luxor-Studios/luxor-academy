@@ -1,6 +1,6 @@
 {
   "id": "hello-agent",
-  "version": "v0.1.0-draft",
+  "version": "v0.1.0",
   "track": "first-agent",
   "title": "Your First Claude Agent",
   "title_es": "Tu primer agente Claude",
@@ -19,71 +19,18 @@
     "readme_permalink": "https://github.com/anthropics/claude-agent-sdk-python/blob/main/README.md"
   },
   "status": "drafted",
-  "modules_planned": [
-    {
-      "id": "01-scaffold",
-      "title": "Scaffold Your Agent",
-      "title_es": "Monta el esqueleto de tu agente",
-      "teaser": "Install the SDK, set your API key, and print your first response from Claude.",
-      "teaser_es": "Instala el SDK, configura tu API key e imprime tu primera respuesta de Claude.",
-      "estimated_minutes": 12,
-      "xp_reward": 75,
-      "source_hint": "README.md"
-    },
-    {
-      "id": "02-system-prompt-and-tools",
-      "title": "System Prompt + Your First Tool",
-      "title_es": "System prompt y tu primera herramienta",
-      "teaser": "Define who the agent is and give it one tool it can actually call.",
-      "teaser_es": "Define quien es el agente y dale una herramienta que pueda invocar de verdad.",
-      "estimated_minutes": 18,
-      "xp_reward": 100,
-      "source_hint": "typescript/GUIDE.md"
-    },
-    {
-      "id": "03-streaming",
-      "title": "Stream the Response",
-      "title_es": "Transmite la respuesta en streaming",
-      "teaser": "Turn the blocking call into a token-by-token stream so the CLI feels alive.",
-      "teaser_es": "Convierte la llamada bloqueante en un stream token a token para que la CLI se sienta viva.",
-      "estimated_minutes": 15,
-      "xp_reward": 100,
-      "source_hint": "typescript/EXAMPLES.md"
-    },
-    {
-      "id": "04-tool-use-loop",
-      "title": "Close the Tool-Use Loop",
-      "title_es": "Cierra el bucle de uso de herramientas",
-      "teaser": "Handle tool_use blocks, run the function, send tool_result back, and iterate until stop_reason is end_turn.",
-      "teaser_es": "Atrapa los bloques tool_use, ejecuta la funcion, devuelve el tool_result e itera hasta que stop_reason sea end_turn.",
-      "estimated_minutes": 22,
-      "xp_reward": 125,
-      "source_hint": "agent-sdk/OVERVIEW.md"
-    },
-    {
-      "id": "05-prompt-caching",
-      "title": "Prompt Caching for Real",
-      "title_es": "Cache de prompts de verdad",
-      "teaser": "Mark cache_control on your system prompt and tool schemas and watch cache_read_input_tokens appear.",
-      "teaser_es": "Marca cache_control en tu system prompt y en los esquemas de herramientas, y observa como aparece cache_read_input_tokens.",
-      "estimated_minutes": 18,
-      "xp_reward": 125,
-      "source_hint": "ARCHITECTURE.md"
-    },
-    {
-      "id": "06-ship-your-own",
-      "title": "Ship Your Own CLI Agent",
-      "title_es": "Lanza tu propio agente CLI",
-      "teaser": "Wrap what you built into a published CLI, push the repo, and share the permalink.",
-      "teaser_es": "Envuelve lo que construiste en una CLI publicada, sube el repositorio y comparte el enlace permanente.",
-      "estimated_minutes": 25,
-      "xp_reward": 150,
-      "source_hint": "cookbooks/RESEARCH-AGENT.md"
-    }
-  ],
   "module_count": 6,
   "total_xp_planned": 675,
   "estimated_minutes": 110,
   "canonical_last_module": "06-ship-your-own",
-  "license": "CC-BY-SA-4.0"
+  "license": "CC-BY-SA-4.0",
+  "modules": [
+    "01-scaffold",
+    "02-system-prompt-and-tools",
+    "03-streaming",
+    "04-tool-use-loop",
+    "05-prompt-caching",
+    "06-ship-your-own"
+  ],
+  "total_xp": 675
 }

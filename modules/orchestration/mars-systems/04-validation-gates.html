@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 04 — Validation Gates · MARS for Systems-Level Innovation · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--background:#0A1628;--surface-1:#111D33;--surface-2:#162440;--surface-3:#1C2B47;--primary:#E9B949;--primary-soft:#F5D06B;--accent:#00F5FF;--accent-soft:#7DF9FF;--text:#FFFFFF;--text-dim:#94A3B8;--text-muted:#64748B;--border:rgba(0,245,255,0.22);--border-strong:rgba(0,245,255,0.6);--danger:#FF3B3B;--success:#22C55E;--glow-cyan:0 0 16px rgba(0,245,255,0.5);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:var(--background);background-image:linear-gradient(rgba(0,245,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.03) 1px,transparent 1px);background-size:32px 32px;color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;box-shadow:var(--glow-cyan)}
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--accent-soft);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--accent);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--accent);border-color:var(--accent)}
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--accent);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--primary-soft);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--accent-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--accent-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--accent);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--accent-soft)}
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+/* Gates widget */
+.gates{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-cyan)}
+.gates .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.gates .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.gates .chrome .dot.r{background:#FF5F57}.gates .chrome .dot.y{background:#FEBC2E}.gates .chrome .dot.g{background:#28C840}
+.gates .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.gates .chrome .state.ship{color:var(--success)}
+.gates .chrome .state.fail{color:var(--danger)}
+.gates .body{padding:1rem}
+.gate{display:flex;align-items:center;gap:0.7rem;padding:0.7rem 0.85rem;margin-bottom:0.55rem;background:var(--surface-1);border:1px solid var(--border);border-radius:4px;transition:all 150ms}
+.gate.pass{border-color:var(--success)}
+.gate.fail{border-color:var(--danger)}
+.gate .num{font-family:var(--font-mono);font-size:0.85rem;color:var(--accent);font-weight:600;width:24px;flex-shrink:0;text-align:center}
+.gate .name{flex:1;color:var(--text);font-size:0.85rem}
+.gate .name small{display:block;color:var(--text-dim);font-size:0.72rem;margin-top:0.15rem}
+.gate .toggles{display:flex;gap:0.3rem;flex-shrink:0}
+.gate button{font-family:var(--font-mono);font-size:0.7rem;padding:0.3rem 0.6rem;border-radius:3px;border:1px solid var(--border);background:var(--surface-3);color:var(--text-dim);cursor:pointer;transition:all 150ms}
+.gate button:hover{color:var(--accent);border-color:var(--accent)}
+.gate button.p.on{background:var(--success);color:var(--background);border-color:var(--success);font-weight:600}
+.gate button.f.on{background:var(--danger);color:#FFFFFF;border-color:var(--danger);font-weight:600}
+.gates .verdict{margin-top:0.85rem;padding:0.75rem 0.9rem;background:var(--surface-3);border-left:3px solid var(--accent);border-radius:0 4px 4px 0;font-size:0.82rem;color:var(--text)}
+.gates .verdict.ship{border-left-color:var(--success);color:var(--success)}
+.gates .verdict.fail{border-left-color:var(--danger);color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(34,197,94,0.12);color:var(--success);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--success);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--accent-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18;white-space:pre-wrap}
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--accent);box-shadow:var(--glow-cyan)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--accent-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+@media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Octahedron — MARS systems glyph">
+    <g fill="none" stroke="#00F5FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 92,50 50,92 8,50"/>
+      <line x1="50" y1="8" x2="50" y2="92"/><line x1="8" y1="50" x2="92" y2="50"/>
+      <line x1="50" y1="8" x2="8" y2="50"/><line x1="50" y1="8" x2="92" y2="50"/>
+      <line x1="50" y1="92" x2="8" y2="50"/><line x1="50" y1="92" x2="92" y2="50"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Orchestration · MARS for Systems-Level Innovation · Module 04 of 05</div>
+    <div class="qname">Validation Gates</div>
+  </div>
+  <div class="stats">
+    <span><strong>+125</strong> XP</span>
+    <span><strong>17</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Validation Gates</h1>
+<div class="module-subtitle">// Tier: Adept · Source: ~/.claude/agents/mars-architect.md</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Quality assurance is a running check, not a final audit</h1>
+  <p>MARS the ARCHITECT is not done when the diagram is done. The agent definition builds a five-gate quality-assurance routine directly into the design posture — five continuous checks that fire during the architectural pass, not at the end of it. If any gate fails, the ARCHITECT self-corrects before the blueprint moves forward.</p>
+  <p>The five gates are explicit. <strong>Gate 1</strong>: <code>Regularly verify that the design actually enables stated capabilities</code>. That is the capability check — does the thing you drew actually do what you claimed? <strong>Gate 2</strong>: <code>Check that integration remains coherent as complexity grows</code>. Integration does not stay coherent for free; it has to be re-checked every time the system gets bigger. <strong>Gate 3</strong>: <code>Ensure structural choices still serve transformation goals</code>. Structure drifts — a choice that served the goal last week may be fighting it now. <strong>Gate 4</strong>: <code>Identify and address single points of failure or brittleness</code>. <strong>Gate 5</strong> is the meta-gate: <code>Self-correct when you notice emerging fragility or misalignment</code>.</p>
+  <p>The fifth gate is what makes the first four operational. A validation gate that only names fragility is a memo. A validation gate that self-corrects is a feedback loop. This is where MARS the ARCHITECT stops being a diagramming agent and starts being a system that keeps its own designs honest.</p>
+  <p>The ship-or-fail decision is not a single audit at the end. It is the accumulated state of these five gates across the design pass. If any one of them is failing when the blueprint lands, the blueprint does not ship — it gets returned to the architect with a specific gate to re-run.</p>
+  <blockquote class="pullquote">The five architect gates — capability, integration coherence, transformation alignment, single-point brittleness, and self-correction — fire continuously. A blueprint with a failing gate does not ship.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 280" role="img" aria-label="Five numbered gates arranged vertically, each representing one of the architect's QA checks. A blueprint card on the left moves rightward past each gate. Any single red gate routes the blueprint back with a self-correct arrow." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .labelacc{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#00F5FF}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#00F5FF}
+          .gpass{fill:#0B2030;stroke:#22C55E;stroke-width:1.5}
+          .gfail{fill:#2A0D10;stroke:#FF3B3B;stroke-width:1.5}
+          .gneutral{fill:#111D33;stroke:#00F5FF;stroke-width:1.2;stroke-opacity:0.5}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2;stroke-opacity:0.7}
+          .arrowback{stroke:#FF3B3B;fill:none;stroke-width:1.2;stroke-dasharray:4 3}
+        </style>
+        <marker id="a1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+        <marker id="a2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#FF3B3B"/>
+        </marker>
+      </defs>
+
+      <rect class="gneutral" x="20" y="100" width="80" height="60" rx="4"/>
+      <text class="labelacc" x="60" y="128" text-anchor="middle">blueprint</text>
+      <text class="label" x="60" y="144" text-anchor="middle">(in)</text>
+
+      <rect class="gpass" x="120" y="30" width="90" height="48" rx="4"/>
+      <text class="head" x="165" y="48" text-anchor="middle">1 · capability</text>
+      <text class="label" x="165" y="66" text-anchor="middle">enables stated caps</text>
+
+      <rect class="gpass" x="120" y="92" width="90" height="48" rx="4"/>
+      <text class="head" x="165" y="110" text-anchor="middle">2 · coherence</text>
+      <text class="label" x="165" y="128" text-anchor="middle">stays as complexity grows</text>
+
+      <rect class="gfail" x="120" y="154" width="90" height="48" rx="4"/>
+      <text class="head" x="165" y="172" text-anchor="middle" style="fill:#FF3B3B">3 · alignment</text>
+      <text class="label" x="165" y="190" text-anchor="middle">serves transformation</text>
+
+      <rect class="gpass" x="230" y="30" width="90" height="48" rx="4"/>
+      <text class="head" x="275" y="48" text-anchor="middle">4 · brittleness</text>
+      <text class="label" x="275" y="66" text-anchor="middle">no single points of failure</text>
+
+      <rect class="gpass" x="230" y="92" width="90" height="48" rx="4"/>
+      <text class="head" x="275" y="110" text-anchor="middle">5 · self-correct</text>
+      <text class="label" x="275" y="128" text-anchor="middle">names &amp; repairs drift</text>
+
+      <path class="arrow" d="M100 130 L120 55" marker-end="url(#a1)"/>
+      <path class="arrow" d="M100 130 L120 116" marker-end="url(#a1)"/>
+      <path class="arrow" d="M100 130 L120 178" marker-end="url(#a1)"/>
+      <path class="arrow" d="M210 54 L230 55"  marker-end="url(#a1)"/>
+      <path class="arrow" d="M210 116 L230 116" marker-end="url(#a1)"/>
+
+      <rect class="gfail" x="340" y="60" width="80" height="54" rx="4"/>
+      <text class="head" x="380" y="80" text-anchor="middle" style="fill:#FF3B3B">return</text>
+      <text class="label" x="380" y="96" text-anchor="middle">re-run gate 3</text>
+      <text class="label" x="380" y="108" text-anchor="middle">(self-correct)</text>
+      <path class="arrowback" d="M320 178 Q370 180 380 114" marker-end="url(#a2)"/>
+
+      <rect class="gneutral" x="450" y="100" width="90" height="60" rx="4"/>
+      <text class="labelacc" x="495" y="128" text-anchor="middle">ship</text>
+      <text class="label" x="495" y="144" text-anchor="middle">only if all 5 pass</text>
+
+      <text class="label" x="20" y="268">source: mars-architect.md §Quality assurance (lines 87-92)</text>
+    </svg>
+    <p class="visual-caption">Five gates. Any single red gate routes the blueprint back to the architect for self-correction, not forward to ship.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Ship-or-Return Gate Board</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Mark each gate <strong style="color:var(--success)">PASS</strong> or <strong style="color:var(--danger)">FAIL</strong> based on a sample blueprint. The verdict at the bottom updates live. Success unlocks when you correctly recognize that <em>any</em> failing gate forces the blueprint back to self-correction.</p>
+  <div class="gates" role="region" aria-label="Validation gate board">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>mars-architect — validate</span>
+      <span class="state" id="gstate">unset</span>
+    </div>
+    <div class="body" id="gbody"></div>
+    <div style="padding:0 1rem 1rem"><div class="verdict" id="verdict">mark all five gates to see the ship decision.</div></div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you flipped one gate to FAIL and saw the blueprint return, not ship.</div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">mars-architect.md · lines 87–92</span>
+      <a href="file:///Users/manu/.claude/agents/mars-architect.md#L87-L92" target="_blank" rel="noopener noreferrer">view local →</a>
+    </div>
+<pre><code>5. **Quality assurance**:
+   - Regularly verify that the design actually enables stated capabilities
+   - Check that integration remains coherent as complexity grows
+   - Ensure structural choices still serve transformation goals
+   - Identify and address single points of failure or brittleness
+   - Self-correct when you notice emerging fragility or misalignment</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — Per mars-architect.md §Quality assurance, how many continuous validation gates does the ARCHITECT run, and when do they fire?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Three gates, run once at the end of the design pass.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Five gates, run continuously during the design pass.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Seven gates, run by a separate reviewer after sign-off.</span></button>
+    </div>
+    <div class="explanation">mars-architect.md lines 87–92 list exactly five QA bullets: capability verification, integration coherence, transformation alignment, single-point brittleness, and self-correction. They are listed under <code>Regularly verify</code> and <code>Check that</code> — continuous checks, not a final audit.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — The fifth gate is the meta-gate that makes the first four operational rather than decorative. What does it prescribe?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Write a post-mortem after every shipped blueprint.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Ask leadership to review every design change.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Self-correct when you notice emerging fragility or misalignment.</span></button>
+    </div>
+    <div class="explanation">mars-architect.md line 92 reads: <code>Self-correct when you notice emerging fragility or misalignment</code>. Without that gate, the first four only name problems. Self-correction converts a list of checks into an active feedback loop — which is the only way the design pass stays honest.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q3">
+    <div class="q">3 — Gate 2 of the ARCHITECT's QA routine addresses a specific drift mode. Which?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Integration coherence decaying as complexity grows.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Timeline slippage due to under-estimated tasks.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Budget overruns caused by scope creep.</span></button>
+    </div>
+    <div class="explanation">mars-architect.md line 89 states: <code>Check that integration remains coherent as complexity grows</code>. Integration decays under growth for free — components accumulate, edges multiply, coherence erodes silently. Gate 2 forces a periodic re-verification so complexity does not outrun coherence.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="03-systems-optimization.html">
+      <span class="label">← previous</span>
+      <span class="title">03 · Systems-Level Optimization</span>
+    </a>
+    <a href="05-ship-your-own.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">05 · Ship Your Own Breakthrough</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* Ship-or-return gate board. No eval, no network. */
+(function(){
+  const GATES = [
+    { n: 1, name: 'Capability',     sub: 'Design actually enables stated capabilities.' },
+    { n: 2, name: 'Coherence',      sub: 'Integration remains coherent as complexity grows.' },
+    { n: 3, name: 'Alignment',      sub: 'Structural choices still serve transformation goals.' },
+    { n: 4, name: 'Brittleness',    sub: 'No single points of failure or brittleness.' },
+    { n: 5, name: 'Self-correction', sub: 'Names and repairs emerging fragility / misalignment.' }
+  ];
+  const body    = document.getElementById('gbody');
+  const verdict = document.getElementById('verdict');
+  const state   = document.getElementById('gstate');
+  const pill    = document.getElementById('successPill');
+  const marks   = {};
+  let sawFailReturn = false;
+
+  function render(){
+    body.innerHTML = '';
+    GATES.forEach(g => {
+      const row = document.createElement('div');
+      row.className = 'gate';
+      const mk = marks[g.n];
+      if (mk) row.classList.add(mk);
+      row.innerHTML = `
+        <span class="num">${g.n}</span>
+        <span class="name">${g.name}<small>${g.sub}</small></span>
+        <span class="toggles">
+          <button type="button" class="p ${mk==='pass'?'on':''}" data-g="${g.n}" data-v="pass">PASS</button>
+          <button type="button" class="f ${mk==='fail'?'on':''}" data-g="${g.n}" data-v="fail">FAIL</button>
+        </span>`;
+      row.querySelectorAll('button').forEach(b => {
+        b.addEventListener('click', () => {
+          marks[b.dataset.g] = b.dataset.v;
+          render();
+          update();
+        });
+      });
+      body.appendChild(row);
+    });
+  }
+
+  function update(){
+    const total = GATES.length;
+    const set   = GATES.filter(g => marks[g.n]).length;
+    const pass  = GATES.filter(g => marks[g.n] === 'pass').length;
+    const fail  = GATES.filter(g => marks[g.n] === 'fail').length;
+
+    if (set < total) {
+      state.textContent = set + ' / ' + total + ' marked';
+      state.classList.remove('ship','fail');
+      verdict.className = 'verdict';
+      verdict.textContent = 'mark all five gates to see the ship decision.';
+      return;
+    }
+
+    if (fail > 0) {
+      state.textContent = 'RETURN';
+      state.classList.add('fail'); state.classList.remove('ship');
+      verdict.className = 'verdict fail';
+      verdict.innerHTML = '<strong>✗ BLUEPRINT RETURNED</strong> — ' + fail + ' gate(s) failing. Per mars-architect.md §Quality assurance, self-correct the failing gate(s) before the blueprint ships.';
+      sawFailReturn = true;
+      pill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.mars-systems.04', '1'); } catch(e){}
+    } else {
+      state.textContent = 'SHIP';
+      state.classList.add('ship'); state.classList.remove('fail');
+      verdict.className = 'verdict ship';
+      verdict.innerHTML = '<strong>✓ BLUEPRINT SHIPS</strong> — all five gates passing. Capability · coherence · alignment · brittleness · self-correction.';
+    }
+  }
+
+  render();
+  update();
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) c.classList.add('correct');
+        else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

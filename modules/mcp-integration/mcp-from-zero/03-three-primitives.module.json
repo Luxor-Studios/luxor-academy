@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "03-three-primitives",
+    "version": "v0.1.0",
+    "track": "mcp-integration",
+    "quest": "mcp-from-zero",
+    "title": "The Three Primitives: Tools, Resources, Prompts",
+    "xp_reward": 160,
+    "estimated_minutes": 30,
+    "tier": "Adept",
+    "license": "MIT",
+    "source_repo": "https://github.com/manutej/meta-prompting-plugin"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Three primitives, three categorical shapes\n\nMCP has exactly three primitives that server authors implement, and the `mcp-categorical` skill encodes each one as a distinct categorical shape. Once you see the shape, the three stop feeling like three arbitrary API families and start feeling like three slots on a single interface.\n\n**Tools are morphisms.** A tool is a function `Parameters → Result`. It has a schema on the input side, it returns content on the output side, and it is the only primitive that _does_ something. Every tool handler is a morphism in the category of tools; composing two tools is composing two functions.\n\n**Resources are objects.** A resource is addressable by URI and has a `read()` that returns bytes or text. Resources do not _act_; they _exist_. They are the objects that tool morphisms consume and produce. A resource with a stable URI is a named point in the category; without the URI it would just be data in motion.\n\n**Prompts are exponentials.** A prompt template takes a `Context` and returns a rendered prompt string: `Context → String`. In category-theory vocabulary that is an exponential object `String^Context` — a first-class function you can pass around, compose, and parameterise. The `composePrompts` helper in the skill is exactly the composition of two exponentials: `(p1, p2) ↦ ctx ↦ p1(ctx) ++ p2(ctx)`.\n\nHold those three shapes in mind and every MCP design question becomes sharper. _Is this a thing I invoke?_ Tool. _Is this a thing I address?_ Resource. _Is this a parameterised render of context?_ Prompt.",
+      "word_count": 267,
+      "key_insight": "Tools are morphisms, resources are objects, prompts are exponentials. Three primitives; three categorical slots; no overlap."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/jitterbug.svg",
+      "alt": "A three-panel diagram. Left panel: a directed arrow labelled `Tool :: Parameters → Result` connecting two boxes — the morphism primitive. Middle panel: three labelled dots connected by URIs — the resource primitive as objects identified by stable addresses. Right panel: a box containing a lambda symbol with input `Context` and output `Prompt` — the prompt primitive as an exponential object. A footer strip ties all three together under a single MCP server icon.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/jitterbug.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "03-three-primitives.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner is shown three unlabelled MCP method specs (e.g. `tools/call`, `resources/read`, `prompts/get`) and must drag each onto the correct categorical shape (morphism / object / exponential). The success pill appears once all three are matched correctly.",
+      "interactive_kind_is_static_readable_in_phase_1": false
+    },
+    "artifact": {
+      "source_path": "skills/integrations/mcp-categorical/SKILL.md",
+      "permalink": "https://github.com/manutej/meta-prompting-plugin/blob/main/skills/integrations/mcp-categorical/SKILL.md#L6-L18",
+      "excerpt": "# MCP Categorical Tool Composition\n\nCategorical patterns for Model Context Protocol server design and tool composition.\n\n## Core Categorical Mapping\n\nMCP structures map to category theory:\n\n- **Tools**: Morphisms `Parameters → Result`\n- **Resources**: Objects with URI-based identity\n- **Prompts**: Exponential objects `Context → Prompt`\n- **Context**: Product type of available information\n- **Server**: Category of tools with composition",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per `mcp-categorical/SKILL.md` §Core Categorical Mapping, a Tool is formally which categorical construct?",
+          "correct": 0,
+          "explanation": "SKILL.md line 14: `**Tools**: Morphisms Parameters → Result`. A tool is a function from a typed parameter object to a typed result — a morphism between objects in the category of tools."
+        },
+        {
+          "prompt": "The skill maps a Resource to an object with URI-based identity. Why URI rather than numeric id?",
+          "correct": 1,
+          "explanation": "A URI is a stable, globally-unique name. Two servers can expose the same logical resource at the same URI without collision, and a URI survives process restarts, caches, and wire transmission. The skill's ResourceCategory registry keys on URI for exactly this reason (SKILL.md lines 280-300)."
+        },
+        {
+          "prompt": "Prompts are modelled as exponential objects `Context → Prompt`. What does that let you do that a plain string template could not?",
+          "correct": 2,
+          "explanation": "Exponential objects are first-class morphisms: you can compose them (`composePrompts(p1, p2)` in SKILL.md lines 356-364), pass them as arguments, partially apply them, and reason about them with the same laws you use for tools. A plain string template is inert data; an exponential is a morphism in the category."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "04-your-first-server",
+      "siblings": ["01-two-layer-protocol", "02-capability-negotiation", "04-your-first-server", "05-client-integration-claude-code", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

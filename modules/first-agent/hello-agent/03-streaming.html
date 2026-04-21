@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 03 — Stream the Response · Hello Agent · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#E9B949;
+  --primary-soft:#F5D06B;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(233,185,73,0.22);
+  --border-strong:rgba(233,185,73,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-gold:0 0 16px rgba(233,185,73,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(233,185,73,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(233,185,73,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-gold)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-gold)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .chrome .state.active{color:var(--success)}
+.sim .body{padding:1rem 1rem 0.5rem;min-height:220px;color:#D4E4F7;white-space:pre-wrap;line-height:1.55}
+.sim .out{color:#D4E4F7;display:block;margin-bottom:0.3rem}
+.sim .out.event{color:var(--accent);opacity:0.85}
+.sim .out.tok{color:var(--primary-soft)}
+.sim .out.final{color:var(--success)}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim .controls label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-right:0.4rem}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .mode{background:var(--surface-3);color:var(--text)}
+.sim .mode.active{border-color:var(--primary);color:var(--primary);background:rgba(233,185,73,0.12)}
+.sim .play{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .play:hover,.sim .play:focus-visible{background:var(--primary-soft)}
+.sim .play[disabled]{opacity:0.4;cursor:not-allowed}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(34,197,94,0.12);color:var(--success);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--success);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-gold)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Tetrahedron Quest glyph">
+    <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,12 86,78 14,78"/>
+      <line x1="50" y1="12" x2="50" y2="58"/>
+      <line x1="14" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
+      <line x1="86" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
+      <circle cx="50" cy="12" r="1.5" fill="#E9B949"/>
+      <circle cx="86" cy="78" r="1.5" fill="#E9B949"/>
+      <circle cx="14" cy="78" r="1.5" fill="#E9B949"/>
+      <circle cx="50" cy="58" r="1.5" fill="#E9B949"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">First Agent · Hello Agent · Module 03 of 06</div>
+    <div class="qname">Stream the Response</div>
+  </div>
+  <div class="stats">
+    <span><strong>+100</strong> XP</span>
+    <span><strong>15</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Stream the Response</h1>
+<div class="module-subtitle">// Tier: Initiate · Source: claude-agent-sdk-multiplatform</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>From a blocking promise to a token-by-token async iterator</h1>
+  <p>Without streaming, <code>messages.create</code> is one round-trip: you <code>await</code> the whole reply and print it at the end. For a CLI this is the wrong shape. The user stares at a blinking cursor for three seconds, then the entire reply lands in one paste. Streaming fixes that by returning an async iterable of <em>events</em> — you consume them with <code>for await (const event of stream)</code> and render each token as it arrives.</p>
+  <p>The mechanics are a single boolean flip. typescript/EXAMPLES.md lines 137-161 show the whole thing: pass <code>stream: true</code> to <code>messages.create</code> and the SDK returns an <code>AsyncIterable&lt;MessageStreamEvent&gt;</code> instead of a single <code>Message</code>. You iterate the stream; you filter for events where <code>event.type === "content_block_delta"</code> and <code>event.delta.type === "text_delta"</code>; you <code>process.stdout.write(event.delta.text)</code> for each one. That is the complete streaming loop.</p>
+  <p>Three things move from implicit to explicit once you stream. First, <strong>event types</strong> — <code>message_start</code>, <code>content_block_start</code>, <code>content_block_delta</code>, <code>content_block_stop</code>, <code>message_delta</code>, <code>message_stop</code> — and you only care about <code>content_block_delta</code> for rendering text. Second, <strong>token usage</strong> only finalises in the <code>message_delta</code> event at the end of the stream, so cost tracking attaches to that event specifically. Third, <strong>errors</strong> can arrive mid-stream, so the <code>try/catch</code> goes around the <code>for await</code> loop, not around the initial <code>create</code> call. Everything else — the model ID, the messages, the <code>max_tokens</code> cap — is identical to the non-streaming version from Module 01.</p>
+  <blockquote class="pullquote">Streaming is not a different API. It is the same <code>messages.create</code> with <code>stream: true</code>, returning an async iterable whose <code>content_block_delta</code> events carry the text you render.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 540 220" role="img" aria-label="A timeline comparison. Top track (blocking) shows one wide block labelled await messages.create spanning 3 seconds then a single large payload at the end. Bottom track (streaming) shows stream true then a sequence of small event capsules emerging in real time — content_block_delta events carrying tokens to stdout." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#E9B949}
+          .axis{stroke:#94A3B8;stroke-opacity:0.4;stroke-width:1}
+          .block{fill:#162440;stroke:#E9B949;stroke-opacity:0.55}
+          .chunk{fill:#162440;stroke:#E9B949;stroke-opacity:0.55}
+          .payload{fill:#0A1628;stroke:#22C55E;stroke-opacity:0.8}
+          .bad{fill:#0A1628;stroke:#FF3B3B;stroke-opacity:0.5}
+          .tokens{fill:#F5D06B;font-family:'JetBrains Mono',monospace;font-size:10px}
+        </style>
+      </defs>
+      <text class="head" x="20" y="22">blocking</text>
+      <line class="axis" x1="20" y1="60" x2="520" y2="60"/>
+      <rect class="bad" x="20" y="36" width="410" height="28" rx="3"/>
+      <text class="label" x="32" y="54">await messages.create({...})</text>
+      <rect class="payload" x="430" y="36" width="90" height="28" rx="3"/>
+      <text class="label" x="440" y="54">full reply →</text>
+      <text class="label" x="20" y="80">t=0</text>
+      <text class="label" x="430" y="80">t≈3s</text>
+
+      <text class="head" x="20" y="130">streaming (stream: true)</text>
+      <line class="axis" x1="20" y1="168" x2="520" y2="168"/>
+      <rect class="chunk" x="20" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="24" y="162">start</text>
+      <rect class="chunk" x="52" y="144" width="30" height="28" rx="3"/>
+      <text class="tokens" x="56" y="162">block</text>
+      <rect class="chunk" x="86" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="92" y="162">tok</text>
+      <rect class="chunk" x="118" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="122" y="162">tok</text>
+      <rect class="chunk" x="150" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="156" y="162">tok</text>
+      <rect class="chunk" x="182" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="188" y="162">tok</text>
+      <rect class="chunk" x="214" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="222" y="162">tok</text>
+      <rect class="chunk" x="246" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="254" y="162">tok</text>
+      <rect class="chunk" x="278" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="284" y="162">tok</text>
+      <rect class="chunk" x="310" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="316" y="162">tok</text>
+      <rect class="chunk" x="342" y="144" width="28" height="28" rx="3"/>
+      <text class="tokens" x="348" y="162">tok</text>
+      <rect class="chunk" x="374" y="144" width="32" height="28" rx="3"/>
+      <text class="tokens" x="380" y="162">stop</text>
+      <rect class="chunk" x="410" y="144" width="40" height="28" rx="3"/>
+      <text class="tokens" x="414" y="162">usage</text>
+      <rect class="chunk" x="454" y="144" width="30" height="28" rx="3"/>
+      <text class="tokens" x="458" y="162">end</text>
+      <text class="label" x="20" y="188">t=0 · each capsule is an event. content_block_delta → process.stdout.write</text>
+      <text class="label" x="420" y="188">t≈3s</text>
+    </svg>
+    <p class="visual-caption">Fallback: static diagram. The two wire shapes are identical in duration. The only difference is rendering granularity — one payload at the end vs. many events along the way.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Event-Stream Player</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Pick a mode, then click <strong style="color:var(--primary)">play</strong>. In <em>blocking</em> mode the whole reply lands at the end. In <em>streaming</em> mode the events fire one by one, with tokens written to stdout as they arrive. <em>No real API call is made</em>; the event sequence is scripted from the EXAMPLES.md loop.</p>
+  <div class="sim" role="region" aria-label="Event-stream player">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>bash — hello-agent</span>
+      <span class="state" id="simstate">idle</span>
+    </div>
+    <div class="body" id="simbody"></div>
+    <div class="controls">
+      <label>Mode:</label>
+      <button class="mode" type="button" data-mode="blocking" id="modeBlocking">blocking</button>
+      <button class="mode active" type="button" data-mode="streaming" id="modeStreaming">streaming (stream: true)</button>
+      <button class="play" type="button" id="playBtn">play</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you have watched both wire shapes.</div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">typescript/EXAMPLES.md · lines 137–163</span>
+      <a href="file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform/typescript/EXAMPLES.md" target="_blank" rel="noopener noreferrer">view vendored source →</a>
+    </div>
+<pre><code>async function streamingChat(message: string): Promise&lt;void&gt; {
+  const client = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY!,
+  });
+
+  console.log("Claude: ");
+
+  const stream = await client.messages.create({
+    model: "claude-sonnet-4-5-20250929",
+    max_tokens: 1024,
+    messages: [{ role: "user", content: message }],
+    stream: true,
+  });
+
+  for await (const event of stream) {
+    if (
+      event.type === "content_block_delta" &&
+      event.delta.type === "text_delta"
+    ) {
+      process.stdout.write(event.delta.text);
+    }
+  }
+
+  console.log("\n");
+}
+
+streamingChat("Write a short story about a robot learning to paint");</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — In typescript/EXAMPLES.md lines 137–163, which single field turns the <code>messages.create</code> call into a streaming call?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>max_tokens: 1024</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>stream: true</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>model: "claude-sonnet-4-5-20250929"</code></span></button>
+    </div>
+    <div class="explanation">EXAMPLES.md line 148: <code>stream: true</code>. That one boolean flips the return type from a <code>Message</code> to an <code>AsyncIterable&lt;MessageStreamEvent&gt;</code>. Everything else in the call — <code>model</code>, <code>max_tokens</code>, <code>messages</code> — is identical to the non-streaming path from Module 01.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — The streaming loop filters events with two conditions (EXAMPLES.md lines 152–155). What is the filter looking for?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>event.type === "message_start"</code> and <code>event.delta.type === "text_delta"</code></span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>event.type === "content_block_stop"</code> and <code>event.delta.type === "tool_use"</code></span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>event.type === "content_block_delta"</code> and <code>event.delta.type === "text_delta"</code></span></button>
+    </div>
+    <div class="explanation">EXAMPLES.md lines 152–155 filter for <code>content_block_delta</code> events whose <code>delta.type</code> is <code>text_delta</code>. Those are the events that carry renderable text. <code>message_start</code>, <code>content_block_start</code>, <code>content_block_stop</code>, <code>message_delta</code>, and <code>message_stop</code> also arrive, but the CLI renderer ignores them.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q3">
+    <div class="q">3 — After the filter matches, what does the example do with the token on EXAMPLES.md line 156?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>process.stdout.write(event.delta.text)</code> — writes the token to stdout immediately, with no buffering.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>console.log(event.delta.text)</code> — prints the token plus a trailing newline, buffered.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span><code>stream.push(event.delta.text)</code> — re-emits the token into a downstream channel.</span></button>
+    </div>
+    <div class="explanation">EXAMPLES.md line 156: <code>process.stdout.write(event.delta.text)</code>. <code>write</code> (unlike <code>console.log</code>) does not add a trailing newline, which is what you want for token-by-token rendering — each <code>text_delta</code> is a fragment, and fragments concatenate into a word. The trailing <code>console.log("\n")</code> on line 160 adds the single final newline after the stream completes.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="02-system-prompt-and-tools.html">
+      <span class="label">← previous</span>
+      <span class="title">02 · System Prompt + Your First Tool</span>
+    </a>
+    <a href="04-tool-use-loop.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">04 · Close the Tool-Use Loop</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* Pure DOM streaming simulator. No eval. No network. No external scripts. */
+(function(){
+  const body = document.getElementById('simbody');
+  const state = document.getElementById('simstate');
+  const playBtn = document.getElementById('playBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const modeBlocking = document.getElementById('modeBlocking');
+  const modeStreaming = document.getElementById('modeStreaming');
+  const successPill = document.getElementById('successPill');
+
+  let mode = 'streaming';
+  const seen = { blocking: false, streaming: false };
+
+  /* Scripted token stream (from the EXAMPLES.md prompt "Write a short story about a robot learning to paint"). */
+  const tokens = [
+    'Pip ', 'the ', 'paint-bot ', 'dipped ', 'his ', 'brush ', 'into ',
+    'cadmium ', 'red ', 'and ', 'hesitated. '
+  ];
+
+  function append(cls, text){
+    const span = document.createElement('span');
+    span.className = 'out ' + (cls || '');
+    span.textContent = text;
+    body.appendChild(span);
+    body.scrollTop = body.scrollHeight;
+    return span;
+  }
+
+  function appendInline(cls, text){
+    const span = document.createElement('span');
+    span.className = cls || '';
+    span.textContent = text;
+    body.appendChild(span);
+    body.scrollTop = body.scrollHeight;
+    return span;
+  }
+
+  function setMode(m){
+    mode = m;
+    modeBlocking.classList.toggle('active', m === 'blocking');
+    modeStreaming.classList.toggle('active', m === 'streaming');
+    reset();
+  }
+
+  function reset(){
+    body.innerHTML = '';
+    state.textContent = 'idle';
+    state.classList.remove('active');
+    playBtn.disabled = false;
+    const intro = append('event', '# click play — mode: ' + mode);
+  }
+
+  async function delay(ms){
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  async function playBlocking(){
+    playBtn.disabled = true;
+    state.textContent = 'awaiting reply…';
+    append('event', '> await client.messages.create({ model, max_tokens: 1024, messages, /* no stream */ })');
+    await delay(2200);
+    const fullText = tokens.join('');
+    append('final', 'Claude: ' + fullText);
+    append('event', '# full reply landed in one payload at t≈2.2s');
+    state.textContent = 'done';
+    state.classList.add('active');
+    seen.blocking = true;
+    checkSuccess();
+    playBtn.disabled = false;
+  }
+
+  async function playStreaming(){
+    playBtn.disabled = true;
+    state.textContent = 'streaming…';
+    append('event', '> const stream = await client.messages.create({ ..., stream: true })');
+    await delay(160);
+    append('event', '> for await (const event of stream) { ... }');
+    await delay(200);
+    append('event', 'message_start');
+    await delay(180);
+    append('event', 'content_block_start');
+    await delay(180);
+    const claudeLine = appendInline('tok', 'Claude: ');
+    for (const t of tokens) {
+      await delay(140);
+      const span = document.createElement('span');
+      span.className = 'tok';
+      span.textContent = t;
+      body.appendChild(span);
+      body.scrollTop = body.scrollHeight;
+    }
+    body.appendChild(document.createElement('br'));
+    append('event', 'content_block_stop');
+    await delay(160);
+    append('event', 'message_delta  (usage.output_tokens ≈ ' + tokens.length * 2 + ')');
+    await delay(160);
+    append('event', 'message_stop');
+    state.textContent = 'stream complete';
+    state.classList.add('active');
+    seen.streaming = true;
+    checkSuccess();
+    playBtn.disabled = false;
+  }
+
+  function checkSuccess(){
+    if (seen.blocking && seen.streaming){
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.hello-agent.03', '1'); } catch(e){}
+    }
+  }
+
+  modeBlocking.addEventListener('click', () => setMode('blocking'));
+  modeStreaming.addEventListener('click', () => setMode('streaming'));
+  playBtn.addEventListener('click', () => {
+    if (mode === 'blocking') playBlocking(); else playStreaming();
+  });
+  resetBtn.addEventListener('click', reset);
+  reset();
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) {
+          c.classList.add('correct');
+        } else {
+          c.classList.add('wrong');
+          choices[correct].classList.add('correct');
+        }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

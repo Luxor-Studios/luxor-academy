@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "02-refinement-types",
+    "version": "v0.1.0",
+    "track": "formal-verification",
+    "quest": "fstar-7-levels",
+    "title": "L2 — Refinement Types",
+    "xp_reward": 180,
+    "estimated_minutes": 30,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/fstar-framework"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Carry the invariant in the type, not in a comment\n\nLevel 2 tightens the screw. Now the refinement is **compound** — multiple conjoined predicates that describe a non-trivial invariant — and the signature of the function *returns* a refined type, not just accepts one. The question is no longer \"can I refuse bad input?\" but \"can I prove the output is always good?\"\n\nThe canonical Week 1 exercise is `clamp`. The spec: given a range `[min, max]` and an input `x`, return a value provably inside the range. The F* type is where the invariant lives:\n\n```fstar\nlet clamp (min:int) (max:int{max >= min}) (x:int)\n  : y:int{y >= min && y <= max} =\n  if x < min then min\n  else if x > max then max\n  else x\n```\n\nRead the return type aloud: *\"returns some integer `y` such that `y >= min && y <= max`.\"* That is not a comment — it is a proof obligation that F* must discharge for every branch of the body. And here is the beautiful part: F* **tracks control flow**. In the `if x < min then min` branch, the solver knows `x < min` holds; it must prove `min >= min && min <= max`, and the second conjunct follows from the precondition `max >= min`. In the final `else x` branch, the solver has accumulated `x >= min && x <= max` from the failed guards and closes the proof for free.\n\nRemove the precondition `max >= min` and the first branch collapses — F* reports `could not prove post-condition: min <= max`, because the assumption that makes it true is gone. The invariant is the type, and the type is binding.",
+      "word_count": 262,
+      "key_insight": "At L2, the return type *is* the postcondition and F* tracks control-flow facts through each branch to discharge it. A missing precondition makes the proof collapse at the first branch that needed it."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/geodesic-sphere.svg",
+      "alt": "A three-branch decision tree for clamp(min, max, x). The root is labeled with the signature `y:int{y >= min && y <= max}`. Branch 1 `if x < min` returns `min` and the annotation reads `context: x < min; goal: min >= min && min <= max; discharged by precondition max >= min`. Branch 2 `else if x > max` returns `max` with a symmetric annotation. Branch 3 `else x` returns `x` with `context: x >= min && x <= max (from negated guards); goal holds directly`. A side note shows that removing the precondition collapses branch 1 into a compile error.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/geodesic-sphere.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "02-refinement-types.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner toggles the precondition `max >= min` on the clamp signature. With the precondition present, all three branches are marked VERIFIED. Toggle it off and branch 1 immediately flips to `could not prove post-condition: min <= max`. Success fires when the learner has seen both states.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "instructor_guide/solutions/week_01_all_solutions.fst",
+      "permalink": "file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/instructor_guide/solutions/week_01_all_solutions.fst",
+      "excerpt": "// Solution:\ntype age = x:int{x >= 0 && x <= 150}\n\nlet clamp (min:int) (max:int{max >= min}) (x:int)\n  : y:int{y >= min && y <= max} =\n  if x < min then min\n  else if x > max then max\n  else x\n\n// Part B: Positive refinement\ntype positive = x:int{x > 0}\n\n// Part C: Bounded integers\ntype bounded100 = x:int{x >= 0 && x < 100}\n\nlet increment_wrap (x:bounded100) : bounded100 =\n  if x = 99 then 0 else x + 1",
+      "language": "fstar"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In `clamp`'s final branch `else x`, how does F* prove the return value satisfies `y >= min && y <= max`?",
+          "correct": 0,
+          "explanation": "F* performs **control-flow analysis**. The `else` branch is only reached when both prior guards failed, so the solver knows `not (x < min)` and `not (x > max)`, i.e., `x >= min && x <= max` — which is exactly the postcondition. The solutions file names this out explicitly: 'F* proves: directly from control flow context!'"
+        },
+        {
+          "prompt": "Why does `clamp`'s signature need the precondition `max:int{max >= min}`?",
+          "correct": 2,
+          "explanation": "Without it, branch 1 `if x < min then min` must still prove `min <= max` — and with no assumption relating `min` and `max`, the solver cannot discharge that conjunct. The teaching notes state the exact error: 'Could not prove postcondition: min <= max'. The precondition closes the gap."
+        },
+        {
+          "prompt": "`increment_wrap (x:bounded100) : bounded100` returns `if x = 99 then 0 else x + 1`. An alternative implementation uses `(x + 1) % 100`. What is the pedagogical trade-off the Week 1 solutions file names between these two?",
+          "correct": 1,
+          "explanation": "Per the instructor notes, the modulo version is more concise but shifts the work to the SMT solver — it must prove `(x + 1) % 100 < 100` holds across the whole domain. The if-then-else version makes the two cases explicit so control-flow analysis closes the proof directly. Both verify; the difference is clarity vs. compactness."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "03-dependent-types",
+      "siblings": ["01-novice-proofs", "03-dependent-types", "04-indexed-types", "05-effect-polymorphism", "06-categorical-proofs", "07-ship-your-own-framework"],
+      "ship_your_own": false
+    }
+  }
+}

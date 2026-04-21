@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 05 — L5 — Effect Polymorphism · F* in Seven Levels · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#39FF14;
+  --primary-soft:#7FFF5F;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(57,255,20,0.22);
+  --border-strong:rgba(57,255,20,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-green:0 0 16px rgba(57,255,20,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(57,255,20,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,255,20,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-green)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* Top bar */
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+/* Title */
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+/* Sections */
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+/* Primer */
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.primer pre{background:#050B18;border:1px solid var(--border);border-radius:6px;padding:1rem 1.15rem;margin:1rem 0;overflow-x:auto}
+.primer pre code{background:transparent;color:#D4E4F7;border:none;padding:0;font-size:0.85rem;line-height:1.6}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+/* Visual */
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+/* Interactive */
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-green)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .chrome .state.active{color:var(--primary)}
+.sim .chrome .state.fail{color:var(--danger)}
+.sim .body{padding:1rem 1rem 0.5rem;min-height:220px;color:#D4E4F7;white-space:pre-wrap;line-height:1.55}
+.sim .ps1{color:var(--primary);font-weight:600}
+.sim .ps1 .prefix{color:var(--accent)}
+.sim .input{color:#FFFFFF}
+.sim .out{color:#94A3B8;display:block;margin-bottom:0.3rem}
+.sim .out.good{color:var(--primary)}
+.sim .out.bad{color:var(--danger)}
+.sim .out.cite{color:var(--primary-soft);font-style:italic}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim .controls label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-right:0.4rem}
+.sim .controls input[type="text"],.sim .controls input[type="url"]{background:var(--surface-3);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:0.8rem;padding:0.4rem 0.6rem;border-radius:4px;flex:1;min-width:140px}
+.sim .controls input[type="text"]:focus,.sim .controls input[type="url"]:focus{outline:none;border-color:var(--primary);box-shadow:var(--glow-green)}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text);}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .activate{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .activate:hover,.sim .activate:focus-visible{background:var(--primary-soft);color:var(--background)}
+.sim .activate[disabled]{opacity:0.4;cursor:not-allowed}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(57,255,20,0.12);color:var(--primary);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--primary);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+
+/* Artifact */
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18}
+
+/* Self-check */
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--primary);background:rgba(57,255,20,0.1);color:var(--primary)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.explanation code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.88em}
+
+/* Next */
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-green)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Geodesic sphere — F* in Seven Levels glyph">
+    <g fill="none" stroke="#39FF14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="50" cy="50" r="42"/>
+      <ellipse cx="50" cy="50" rx="42" ry="14" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="14" ry="42" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="28" ry="42" opacity="0.55"/>
+      <polygon points="50,8 78,28 68,62 32,62 22,28" opacity="0.85"/>
+      <polygon points="50,92 22,72 32,38 68,38 78,72" opacity="0.85"/>
+      <circle cx="50" cy="8" r="1.4" fill="#39FF14"/>
+      <circle cx="50" cy="92" r="1.4" fill="#39FF14"/>
+      <circle cx="8" cy="50" r="1.4" fill="#39FF14"/>
+      <circle cx="92" cy="50" r="1.4" fill="#39FF14"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Formal Verification · F* in Seven Levels · Module 05 of 07</div>
+    <div class="qname">L5 — Effect Polymorphism</div>
+  </div>
+  <div class="stats">
+    <span><strong>+240</strong> XP</span>
+    <span><strong>40</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">L5 — Effect Polymorphism</h1>
+<div class="module-subtitle">// Tier: Master · Source: fstar-framework · Level 5/7</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Effects as types — stateful code, still verified</h1>
+  <p>At Level 5 the type system gains a whole new axis. Alongside <code>int</code>, <code>list a</code>, and refinements, every computation now carries an <strong>effect label</strong> — <code>Tot</code> for total, <code>Dv</code> for divergent, <code>ST</code> for stateful, <code>GTot</code> for erasable ghost code. The effect <em>is part of the type</em>. F* can talk about state, exceptions, and divergence inside the same logic that proved <code>clamp</code> and <code>fibonacci</code>, and it can <em>mix</em> them through effect polymorphism and lifting.</p>
+  <p>The canonical L4/L5 example in the fstar-framework is <code>swap</code>, written in the <code>ST</code> (state) effect with an explicit Hoare triple:</p>
+  <pre><code class="lang-fstar">let swap (#a: Type) (r1 r2: ref a) : ST unit
+  (requires (fun h -&gt; True))
+  (ensures (fun h0 _ h1 -&gt;
+    sel h1 r1 == sel h0 r2 &amp;&amp;
+    sel h1 r2 == sel h0 r1 &amp;&amp;
+    modifies (only r1 ++ only r2) h0 h1))
+=
+  let tmp = !r1 in
+  r1 := !r2;
+  r2 := tmp</code></pre>
+  <p>Three new things are loud in that signature. <strong>Requires</strong> names the precondition on the incoming heap <code>h</code>. <strong>Ensures</strong> names the postcondition as a relation between pre-heap <code>h0</code>, return value, and post-heap <code>h1</code>. And <strong>modifies</strong> names a <em>frame</em> — the set of references that can change. F* requires you to prove that <em>nothing outside the frame is touched</em>, which is how effect polymorphism composes: if <code>f : ST _ _ _ (modifies S0)</code> and <code>g : ST _ _ _ (modifies S1)</code>, then sequencing them gives a combined <code>modifies (S0 ++ S1)</code>, and the rest of the heap is provably untouched.</p>
+  <p>The skeleton extrapolates. <code>ST</code> is one effect in a lattice — <code>Tot ⊂ Ghost ⊂ ML ⊂ Dv</code>, with <code>ST</code> sitting orthogonally over the heap. Write your algorithm once over an effect variable; instantiate it for <code>Tot</code> when you want a pure extraction, for <code>ST</code> when you need real memory. Same code, different effect, same proofs.</p>
+  <blockquote class="pullquote">At L5 the effect is part of the type. <code>ST unit (requires ...) (ensures ...)</code> is a Hoare triple embedded in F*'s type system, and the <code>modifies</code> clause is the frame condition that makes effect polymorphism compositional.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    
+    <svg viewBox="0 0 540 280" role="img" aria-label="Hoare triple diagram for swap with frame condition." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#39FF14}
+          .box{fill:#111D33;stroke:#39FF14;stroke-opacity:0.4}
+          .heap{fill:#0A1628;stroke:#39FF14;stroke-opacity:0.6}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .frame{fill:none;stroke:#FF3B3B;stroke-opacity:0.7;stroke-dasharray:4 3;stroke-width:1.2}
+        </style>
+        <marker id="a5" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+      </defs>
+      <text class="head" x="20" y="20">pre-heap h0</text>
+      <rect class="heap" x="20" y="30" width="200" height="120" rx="3"/>
+      <rect class="frame" x="28" y="40" width="180" height="56" rx="3"/>
+      <text class="label" x="40" y="60">r1 → A</text>
+      <text class="label" x="40" y="80">r2 → B</text>
+      <text class="label" x="40" y="120">r3 → C  (outside frame)</text>
+
+      <path class="arrow" d="M225 90 L315 90" marker-end="url(#a5)"/>
+      <text class="label" x="230" y="82">swap r1 r2</text>
+      <text class="label" x="230" y="104">ST unit</text>
+
+      <text class="head" x="320" y="20">post-heap h1</text>
+      <rect class="heap" x="320" y="30" width="200" height="120" rx="3"/>
+      <rect class="frame" x="328" y="40" width="180" height="56" rx="3"/>
+      <text class="label" x="340" y="60">r1 → B</text>
+      <text class="label" x="340" y="80">r2 → A</text>
+      <text class="label" x="340" y="120">r3 → C  (unchanged)</text>
+
+      <text class="label" x="20" y="180">modifies (only r1 ++ only r2)</text>
+      <text class="label" x="20" y="196">frame condition names the red dashed box</text>
+      <text class="label" x="20" y="220">Tot ⊂ Ghost ⊂ ML; ST sits over the heap</text>
+      <text class="label" x="20" y="240">lift Tot → ST for free: the heap is unchanged.</text>
+    </svg>
+    <p class="visual-caption">A diagram of the <code>swap</code> Hoare triple. On the left, the pre-heap <code>h0</code> with references <code>r1 -&gt; A</code>, <code>r2 -&gt; B</code>, and <code>r3 -&gt; C</code> (outside the frame). An arrow labeled <code>swap r1 r2</code> runs to the right side, where the post-heap <code>h1</code> shows <code>r1 -&gt; B</code>, <code>r2 -&gt; A</code>, and <code>r3 -&gt; C</code> unchanged. A red dashed rectangle labeled <code>frame: {r1, r2}</code> encloses the two affected refs in both heaps; the note reads <code>modifies (only r1 ++ only r2)</code>. Above: a small effect-lattice diagram showing <code>Tot ⊂ Ghost ⊂ ML</code>, with <code>ST</code> branching off to carry the heap.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Frame-Condition Toggle</h2>
+  
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Toggle the <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">modifies</code> frame condition on <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">swap</code>. With the correct frame, F* proves every other reference in the heap is untouched. Replace it with <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">no_refs</code> and F* cannot prove the third reference stayed put. <em>Static readout — no real F* executes.</em></p>
+  <div class="sim" role="region" aria-label="Frame condition toggle">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>fstar — swap heap frame</span>
+      <span class="state active" id="simstate">frame {r1, r2}</span>
+    </div>
+    <div class="body" id="simbody"></div>
+    <div class="controls">
+      <label>modifies:</label>
+      <button class="activate" type="button" id="frameOn">only r1 ++ only r2</button>
+      <button class="cmd" type="button" id="frameOff">no_refs</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you saw the frame condition go from verified to a proof-failure on r3.</div>
+
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">FSTAR_META_PROMPTING_FRAMEWORK.md</span>
+      <a href="file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/FSTAR_META_PROMPTING_FRAMEWORK.md" target="_blank" rel="noopener noreferrer">open source file →</a>
+    </div>
+<pre><code>let swap (#a: Type) (r1 r2: ref a) : ST unit
+  (requires (fun h -&gt; True))
+  (ensures (fun h0 _ h1 -&gt;
+    sel h1 r1 == sel h0 r2 &amp;&amp;
+    sel h1 r2 == sel h0 r1 &amp;&amp;
+    modifies (only r1 ++ only r2) h0 h1))
+=
+  let tmp = !r1 in
+  r1 := !r2;
+  r2 := tmp</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — In the <code>swap</code> signature, <code>sel h1 r1 == sel h0 r2</code> appears in the <code>ensures</code> clause. What do <code>h0</code> and <code>h1</code> refer to, and what is <code>sel</code>?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>They are ghost witnesses erased at compile time.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span><code>h0</code> is the pre-heap, <code>h1</code> is the post-heap, and <code>sel h r</code> reads the value at reference <code>r</code> in heap <code>h</code> — the clause is therefore a relational statement between two heap states.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>They are fresh references allocated by the <code>swap</code> call.</span></button>
+    </div>
+    <div class="explanation"><code>h0</code> is the **pre-heap** (state before the call), <code>h1</code> is the **post-heap** (state after), and <code>sel h r</code> reads the value stored at reference <code>r</code> in heap <code>h</code>. The ensures clause is therefore the relational statement 'the value of r1 after the call equals the value r2 held before the call' — the core correctness of a swap.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q2">
+    <div class="q">2 — The <code>modifies (only r1 ++ only r2) h0 h1</code> clause is the **frame condition**. Why does F* require it?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>The frame condition names the set of references that may change, so F* can prove every other reference in the heap is unchanged — this is what makes effect polymorphism compositional across sequential calls.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>It improves runtime performance by telling the allocator which references are hot.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>It is optional metadata that the compiler ignores.</span></button>
+    </div>
+    <div class="explanation">Effect polymorphism is only compositional if you can talk about what a computation *does not* touch. The frame condition names the set of references <code>{r1, r2}</code> that <code>swap</code> may write to, and F* then proves every other reference in the heap is unchanged — so when you sequence <code>swap r1 r2; do_something_with r3</code>, the solver knows <code>r3</code>'s value survived intact.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q3">
+    <div class="q">3 — The framework document places <code>ST</code> in a lattice of effects. What is the practical consequence of <code>Tot ⊂ ST</code> in that lattice?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span><code>ST</code> computations cannot call <code>Tot</code> functions.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Every <code>Tot</code> value must be wrapped in <code>return</code> to lift it into <code>ST</code>.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Every total (pure) computation lifts freely into <code>ST</code> — the heap is simply unchanged — so a library function written once in <code>Tot</code> can be called safely from <code>ST</code> code without rewriting.</span></button>
+    </div>
+    <div class="explanation">Every total (pure) computation can be **lifted** into the stateful effect for free — the heap is simply unchanged. That is what lets you write a library function once in <code>Tot</code> and call it safely from <code>ST</code> code. The subsumption is one direction only: you cannot silently demote an <code>ST</code> computation to <code>Tot</code>, because that would lose the heap reasoning.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="04-indexed-types.html"><span class="label">← previous</span><span class="title">module 04</span></a>
+    <a href="06-categorical-proofs.html" class="next"><span class="label">next module →</span><span class="title">06 · L6 · Categorical Proofs</span></a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* 05-effect-polymorphism interactive — pure DOM, no eval, no network. */
+(function(){
+  const body = document.getElementById('simbody');
+  const state = document.getElementById('simstate');
+  const frameOn = document.getElementById('frameOn');
+  const frameOff = document.getElementById('frameOff');
+  const resetBtn = document.getElementById('resetBtn');
+  const successPill = document.getElementById('successPill');
+  let sawOn = false; let sawOff = false;
+
+  function write(cls, txt){
+    const el = document.createElement('span');
+    el.className = 'out ' + cls;
+    el.textContent = txt;
+    body.appendChild(el);
+  }
+
+  function render(withFrame){
+    body.innerHTML = '';
+    write('cite', '# citation: FSTAR_META_PROMPTING_FRAMEWORK.md — L4 Advanced: Swap Function with Heap Reasoning');
+    write('out', 'let swap (#a:Type) (r1 r2: ref a) : ST unit');
+    write('out', '  (requires (fun h -> True))');
+    write('out', '  (ensures (fun h0 _ h1 ->');
+    write('out', '    sel h1 r1 == sel h0 r2 &&');
+    write('out', '    sel h1 r2 == sel h0 r1 &&');
+    if (withFrame) {
+      write('good', '    modifies (only r1 ++ only r2) h0 h1))');
+      write('good', '✓ ST unit — verified (frame respected)');
+      write('good', '    r3 : ref int, sel h0 r3 == sel h1 r3   ✓ (outside frame, unchanged)');
+    } else {
+      write('bad', '    modifies no_refs h0 h1))');
+      write('bad', '✗ could not prove modifies no_refs: swap writes to r1 and r2');
+      write('bad', '    r3 : ref int unchanged — but frame says no_refs, so client cannot rely on r1/r2 changing either');
+    }
+  }
+
+  function on(){
+    render(true);
+    state.textContent = 'frame {r1, r2} — verified';
+    state.classList.remove('fail'); state.classList.add('active');
+    sawOn = true; checkSuccess();
+  }
+  function off(){
+    render(false);
+    state.textContent = 'frame no_refs — rejected';
+    state.classList.remove('active'); state.classList.add('fail');
+    sawOff = true; checkSuccess();
+  }
+  function reset(){
+    body.innerHTML = '';
+    sawOn = false; sawOff = false;
+    successPill.classList.remove('visible');
+    state.textContent = 'idle';
+    state.classList.remove('active', 'fail');
+    seed();
+  }
+  function seed(){
+    const intro = document.createElement('span');
+    intro.className = 'out cite';
+    intro.textContent = '# click ON / OFF to flip the frame condition';
+    body.appendChild(intro);
+  }
+  function checkSuccess(){
+    if (sawOn && sawOff) {
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.fstar-7-levels.05', '1'); } catch(e){}
+    }
+  }
+  frameOn.addEventListener('click', on);
+  frameOff.addEventListener('click', off);
+  resetBtn.addEventListener('click', reset);
+  seed();
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) {
+          c.classList.add('correct');
+        } else {
+          c.classList.add('wrong');
+          choices[correct].classList.add('correct');
+        }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+/* XP export (sovereignty clause) */
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

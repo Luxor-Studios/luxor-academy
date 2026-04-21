@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "id": "06-ship-your-own",
+    "version": "v0.1.0",
+    "track": "first-agent",
+    "quest": "hello-agent",
+    "title": "Ship Your Own CLI Agent",
+    "xp_reward": 150,
+    "estimated_minutes": 25,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# You have scaffolded, prompted, streamed, looped, and cached. Now wrap it and ship.\n\nThe five modules before this one handed you every part of an agent: a package and key (01), a persona and a tool schema (02), a token-by-token renderer (03), a `while (true)` loop keyed on `stop_reason` (04), and a `cache_control` annotation that makes the loop affordable (05). There is nothing left to teach about *how to build* an agent. What is left is to wrap the thing in a CLI shell and publish it.\n\nThe cookbooks/RESEARCH-AGENT.md example on lines 222-262 shows the archetype: a small class (`ResearchOrchestrator`) that composes three agent helpers (`PlanningAgent`, `ResearchAgent`, `SynthesisAgent`), exposes one public method (`conductResearch(topic)`), and runs from a top-level `async function main()` that reads from `process.env.ANTHROPIC_API_KEY` and prints the result. That is a shippable CLI. Rename the class, swap the helpers for your own, add a `#!/usr/bin/env node` shebang plus a `bin` entry in `package.json`, and you have a published command.\n\nThis module is the canonical last module of every LUXOR Academy Quest. You paste a URL to your own repo — your research agent, your code reviewer, your email triager, your weather bot — and the Academy's codebase-to-course pipeline extracts the same six slots from *your* code: a primer anchored in your README, a visual traced from your architecture, an interactive sandbox pointed at your real CLI, an artifact deep-link into your canonical file, a self-check derived from your tests, and a next-step that routes a future learner through *your* codebase.\n\nWhat you get back is a permalink. Not a certificate. Not a badge. A URL that teaches someone else the agent you just built, with your name on the attribution line. Phase 1 of LUXOR Academy captures your repo URL and queues it for the pipeline. XP vests in two steps — **150 XP lands the moment you queue your repo URL** here in Phase 1; a Phase 3 bonus unlocks when the pipeline mints the permalink for your generated Quest.",
+      "word_count": 337,
+      "key_insight": "The last module of every Quest is not a summary. It is a handoff: you paste your repo URL, the pipeline runs the same six-slot contract on it, and you walk away with a permalink that teaches the thing you just built."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/tetrahedron.svg",
+      "alt": "A pipeline flow diagram. At the left, a repo URL icon (github.com/you/your-agent) enters a three-gear mechanism labelled `extract → validate → render`. Between the gears and the output, the six slot labels hover as tags: primer, visual, interactive, artifact, self_check, next. At the right, the pipeline emits a permalink ribbon stamped with the learner's handle, and a module card showing the six slots populated from the learner's own code.",
+      "alt_es": "Un diagrama de flujo de tuberia. A la izquierda, un icono de URL de repo (github.com/tu/tu-agente) entra en un mecanismo de tres engranajes etiquetado `extract → validate → render`. Entre los engranajes y la salida, las seis etiquetas de slot flotan como tags: primer, visual, interactive, artifact, self_check, next. A la derecha, la tuberia emite una cinta de permalink estampada con el handle del estudiante, y una tarjeta de modulo mostrando los seis slots poblados desde el codigo propio del estudiante.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/tetrahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "06-ship-your-own.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner pastes a GitHub repo URL into the form, reviews the preview of what the pipeline would extract (the six slots derived from their repo), and submits. Phase 1 stores the URL locally for Phase 3 pipeline activation; the submit button is a visual stub in Phase 1.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "cookbooks/RESEARCH-AGENT.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform/cookbooks/RESEARCH-AGENT.md#L222-L262",
+      "excerpt": "class ResearchOrchestrator {\n  private planner: PlanningAgent;\n  private researcher: ResearchAgent;\n  private synthesizer: SynthesisAgent;\n\n  constructor(apiKey: string) {\n    this.planner = new PlanningAgent(apiKey);\n    this.researcher = new ResearchAgent(apiKey);\n    this.synthesizer = new SynthesisAgent(apiKey);\n  }\n\n  async conductResearch(topic: string): Promise<string> {\n    console.log(`Planning research for: ${topic}`);\n\n    // Step 1: Plan\n    const subtopics = await this.planner.planResearch(topic);\n    console.log(`Identified ${subtopics.length} subtopics`);\n\n    // Step 2: Research (parallel)\n    console.log(\"Conducting research...\");\n    const researchPromises = subtopics.map((subtopic) =>\n      this.researcher.research(subtopic)\n    );\n    const results = await Promise.all(researchPromises);\n\n    // Build findings map\n    const findings: Record<string, string> = {};\n    subtopics.forEach((subtopic, i) => {\n      findings[subtopic] = results[i];\n    });\n\n    // Step 3: Synthesize\n    console.log(\"Synthesizing findings...\");\n    const report = await this.synthesizer.synthesize(topic, findings);\n\n    return report;\n  }\n}",
+      "language": "typescript"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In cookbooks/RESEARCH-AGENT.md lines 222-262, the `ResearchOrchestrator` composes three helper agents in its constructor. What are they, in order?",
+          "correct": 0,
+          "options": [
+            "`PlanningAgent`, `ResearchAgent`, `SynthesisAgent`.",
+            "`ToolAgent`, `StreamAgent`, `CacheAgent`.",
+            "`PromptAgent`, `LoopAgent`, `ShipAgent`."
+          ],
+          "explanation": "RESEARCH-AGENT.md lines 228-230: `this.planner = new PlanningAgent(apiKey); this.researcher = new ResearchAgent(apiKey); this.synthesizer = new SynthesisAgent(apiKey);`. The three-stage orchestration — plan, research in parallel, synthesize — is the shape of most shippable agents. Rename the stages and you have your own CLI."
+        },
+        {
+          "prompt": "Why is the canonical last module of every LUXOR Academy Quest a 'Ship Your Own' step rather than a summary quiz?",
+          "correct": 1,
+          "options": [
+            "Because summary quizzes are harder to grade automatically.",
+            "Because learners should end every Quest holding a permalink to their own work, not a score — the Quest trains for the *next* repo, not for itself.",
+            "Because the XP award is larger for shipping than for testing."
+          ],
+          "explanation": "The sovereignty clause. Per the Academy meta-prompt and MERCURIO's canonical-last-module pattern, each Quest ends by running the same six-slot contract on the learner's own repo and emitting a permalink back. Summary quizzes train for the Quest. Ship-Your-Own trains for the next repo."
+        },
+        {
+          "prompt": "`ResearchOrchestrator.conductResearch(topic)` on RESEARCH-AGENT.md lines 234-259 runs the three research helpers with one specific concurrency shape. Which?",
+          "correct": 2,
+          "options": [
+            "All three stages run sequentially, one after the other.",
+            "All three stages run in parallel with `Promise.all`.",
+            "Plan runs first, then the research calls for every subtopic run in parallel via `Promise.all`, then synthesis runs last on the gathered findings."
+          ],
+          "explanation": "RESEARCH-AGENT.md lines 238-246: `subtopics = await this.planner.planResearch(topic)` runs first (sequential), then `Promise.all(subtopics.map(...))` fans out the research calls in parallel, and finally `this.synthesizer.synthesize(topic, findings)` runs sequentially on the joined results. This plan-fanout-join shape generalises to almost any multi-stage agent CLI you will ship."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["01-scaffold", "02-system-prompt-and-tools", "03-streaming", "04-tool-use-loop", "05-prompt-caching"],
+      "ship_your_own": true
+    }
+  }
+}

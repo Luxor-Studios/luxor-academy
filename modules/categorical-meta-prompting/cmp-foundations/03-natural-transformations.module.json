@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "03-natural-transformations",
+    "version": "v0.1.0",
+    "track": "categorical-meta-prompting",
+    "quest": "cmp-foundations",
+    "title": "Natural Transformations: Swapping Strategies",
+    "xp_reward": 180,
+    "estimated_minutes": 30,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/categorical-meta-prompting"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# A natural transformation is a strategy swap that commutes\n\nWhen you switch from zero-shot prompting to chain-of-thought, you are not rewriting every call site — you are replacing one *functor* with another. In categorical language, the thing that lets you do this consistently is a **natural transformation** `α: F ⇒ G`, a family of arrows `α_X : F(X) → G(X)` indexed by objects `X`, required to satisfy one square: for every morphism `f: A → B`, the diagram `α_B ∘ F(f) = G(f) ∘ α_A` must commute.\n\nThe `categorical-meta-prompting` framework enumerates the useful prompt-strategy functors — `F_ZS` (zero-shot, q ≈ 0.65), `F_FS` (few-shot, q ≈ 0.78), `F_CoT` (chain-of-thought, q ≈ 0.85), `F_ToT` (tree-of-thought, q ≈ 0.88), `F_Meta` (meta-prompting, q ≈ 0.90) — and defines transformations between them: `α[ZS→CoT]` literally adds the string \"step by step\"; `α[FS→CoT]` rewrites examples as reasoning traces; `α[CoT→ToT]` introduces branching and backtracking.\n\nThe naturality square is not bureaucracy; it is the *correctness condition*. It says: if you have a pipeline `A → B` under strategy `F`, and you want to flip the whole pipeline to strategy `G`, you can either (a) transform every stage and then run the new pipeline, or (b) run the old pipeline and transform the result — and the naturality law guarantees those two paths produce the same output. That is exactly the property that lets `/transform @from:zero-shot @to:chain-of-thought` swap strategies without touching the call sites. It is the categorical version of a plugin architecture, and the law is the contract that says the plugin will not silently change semantics.",
+      "word_count": 279,
+      "key_insight": "A natural transformation α: F ⇒ G swaps an entire prompting strategy under the hood. The naturality square α_B ∘ F(f) = G(f) ∘ α_A is the contract that guarantees the swap does not break composition."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/icosahedron.svg",
+      "alt": "Naturality square: four nodes labelled F(A), F(B) (top row) and G(A), G(B) (bottom row), with horizontal arrows F(f) and G(f), and vertical arrows α_A and α_B. A label reads 'α_B ∘ F(f) = G(f) ∘ α_A — diagram must commute'. Beside the square, a table lists the five strategy functors (F_ZS, F_FS, F_CoT, F_ToT, F_Meta) with their quality values, and example transformations α[ZS→CoT] 'add step by step' and α[CoT→ToT] 'add branching'.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/icosahedron.svg"
+    },
+    "interactive": {
+      "kind": "diagram-explorer",
+      "entry": "03-natural-transformations.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner picks a source strategy (F_ZS, F_FS, F_CoT) and a target strategy (F_CoT, F_ToT, F_Meta), and the widget renders the naturality square with all four corners and two arrows populated. The learner then clicks 'verify commute' and the widget traces both paths (α_B ∘ F(f)) and (G(f) ∘ α_A) around the square, confirming they produce the same output — with the transform_factor quality adjustment visible on each arrow.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "docs/CATEGORICAL-ONTOLOGY.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/docs/CATEGORICAL-ONTOLOGY.md#L206-L252",
+      "excerpt": "α: F ⇒ G   (Strategy Transformation)\n\nNATURALITY SQUARE (must commute):\n                F(f)\n         F(A) ───────▶ F(B)\n          │             │\n        α_A             α_B\n          ▼             ▼\n         G(A) ───────▶ G(B)\n                G(f)\n\nCondition: α_B ∘ F(f) = G(f) ∘ α_A\n\nSTRATEGY FUNCTORS:\n  F_ZS  ─▶ DirectPrompt      Zero-Shot        q = 0.65\n  F_FS  ─▶ ExemplarPrompt    Few-Shot         q = 0.78\n  F_CoT ─▶ ReasoningPrompt   Chain-of-Thought q = 0.85\n  F_ToT ─▶ BranchingPrompt   Tree-of-Thought  q = 0.88\n  F_Meta─▶ MetaPrompt        Meta-Prompting   q = 0.90\n\nTRANSFORMATION RULES:\n  α[ZS→CoT]:  ADD \"step by step\"\n  α[FS→CoT]:  TRANSFORM examples → reasoning traces\n  α[CoT→ToT]: ADD branching + backtracking\n  α[*→Meta]:  WRAP with strategy selection layer",
+      "language": "text"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Write out the naturality condition that a transformation α: F ⇒ G between two functors must satisfy, for every morphism f: A → B.",
+          "correct": 2,
+          "explanation": "The condition is `α_B ∘ F(f) = G(f) ∘ α_A`. This says the square with corners F(A), F(B), G(A), G(B) commutes: transforming after applying F equals applying G after transforming. `CATEGORICAL-ONTOLOGY.md §2.4` gives exactly this. Options mixing up the subscripts (e.g. `α_A ∘ F(f) = G(f) ∘ α_B`) would not type-check because F(f) lands in F(B), so it must compose with α_B, not α_A."
+        },
+        {
+          "prompt": "According to the framework's strategy table, which transformation has the literal rule 'ADD \"step by step\"' attached to it?",
+          "correct": 0,
+          "explanation": "`α[ZS→CoT]` is defined as `ADD \"step by step\"`, upgrading zero-shot to chain-of-thought by prepending the reasoning instruction. The other listed transformations are `α[FS→CoT]` (rewrite examples as reasoning traces), `α[CoT→ToT]` (add branching + backtracking), and `α[*→Meta]` (wrap with a strategy-selection layer). See `docs/CATEGORICAL-ONTOLOGY.md §2.4 TRANSFORMATION RULES`."
+        },
+        {
+          "prompt": "Why does the naturality square let you swap strategies 'without touching the call sites'?",
+          "correct": 1,
+          "explanation": "Because the commuting square guarantees that `(apply α at every stage, then run under G)` produces the same result as `(run under F, then apply α at the end)`. That interchange is exactly what 'hot-swap the whole pipeline' requires — you can replace F with G at any layer and the downstream composition continues to make sense. Without the naturality law, swapping F for G mid-pipeline could silently change semantics."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "04-cmp-query-language",
+      "siblings": ["01-objects-morphisms-composition", "02-prompts-as-morphisms", "04-cmp-query-language", "05-recursive-meta-prompting", "06-ship-your-own-composition"],
+      "ship_your_own": false
+    }
+  }
+}

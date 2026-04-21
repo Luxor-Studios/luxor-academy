@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "id": "04-expert-selection",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mercurio-for-decisions",
+    "title": "Expert Selection: Assembling the Panel",
+    "xp_reward": 125,
+    "estimated_minutes": 18,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Three to seven diverse agents, weighted by domain\n\nThe Physical Plane Playbook is where MERCURIO's *operational grounding* lives — the sub-spec that translates intellectual understanding into coordinated work. Its core question, stated at the top of the playbook, is: *Can we actually do this? What does execution require? How do we coordinate across domains?* That question governs expert selection, because a panel is a micro-project.\n\nThe playbook gives expert selection a hard constraint that most teams ignore: **coordination overhead scales faster than panel size**. The exact formula from the Key Concepts section is N(N-1)/2 potential communication channels for N teams — 1 team has 0 channels, 2 teams have 1, 3 teams have 3, and 7 teams have 21. That is why MERCURIO caps panels at 3–7 experts. Below 3, you do not have enough diverse views to converge on anything robust. Above 7, coordination cost eats the convergence signal before it can crystallize.\n\nResource Planning (Method 4) gives you the procedure. List the tasks the panel must cover, identify skills needed per task, map against available experts, and find the bottleneck resource. A panel where two experts both cover the same dimension is a panel with a silent over-allocation. A panel missing a dimension is a panel where the missing plane will retaliate downstream. The Feasibility Assessment (Method 1) is the gate before the panel even meets: distinguish fixed from negotiable constraints, note hidden dependencies, and refuse to assemble a panel whose decision has already been pre-constrained.\n\nIn this module you read the Resource Matrix template literally from the playbook, then assemble a 3–7 expert panel for a sample decision — weighting each expert's vote by their domain coverage and checking coordination cost before you commit.",
+      "markdown_es": "# De tres a siete agentes diversos, ponderados por dominio\n\nEl Manual del Plano Fisico es donde vive el *anclaje operativo* de MERCURIO: la sub-especificacion que traduce el entendimiento intelectual en trabajo coordinado. Su pregunta central, enunciada al inicio del manual, es: *Podemos realmente hacer esto? Que requiere la ejecucion? Como coordinamos a traves de dominios?* Esa pregunta gobierna la seleccion de expertos, porque un panel es un micro-proyecto.\n\nEl manual le da a la seleccion de expertos una restriccion dura que la mayoria de los equipos ignora: **el costo de coordinacion escala mas rapido que el tamaño del panel**. La formula exacta de la seccion de Conceptos Clave es N(N-1)/2 canales potenciales de comunicacion para N equipos: 1 equipo tiene 0 canales, 2 equipos tienen 1, 3 equipos tienen 3 y 7 equipos tienen 21. Por eso MERCURIO topa los paneles en 3 a 7 expertos. Por debajo de 3 no tienes suficientes vistas diversas para converger en algo robusto. Por encima de 7, el costo de coordinacion devora la señal de convergencia antes de que cristalice.\n\nLa Planificacion de Recursos (Metodo 4) te da el procedimiento. Lista las tareas que el panel debe cubrir, identifica las habilidades necesarias por tarea, mapealas contra los expertos disponibles y encuentra el recurso cuello de botella. Un panel donde dos expertos cubren la misma dimension es un panel con sobre-asignacion silenciosa. Un panel al que le falta una dimension es un panel donde el plano faltante se vengara rio abajo. La Evaluacion de Viabilidad (Metodo 1) es la puerta antes de que el panel se reuna: distingue lo fijo de lo negociable, anota las dependencias ocultas y rehusate a ensamblar un panel cuya decision ya ha sido pre-restringida.\n\nEn este modulo lees la plantilla de Matriz de Recursos literalmente desde el manual, luego ensamblas un panel de 3 a 7 expertos para una decision de muestra, ponderando el voto de cada experto por su cobertura de dominio y verificando el costo de coordinacion antes de comprometerte.",
+      "word_count": 277,
+      "key_insight": "Coordination cost is N(N-1)/2. At 8 experts you pay 28 channels of overhead. That is why MERCURIO caps panels at 3-7: below 3 is under-diverse, above 7 the coordination cost eats the convergence signal.",
+      "key_insight_es": "El costo de coordinacion es N(N-1)/2. Con 8 expertos pagas 28 canales de sobrecarga. Por eso MERCURIO topa los paneles en 3 a 7: por debajo de 3 hay poca diversidad, por encima de 7 el costo de coordinacion devora la señal de convergencia."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "A grid showing panel size (1 through 8 experts) on the x-axis and communication channel count on the y-axis, drawn as the formula N(N-1)/2. A shaded band highlights the 3-to-7 sweet spot. Below the curve, a Resource Matrix table shows three experts and four tasks with percent allocations summing per column; an over-allocated column is flagged in red.",
+      "alt_es": "Una cuadricula que muestra el tamaño del panel (1 a 8 expertos) en el eje x y la cuenta de canales de comunicacion en el eje y, dibujada como la formula N(N-1)/2. Una banda sombreada resalta la zona optima de 3 a 7. Debajo de la curva, una tabla de Matriz de Recursos muestra tres expertos y cuatro tareas con asignaciones porcentuales que suman por columna; una columna sobre-asignada esta marcada en rojo.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "04-expert-selection.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner assembles a panel by dragging expert cards (architect, security, product, ops, ethics, legal, finance, data science) into a panel slot. The simulator computes N(N-1)/2 channels live and flags panels smaller than 3 as under-diverse or larger than 7 as over-coordinated. A green badge appears on a 3-7 panel that covers all three MERCURIO planes.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "/Users/manu/.claude/agents/mercurio-agent/docs/PHYSICAL-PLANE-PLAYBOOK.md",
+      "permalink": "file:///Users/manu/.claude/agents/mercurio-agent/docs/PHYSICAL-PLANE-PLAYBOOK.md#L108-L127",
+      "excerpt": "### 5. Coordination Overhead\n\nMore teams = more coordination needed\n\n```\n1 team: No coordination needed\n2 teams: One handoff point\n3 teams: Three handoff points\nN teams: N(N-1)/2 potential communication channels\n```\n\nThe Physical Plane accounts for coordination cost.\n\n### 6. The Buffer Principle\n\nAlways build in buffers for:\n- **Time**: Unexpected obstacles always occur\n- **People**: Someone will get sick, leave, have conflicting priorities\n- **Money**: Scope creep and surprises cost more than expected\n- **Knowledge**: You won't know everything needed upfront",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "The Physical Plane Playbook gives an exact formula for communication channels as team count N grows. How many channels exist for a panel of 7 experts?",
+          "correct": 2,
+          "explanation": "N(N-1)/2 = 7*6/2 = 21 channels. The formula is why panels above 7 pay prohibitive coordination cost. At 8 you jump to 28, at 10 to 45. MERCURIO caps panels at 7 precisely because 21 is already near the ceiling of what a single synthesizer can weave coherently."
+        },
+        {
+          "prompt": "You are assembling a panel to evaluate a new product feature. The Physical Plane Playbook's Resource Planning method (Method 4) asks you to do which of these FIRST?",
+          "correct": 1,
+          "explanation": "Method 4 step 1: 'List all tasks (from work breakdown)'. Skills and people come after. Starting with experts before tasks is how panels over-index on whoever is loudest; starting with tasks is how MERCURIO ensures every dimension has coverage."
+        },
+        {
+          "prompt": "Your panel has an architect, a security engineer, a DBA, and a backend engineer. Per the Physical Plane's integration guidance (Connection to Other Planes), what is this panel most likely to miss?",
+          "correct": 0,
+          "explanation": "All four experts live on the Physical/Mental planes. The panel has no Spiritual Plane coverage — no ethics, values, or stakeholder-impact voice. The playbook states explicitly: 'Executing work that's technically sound but ethically problematic' is the failure mode when Spiritual is absent. Add an ethics or user-advocate expert."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "05-ship-your-own",
+      "siblings": ["01-three-plane-analysis", "02-convergence-methods", "03-confidence-thresholds", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "id": "04-tool-use-loop",
+    "version": "v0.1.0",
+    "track": "first-agent",
+    "quest": "hello-agent",
+    "title": "Close the Tool-Use Loop",
+    "xp_reward": 125,
+    "estimated_minutes": 22,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# The three states of an agent loop: end_turn, tool_use, iterate\n\nModule 02 taught you to declare a tool schema. Module 04 teaches you what the agent actually *does* when Claude decides to call it. The answer is a tight `while (true)` loop with exactly two exit/continuation branches, keyed on `response.stop_reason`.\n\nThe typescript/GUIDE.md loop on lines 388-440 is the canonical shape. You initialize `messages` with the user's turn. Inside the loop you call `messages.create` with the tools array. The response comes back with a `stop_reason`. If it is `\"end_turn\"`, Claude has produced the final text — return it and exit. If it is `\"tool_use\"`, the response's `content` array contains one or more `tool_use` blocks, each with a `name`, an `id`, and an `input` object that validates against your schema. You **append the assistant's message verbatim** (`messages.push({ role: \"assistant\", content: response.content })`), then **execute the tool function** (a lookup by `block.name`), then **append a `user` message whose content is an array of `tool_result` blocks** (one per tool call, correlated by `tool_use_id` to the original `id`), then loop. Claude sees the tool results on the next iteration and either calls another tool or returns `end_turn`.\n\nThe two loop invariants that matter: (1) every `tool_use` must be answered by a `tool_result` with the same `tool_use_id` — the SDK rejects the next request otherwise; (2) the assistant turn you push back must be `response.content` unchanged, not a re-serialisation. Break either invariant and the loop either 400s immediately or silently drops context.",
+      "word_count": 268,
+      "key_insight": "The agent loop is a state machine with two labels: `end_turn` exits, `tool_use` executes-and-continues. The tool_result block ties the loop back to the tool_use block via `tool_use_id` — that ID is the single thread that keeps the conversation coherent."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/tetrahedron.svg",
+      "alt": "A state machine diagram. A rounded box labelled `messages.create(tools)` emits an arrow to a diamond labelled `stop_reason?`. The diamond has two outgoing edges. The left edge is labelled `end_turn` and ends at a terminal node marked `return response.content[0].text`. The right edge is labelled `tool_use` and leads through three sequential boxes — `push assistant message`, `execute block.input`, `push user turn with tool_result[tool_use_id=block.id]` — before looping back with a curved arrow to the original `messages.create(tools)` box.",
+      "alt_es": "Un diagrama de maquina de estados. Una caja redondeada etiquetada `messages.create(tools)` emite una flecha a un rombo etiquetado `stop_reason?`. El rombo tiene dos aristas de salida. La arista izquierda etiquetada `end_turn` termina en un nodo terminal marcado `return response.content[0].text`. La arista derecha etiquetada `tool_use` pasa por tres cajas secuenciales — `push assistant message`, `execute block.input`, `push user turn with tool_result[tool_use_id=block.id]` — antes de regresar con una flecha curva a la caja original `messages.create(tools)`.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/tetrahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "04-tool-use-loop.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the annotated loop, identifies the two exit/continuation branches on `stop_reason`, and can explain why `tool_use_id` must correlate to `block.id` in the tool_result.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "typescript/GUIDE.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform/typescript/GUIDE.md#L388-L440",
+      "excerpt": "async function runWithTools(userMessage: string): Promise<string> {\n  const messages: Anthropic.Messages.MessageParam[] = [\n    { role: \"user\", content: userMessage },\n  ];\n\n  while (true) {\n    const response = await client.messages.create({\n      model: \"claude-sonnet-4-5-20250929\",\n      max_tokens: 4096,\n      tools,\n      messages,\n    });\n\n    console.log(\"Stop reason:\", response.stop_reason);\n\n    // If Claude is done, return the final response\n    if (response.stop_reason === \"end_turn\") {\n      const textContent = response.content.find((c) => c.type === \"text\");\n      return textContent?.text || \"\";\n    }\n\n    // If Claude wants to use a tool\n    if (response.stop_reason === \"tool_use\") {\n      // Add Claude's response to messages\n      messages.push({ role: \"assistant\", content: response.content });\n\n      // Process each tool use\n      const toolResults: Anthropic.Messages.ToolResultBlockParam[] = [];\n\n      for (const block of response.content) {\n        if (block.type === \"tool_use\") {\n          console.log(`Calling tool: ${block.name} with`, block.input);\n\n          const toolFunction = toolFunctions[block.name];\n          if (!toolFunction) {\n            throw new Error(`Unknown tool: ${block.name}`);\n          }\n\n          const result = await toolFunction(block.input);\n\n          toolResults.push({\n            type: \"tool_result\",\n            tool_use_id: block.id,\n            content: JSON.stringify(result),\n          });\n        }\n      }\n\n      // Add tool results to messages\n      messages.push({ role: \"user\", content: toolResults });\n    }\n  }\n}",
+      "language": "typescript"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In typescript/GUIDE.md lines 388-440, what value of `response.stop_reason` causes `runWithTools` to return its final answer and exit the loop?",
+          "correct": 0,
+          "options": [
+            "`\"end_turn\"`",
+            "`\"tool_use\"`",
+            "`\"max_tokens\"`"
+          ],
+          "explanation": "GUIDE.md lines 404-407: `if (response.stop_reason === \"end_turn\")` returns the text block. `\"tool_use\"` (line 410) is the *continue* branch — it means Claude wants to call a tool and expects you to loop. `\"max_tokens\"` would mean the cap you set on line 396 was hit; the example does not handle that case."
+        },
+        {
+          "prompt": "On GUIDE.md line 430, each `tool_result` block carries `tool_use_id: block.id`. What happens if you drop that field or use a different value?",
+          "correct": 1,
+          "options": [
+            "Nothing — the API matches tool calls by order.",
+            "The next `messages.create` call rejects the request because it cannot correlate the tool_result to a prior tool_use.",
+            "Claude silently ignores the result and the loop runs forever."
+          ],
+          "explanation": "GUIDE.md line 430: `tool_use_id: block.id` is the correlation key. The API pairs every `tool_use` block (which has an `id`) with exactly one `tool_result` block (whose `tool_use_id` matches). A missing or mismatched ID yields a 400 from the API on the next iteration."
+        },
+        {
+          "prompt": "Why does GUIDE.md line 412 push `response.content` verbatim into `messages` as the assistant turn, instead of just pushing the text?",
+          "correct": 2,
+          "options": [
+            "Because the SDK mutates `response.content` and a shallow reference is required.",
+            "Because pushing text alone is shorter and equivalent.",
+            "Because `response.content` is an array of content blocks (including the original `tool_use` block) that Claude needs to see in its own history to match its next `tool_result` against."
+          ],
+          "explanation": "GUIDE.md line 412: `messages.push({ role: \"assistant\", content: response.content })`. The assistant's content includes the `tool_use` blocks verbatim. On the next turn, Claude reads its own previous `tool_use` and the user's paired `tool_result` to know what happened. Replacing `response.content` with just the text strips the `tool_use` block and breaks the pairing."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "05-prompt-caching",
+      "siblings": ["01-scaffold", "02-system-prompt-and-tools", "03-streaming", "05-prompt-caching", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

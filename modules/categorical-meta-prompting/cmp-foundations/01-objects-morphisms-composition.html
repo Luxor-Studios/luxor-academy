@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 01 — Objects, Morphisms, Composition · CMP Foundations · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --background:#0A1628;
+  --surface-1:#111D33;
+  --surface-2:#162440;
+  --surface-3:#1C2B47;
+  --primary:#A78BFA;
+  --primary-soft:#C4B5FD;
+  --accent:#00F5FF;
+  --text:#FFFFFF;
+  --text-dim:#94A3B8;
+  --text-muted:#64748B;
+  --border:rgba(167,139,250,0.22);
+  --border-strong:rgba(167,139,250,0.6);
+  --danger:#FF3B3B;
+  --success:#22C55E;
+  --glow-violet:0 0 16px rgba(167,139,250,0.45);
+  --glow-cyan:0 0 12px rgba(0,245,255,0.45);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  background:var(--background);
+  background-image:
+    linear-gradient(rgba(167,139,250,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(167,139,250,0.025) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-violet)}
+
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+
+.sim{background:#050B18;border:1px solid var(--border-strong);border-radius:6px;overflow:hidden;font-family:var(--font-mono);font-size:0.85rem;box-shadow:var(--glow-violet)}
+.sim .chrome{background:var(--surface-2);padding:0.5rem 0.9rem;font-size:0.72rem;color:var(--text-dim);display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid var(--border)}
+.sim .chrome .dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted)}
+.sim .chrome .dot.r{background:#FF5F57}.sim .chrome .dot.y{background:#FEBC2E}.sim .chrome .dot.g{background:#28C840}
+.sim .chrome .state{margin-left:auto;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase}
+.sim .body{padding:1rem;min-height:200px;color:#D4E4F7;line-height:1.55}
+.sim .row{display:flex;flex-wrap:wrap;gap:0.6rem;align-items:center;margin-bottom:0.7rem}
+.sim label{font-size:0.72rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
+.sim select,.sim .pick{font-family:var(--font-mono);font-size:0.8rem;background:var(--surface-3);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0.35rem 0.6rem}
+.sim .output{background:var(--surface-1);border:1px dashed var(--border);border-radius:4px;padding:0.75rem 0.9rem;margin-top:0.6rem;color:var(--primary-soft);font-size:0.82rem;white-space:pre-wrap}
+.sim .controls{background:var(--surface-1);padding:0.85rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center}
+.sim button{font-family:var(--font-mono);font-size:0.75rem;padding:0.45rem 0.8rem;border-radius:4px;cursor:pointer;letter-spacing:0.06em;transition:all 150ms;border:1px solid var(--border)}
+.sim .cmd{background:var(--surface-3);color:var(--text)}
+.sim .cmd:hover,.sim .cmd:focus-visible{border-color:var(--accent);color:var(--accent)}
+.sim .go{background:var(--primary);color:var(--background);border-color:var(--primary);font-weight:600}
+.sim .go:hover,.sim .go:focus-visible{background:var(--primary-soft)}
+.sim .reset{background:transparent;color:var(--text-dim)}
+.sim .reset:hover,.sim .reset:focus-visible{color:var(--danger);border-color:var(--danger)}
+.success-pill{display:inline-block;margin-top:0.85rem;padding:0.35rem 0.75rem;background:rgba(34,197,94,0.12);color:var(--success);font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--success);border-radius:4px;opacity:0;transition:opacity 200ms}
+.success-pill.visible{opacity:1}
+
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:#D4E4F7;background:#050B18;white-space:pre-wrap}
+
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-violet)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+
+@media (max-width:520px){
+  .module-title{font-size:2rem}
+  section h2{font-size:1.35rem}
+  .topbar .stats{font-size:0.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Icosahedron Master-tier glyph">
+    <g fill="none" stroke="#A78BFA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 89,36 74,82 26,82 11,36"/>
+      <polygon points="50,38 71,50 64,72 36,72 29,50"/>
+      <line x1="50" y1="8" x2="50" y2="38"/>
+      <line x1="89" y1="36" x2="71" y2="50"/>
+      <line x1="74" y1="82" x2="64" y2="72"/>
+      <line x1="26" y1="82" x2="36" y2="72"/>
+      <line x1="11" y1="36" x2="29" y2="50"/>
+      <line x1="50" y1="8" x2="71" y2="50"/>
+      <line x1="50" y1="8" x2="29" y2="50"/>
+      <line x1="89" y1="36" x2="64" y2="72"/>
+      <line x1="11" y1="36" x2="36" y2="72"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Categorical Meta-Prompting · CMP Foundations · Module 01 of 06</div>
+    <div class="qname">Objects, Morphisms, Composition</div>
+  </div>
+  <div class="stats">
+    <span><strong>+150</strong> XP</span>
+    <span><strong>25</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Objects, Morphisms, Composition</h1>
+<div class="module-subtitle">// Tier: Master · Source: categorical-meta-prompting/docs/CATEGORICAL-ONTOLOGY.md</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>The three things every category has</h1>
+  <p>A category is specified by three pieces of data: <strong>objects</strong>, <strong>morphisms</strong> (arrows) between objects, and a <strong>composition</strong> operation that combines two compatible arrows into a third. Add two laws — <em>identity</em> (every object has an arrow to itself that does nothing) and <em>associativity</em> (<code>(h ∘ g) ∘ f = h ∘ (g ∘ f)</code>) — and you have a category.</p>
+  <p>The <code>CATEGORICAL-ONTOLOGY.md</code> document in <code>categorical-meta-prompting</code> fixes the ontology the rest of the framework depends on: the <strong>objects</strong> of the meta-prompting category are <code>Task</code>, <code>Prompt</code>, <code>Context</code>, and <code>Quality ∈ [0,1]</code>; the <strong>morphisms</strong> are the composition operators <code>→</code> (sequence), <code>||</code> (parallel), <code>⊗</code> (tensor), and <code>&gt;=&gt;</code> (Kleisli); and composition is explicitly tracked through a quality lattice where <code>quality(A ⊗ B) ≤ min(q(A), q(B))</code> and <code>quality(A || B) = mean(q(A), q(B))</code>.</p>
+  <p>Why this matters: once you agree that prompts live in a category, you are no longer stringing together strings. You are composing typed arrows, and the composition laws — identity and associativity — give you predictable behaviour. <code>F(id_task) = id_prompt</code> means wrapping a no-op task yields a no-op prompt; <code>F(g ∘ f) = F(g) ∘ F(f)</code> means composing two task transformations equals transforming each separately and composing the results. Those two lines are the promise that categorical meta-prompting makes to you, and everything else in this Quest is earning it.</p>
+  <blockquote class="pullquote">Objects, morphisms, and composition — plus identity and associativity — are the minimal vocabulary every category requires. Meta-prompting was missing exactly that vocabulary.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 300" role="img" aria-label="Four canonical objects (Task, Prompt, Context, Quality) with labelled morphisms showing the composition operators, identity loops at each node, and an associativity triangle." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .node{fill:#111D33;stroke:#A78BFA;stroke-opacity:0.6;stroke-width:1.5}
+          .label{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#C4B5FD}
+          .nlabel{font-family:'Playfair Display',serif;font-size:14px;fill:#FFFFFF;font-weight:700}
+          .arr{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .arr-dim{stroke:#94A3B8;fill:none;stroke-width:1;stroke-dasharray:4 3}
+          .op{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#A78BFA}
+          .law{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+        </style>
+        <marker id="arrV" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        </marker>
+        <marker id="arrD" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#94A3B8"/>
+        </marker>
+      </defs>
+
+      <rect class="node" x="40" y="40" width="100" height="46" rx="6"/>
+      <text class="nlabel" x="90" y="68" text-anchor="middle">Task</text>
+
+      <rect class="node" x="230" y="40" width="100" height="46" rx="6"/>
+      <text class="nlabel" x="280" y="68" text-anchor="middle">Prompt</text>
+
+      <rect class="node" x="420" y="40" width="100" height="46" rx="6"/>
+      <text class="nlabel" x="470" y="68" text-anchor="middle">Context</text>
+
+      <rect class="node" x="230" y="180" width="100" height="46" rx="6"/>
+      <text class="nlabel" x="280" y="208" text-anchor="middle">Quality</text>
+
+      <path class="arr" d="M140 63 L225 63" marker-end="url(#arrV)"/>
+      <text class="op" x="182" y="56" text-anchor="middle">F (→)</text>
+
+      <path class="arr" d="M330 63 L415 63" marker-end="url(#arrV)"/>
+      <text class="op" x="372" y="56" text-anchor="middle">g (→)</text>
+
+      <path class="arr" d="M280 86 L280 178" marker-end="url(#arrV)"/>
+      <text class="op" x="320" y="135" text-anchor="start">q: [0,1]</text>
+
+      <path class="arr-dim" d="M90 95 Q55 115 70 88 Q90 75 90 88" marker-end="url(#arrD)"/>
+      <text class="law" x="25" y="115">id_Task</text>
+
+      <path class="arr-dim" d="M280 95 Q245 115 260 88 Q280 75 280 88" marker-end="url(#arrD)"/>
+      <text class="law" x="212" y="115">id_Prompt</text>
+
+      <path class="arr-dim" d="M470 95 Q435 115 450 88 Q470 75 470 88" marker-end="url(#arrD)"/>
+      <text class="law" x="405" y="115">id_Context</text>
+
+      <text class="law" x="280" y="260" text-anchor="middle">(h ∘ g) ∘ f = h ∘ (g ∘ f)   ·   associativity</text>
+      <text class="law" x="280" y="278" text-anchor="middle">id ∘ f = f = f ∘ id   ·   identity</text>
+    </svg>
+    <p class="visual-caption">Fallback: static diagram. Four objects, typed morphisms between them, identity loops at each node, and the two laws every category must satisfy.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Composition Explorer</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Pick two morphisms and compose them. The widget shows the composite arrow and the resulting quality under the framework's rule. Apply the identity morphism and verify <code style="font-family:var(--font-mono);background:var(--surface-2);padding:0.1rem 0.35rem;border-radius:3px">id ∘ f = f</code>. <em>Static readable example in Phase 1.</em></p>
+  <div class="sim" role="region" aria-label="Composition explorer">
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span>compose(f, g) — cmp-foundations</span>
+      <span class="state" id="simstate">ready</span>
+    </div>
+    <div class="body">
+      <div class="row">
+        <label>f:</label>
+        <select id="pickF">
+          <option value="F:Task->Prompt|0.90">F: Task → Prompt (q=0.90)</option>
+          <option value="id:Task->Task|1.00">id_Task: Task → Task (q=1.00)</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>g:</label>
+        <select id="pickG">
+          <option value="g:Prompt->Context|0.85">g: Prompt → Context (q=0.85)</option>
+          <option value="id:Prompt->Prompt|1.00">id_Prompt: Prompt → Prompt (q=1.00)</option>
+        </select>
+      </div>
+      <div class="output" id="simout">// select f and g, then click compose</div>
+    </div>
+    <div class="controls">
+      <button class="go" type="button" id="composeBtn">compose (g ∘ f)</button>
+      <button class="cmd" type="button" id="verifyIdBtn">verify id ∘ f = f</button>
+      <button class="reset" type="button" id="resetBtn">reset</button>
+    </div>
+  </div>
+  <div class="success-pill" id="successPill" role="status" aria-live="polite">✓ Success — you composed two morphisms and verified an identity law.</div>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">docs/CATEGORICAL-ONTOLOGY.md · §2.1 + §3.1</span>
+      <a href="file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/docs/CATEGORICAL-ONTOLOGY.md" target="_blank" rel="noopener noreferrer">open local →</a>
+    </div>
+<pre><code>LAWS:
+  • F(id_task) = id_prompt           (identity preserved)
+  • F(g ∘ f) = F(g) ∘ F(f)           (composition preserved)
+
+COMPOSITION OPERATORS AS MORPHISMS
+  → (SEQUENCE)      Quality: min(qₐ, qᵦ)
+  || (PARALLEL)     Quality: mean(qᵦ, qᵧ, qᵨ)
+  ⊗ (TENSOR)        Quality: min(qₐ, qᵦ)
+  &gt;=&gt; (KLEISLI)     Quality: converges iteratively</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="0" id="q1">
+    <div class="q">1 — A category is specified by objects, morphisms, and composition. Which two laws must composition satisfy for the specification to actually be a category?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Identity (id ∘ f = f = f ∘ id) and associativity ((h ∘ g) ∘ f = h ∘ (g ∘ f)).</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Commutativity (f ∘ g = g ∘ f) and distributivity.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Idempotence (f ∘ f = f) and closure.</span></button>
+    </div>
+    <div class="explanation">Every category requires (a) identity — for each object X there is an identity morphism id_X such that id_X ∘ f = f and g ∘ id_X = g for any compatible f, g — and (b) associativity: (h ∘ g) ∘ f = h ∘ (g ∘ f). These are the two axioms stated in <code>docs/CATEGORICAL-ONTOLOGY.md §2.1</code> and enforced by the framework as <code>F(id) = id</code> and <code>F(g ∘ f) = F(g) ∘ F(f)</code>.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — In the categorical-meta-prompting ontology, the → (sequence) operator and the ⊗ (tensor) operator share the same quality rule. What is it?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>mean(q₁, q₂)</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>max(q₁, q₂)</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>min(q₁, q₂)</span></button>
+    </div>
+    <div class="explanation">Both use <code>min(q₁, q₂)</code>. <code>docs/CATEGORICAL-ONTOLOGY.md §3.1</code> states: <code>→ (SEQUENCE) Quality: min(qₐ, qᵦ)</code> and <code>⊗ (TENSOR) Quality: min(qₐ, qᵦ)</code>. The intuition: a chain or a tensor is only as good as its weakest link. Parallel (<code>||</code>) is the one that averages; Kleisli (<code>&gt;=&gt;</code>) is the one that converges iteratively.</div>
+  </div>
+
+  <div class="question" data-correct="1" id="q3">
+    <div class="q">3 — Why does the framework choose objects like <code>Task</code>, <code>Prompt</code>, <code>Context</code>, <code>Quality</code> rather than just <code>String</code>?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>It makes the prompts shorter at runtime.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Categories only work when morphisms are typed; distinct object types make F: Task → Prompt a real structural claim, not a rename.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>It forces the LLM to produce JSON output.</span></button>
+    </div>
+    <div class="explanation">Categories only work when morphisms are typed. If every object is <code>String</code>, then every arrow is <code>String → String</code> and composition is trivial but meaningless. Distinct object types (<code>Task</code>, <code>Prompt</code>, <code>Context</code>) make <code>F: Task → Prompt</code> a real structural claim, not a rename — and they are what let the identity and composition laws carry content.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="#" aria-disabled="true" style="opacity:0.4;pointer-events:none">
+      <span class="label">← previous</span>
+      <span class="title">—</span>
+    </a>
+    <a href="02-prompts-as-morphisms.html" class="next">
+      <span class="label">next module →</span>
+      <span class="title">02 · Prompts as Morphisms</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+/* Pure DOM simulator. No eval. No network. */
+(function(){
+  const state = document.getElementById('simstate');
+  const out = document.getElementById('simout');
+  const composeBtn = document.getElementById('composeBtn');
+  const verifyBtn = document.getElementById('verifyIdBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const pickF = document.getElementById('pickF');
+  const pickG = document.getElementById('pickG');
+  const successPill = document.getElementById('successPill');
+  let composed = false;
+  let verifiedId = false;
+
+  function parse(v){
+    // "F:Task->Prompt|0.90" -> {name, src, dst, q}
+    const [nameSig, qstr] = v.split('|');
+    const [name, sig] = nameSig.split(':');
+    const [src, dst] = sig.split('->');
+    return { name, src, dst, q: parseFloat(qstr) };
+  }
+
+  function compose(){
+    const f = parse(pickF.value);
+    const g = parse(pickG.value);
+    if (f.dst !== g.src) {
+      out.textContent = '// type error: f: ' + f.src + '→' + f.dst + ' cannot compose with g: ' + g.src + '→' + g.dst;
+      state.textContent = 'type error';
+      state.style.color = 'var(--danger)';
+      return;
+    }
+    const qComp = Math.min(f.q, g.q);
+    const lines = [
+      '// composition under the → (sequence) operator',
+      'f : ' + f.src + ' → ' + f.dst + '   (q = ' + f.q.toFixed(2) + ')',
+      'g : ' + g.src + ' → ' + g.dst + '   (q = ' + g.q.toFixed(2) + ')',
+      '',
+      'g ∘ f : ' + f.src + ' → ' + g.dst,
+      'quality(g ∘ f) = min(' + f.q.toFixed(2) + ', ' + g.q.toFixed(2) + ') = ' + qComp.toFixed(2),
+      '',
+      '// associativity: (h ∘ g) ∘ f = h ∘ (g ∘ f)  ✓'
+    ];
+    out.textContent = lines.join('\n');
+    state.textContent = 'composed';
+    state.style.color = 'var(--success)';
+    composed = true;
+    checkSuccess();
+  }
+
+  function verifyId(){
+    // Use selected f; compose with id on the left
+    const f = parse(pickF.value);
+    const lines = [
+      '// identity law: id ∘ f = f',
+      'f : ' + f.src + ' → ' + f.dst + '   (q = ' + f.q.toFixed(2) + ')',
+      'id_' + f.dst + ' : ' + f.dst + ' → ' + f.dst + '   (q = 1.00)',
+      '',
+      'id_' + f.dst + ' ∘ f : ' + f.src + ' → ' + f.dst,
+      'quality = min(' + f.q.toFixed(2) + ', 1.00) = ' + f.q.toFixed(2),
+      '',
+      '// identical to f  ✓'
+    ];
+    out.textContent = lines.join('\n');
+    state.textContent = 'id verified';
+    state.style.color = 'var(--success)';
+    verifiedId = true;
+    checkSuccess();
+  }
+
+  function reset(){
+    out.textContent = '// select f and g, then click compose';
+    state.textContent = 'ready';
+    state.style.color = '';
+    composed = false;
+    verifiedId = false;
+    successPill.classList.remove('visible');
+  }
+
+  function checkSuccess(){
+    if (composed && verifiedId) {
+      successPill.classList.add('visible');
+      try { localStorage.setItem('luxor.academy.completed.cmp-foundations.01', '1'); } catch(e){}
+    }
+  }
+
+  composeBtn.addEventListener('click', compose);
+  verifyBtn.addEventListener('click', verifyId);
+  resetBtn.addEventListener('click', reset);
+})();
+
+/* Self-check MCQ */
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) {
+          c.classList.add('correct');
+        } else {
+          c.classList.add('wrong');
+          choices[correct].classList.add('correct');
+        }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

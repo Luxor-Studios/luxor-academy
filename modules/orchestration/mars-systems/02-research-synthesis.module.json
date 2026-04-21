@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "02-research-synthesis",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mars-systems",
+    "title": "Research Synthesis",
+    "xp_reward": 125,
+    "estimated_minutes": 20,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Classify every constraint before you design anything\n\nAfter the parallel fan-out, MARS does not immediately design. It runs the extracts through an **epistemic pass**: what do we know, what are we assuming, and which constraints are actually movable. The Epistemic Dimension Playbook is blunt about what kills otherwise-good blueprints — unexamined self-imposed constraints that everyone has treated as hard.\n\nThe playbook splits constraints into three bins. **Hard constraints** are `Laws of physics (gravity, entropy)`, legal requirements, contractual obligations; you `Accept and design around`. **Soft constraints** are budget, timeline, staffing — expensive to move, but `Negotiate where high ROI`. **Self-imposed constraints** are the dangerous bucket: `Assumed to be hard, but changeable`. Lines like `We've always done it this way` or `Our customers won't accept that`. The prescribed move is `Challenge and test assumptions`.\n\nThe synthesis pass runs four steps in order: (1) `Identify all mentioned constraints` — list everything blocking the work; (2) `Classify each constraint` as hard, soft, or self-imposed; (3) `Challenge self-imposed constraints` — is this actually true, or assumed? Has anyone tested this? (4) `Negotiate soft constraints where high ROI`.\n\nThat sequence is the whole difference between research synthesis and stenography. A specialist returning `the regulatory environment makes this impossible` is making a claim the synthesizer has to classify — is that a statute, a contract, or a belief? MARS treats the third bucket as the highest-leverage surface area in the whole system, because reclassifying one self-imposed constraint as changeable opens a design space nobody was drawing on yesterday.",
+      "word_count": 257,
+      "key_insight": "Every constraint in your research pile is hard, soft, or self-imposed. The third bucket is the only one where synthesis generates new design space."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Three-column classification diagram: a stack of raw constraint claims on the left funnels into three bins — HARD (accept and design around), SOFT (negotiate where high ROI), SELF-IMPOSED (challenge and test). An arrow highlights the self-imposed bin as the highest-leverage surface for synthesis.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "02-research-synthesis.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner drags or clicks to classify all six supplied constraint claims into hard / soft / self-imposed bins. Success pill unlocks when every self-imposed constraint is correctly identified (the two belief-based claims: 'customers won't accept that' and 'we've always done it this way').",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "mars-agent/docs/EPISTEMIC-DIMENSION-PLAYBOOK.md",
+      "permalink": "file:///Users/manu/.claude/agents/mars-agent/docs/EPISTEMIC-DIMENSION-PLAYBOOK.md#L100-L150",
+      "excerpt": "### Three Types of Constraints\n\n**HARD CONSTRAINTS** (Cannot change):\n```\n- Laws of physics (gravity, entropy)\n- Legal/regulatory requirements\n- Contractual obligations (can't change without cost)\n- Natural resource limits\n- Market realities (can't force demand)\n\nApproach: Accept and design around\n```\n\n**SOFT CONSTRAINTS** (Expensive/difficult to change):\n```\n- Budget limitations (can raise more, but costs)\n- Timeline pressures (can extend, but costs)\n- Staff availability (can hire, but costs)\n- Technology investments (can upgrade, but costs)\n- Organizational culture (can shift, but takes time)\n\nApproach: Negotiate where high ROI\n```\n\n**SELF-IMPOSED CONSTRAINTS** (Assumed to be hard, but changeable):\n```\n- \"We've always done it this way\"\n- \"Our customers won't accept that\"\n- \"That's not possible in our industry\"\n- \"We're too small/big to do this\"\n- \"That would never work here\"\n\nApproach: Challenge and test assumptions\n```",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "The Epistemic Dimension Playbook lists exactly three types of constraints. Which set matches what MARS actually uses during synthesis?",
+          "correct": 1,
+          "explanation": "EPISTEMIC-DIMENSION-PLAYBOOK.md §Constraint Classification (lines 100-133) defines three categories: HARD (cannot change), SOFT (expensive/difficult to change), SELF-IMPOSED (assumed to be hard, but changeable). That exact trichotomy drives the relaxation strategy."
+        },
+        {
+          "prompt": "Per the Epistemic Playbook, what is the prescribed approach for a self-imposed constraint like `Our customers won't accept that`?",
+          "correct": 2,
+          "explanation": "EPISTEMIC-DIMENSION-PLAYBOOK.md line 132 is explicit for the self-imposed bucket: `Approach: Challenge and test assumptions`. Self-imposed constraints are assumed hard but actually changeable; the whole point of the classification is to identify them and test whether they hold."
+        },
+        {
+          "prompt": "In the Constraint Relaxation Strategy, what is the second step — right after identifying all mentioned constraints?",
+          "correct": 0,
+          "explanation": "EPISTEMIC-DIMENSION-PLAYBOOK.md §Constraint Relaxation Strategy lists the order as: (1) identify, (2) classify each as hard/soft/self-imposed, (3) challenge self-imposed, (4) negotiate soft where high ROI. Classification has to precede challenge — you cannot attack a self-imposed constraint you have not yet named."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "03-systems-optimization",
+      "siblings": ["01-parallel-discovery", "03-systems-optimization", "04-validation-gates", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

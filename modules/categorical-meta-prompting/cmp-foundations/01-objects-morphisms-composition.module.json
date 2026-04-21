@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "01-objects-morphisms-composition",
+    "version": "v0.1.0",
+    "track": "categorical-meta-prompting",
+    "quest": "cmp-foundations",
+    "title": "Objects, Morphisms, Composition",
+    "xp_reward": 150,
+    "estimated_minutes": 25,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/categorical-meta-prompting"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# The three things every category has\n\nA category is specified by three pieces of data: **objects**, **morphisms** (arrows) between objects, and a **composition** operation that combines two compatible arrows into a third. Add two laws — identity (every object has an arrow to itself that does nothing) and associativity (`(h ∘ g) ∘ f = h ∘ (g ∘ f)`) — and you have a category.\n\nThe `CATEGORICAL-ONTOLOGY.md` document in `categorical-meta-prompting` fixes the ontology the rest of the framework depends on: the **objects** of the meta-prompting category are `Task`, `Prompt`, `Context`, and `Quality ∈ [0,1]`; the **morphisms** are the composition operators `→` (sequence), `||` (parallel), `⊗` (tensor), and `>=>` (Kleisli); and composition is explicitly tracked through a quality lattice where `quality(A ⊗ B) ≤ min(q(A), q(B))` and `quality(A || B) = mean(q(A), q(B))`.\n\nWhy this matters: once you agree that prompts live in a category, you are no longer stringing together strings. You are composing typed arrows, and the composition laws — identity and associativity — give you predictable behaviour. `F(id_task) = id_prompt` means wrapping a no-op task yields a no-op prompt; `F(g ∘ f) = F(g) ∘ F(f)` means composing two task transformations equals transforming each separately and composing the results. Those two lines are the promise that categorical meta-prompting makes to you, and everything else in this Quest is earning it.",
+      "word_count": 257,
+      "key_insight": "Objects, morphisms, and composition — plus identity and associativity — are the minimal vocabulary every category requires. Meta-prompting was missing exactly that vocabulary."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/icosahedron.svg",
+      "alt": "Diagram of the four canonical objects (Task, Prompt, Context, Quality) arranged as nodes, with arrows labelled by the four composition operators (→ sequence, || parallel, ⊗ tensor, >=> Kleisli) showing how morphisms flow between them. Identity loops at each node illustrate the identity law; an associativity triangle in the corner shows (h ∘ g) ∘ f = h ∘ (g ∘ f).",
+      "reduced_motion_fallback": "atlas/icons/synergetics/icosahedron.svg"
+    },
+    "interactive": {
+      "kind": "diagram-explorer",
+      "entry": "01-objects-morphisms-composition.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner selects two morphisms f: Task → Prompt and g: Prompt → Context, clicks 'compose', and the widget renders g ∘ f: Task → Context along with the quality rule min(q_f, q_g). Identity morphism is then applied and the widget shows that id ∘ f = f (left identity) — confirming the identity law.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "docs/CATEGORICAL-ONTOLOGY.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/categorical-meta-prompting/docs/CATEGORICAL-ONTOLOGY.md#L82-L86",
+      "excerpt": "LAWS:\n  • F(id_task) = id_prompt           (identity preserved)\n  • F(g ∘ f) = F(g) ∘ F(f)           (composition preserved)\n\nCOMPOSITION OPERATORS AS MORPHISMS\n  → (SEQUENCE)      Quality: min(qₐ, qᵦ)\n  || (PARALLEL)     Quality: mean(qᵦ, qᵧ, qᵨ)\n  ⊗ (TENSOR)        Quality: min(qₐ, qᵦ)\n  >=> (KLEISLI)     Quality: converges iteratively",
+      "language": "text"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "A category is specified by objects, morphisms, and composition. Which two laws must composition satisfy for the specification to actually be a category?",
+          "correct": 0,
+          "explanation": "Every category requires (a) identity — for each object X there is an identity morphism id_X such that id_X ∘ f = f and g ∘ id_X = g for any compatible f, g — and (b) associativity: (h ∘ g) ∘ f = h ∘ (g ∘ f). These are the two axioms stated in `docs/CATEGORICAL-ONTOLOGY.md §2.1` and enforced by the framework as `F(id) = id` and `F(g ∘ f) = F(g) ∘ F(f)`."
+        },
+        {
+          "prompt": "In the categorical-meta-prompting ontology, the → (sequence) operator and the ⊗ (tensor) operator share the same quality rule. What is it?",
+          "correct": 2,
+          "explanation": "Both use `min(q₁, q₂)`. `docs/CATEGORICAL-ONTOLOGY.md §3.1` states: `→ (SEQUENCE) Quality: min(qₐ, qᵦ)` and `⊗ (TENSOR) Quality: min(qₐ, qᵦ)`. The intuition: a chain or a tensor is only as good as its weakest link. Parallel (`||`) is the one that averages; Kleisli (`>=>`) is the one that converges iteratively."
+        },
+        {
+          "prompt": "Why does the framework choose objects like `Task`, `Prompt`, `Context`, `Quality` rather than just `String`?",
+          "correct": 1,
+          "explanation": "Because categories only work when morphisms are typed. If every object is `String`, then every arrow is `String → String` and composition is trivial but meaningless. Distinct object types (`Task`, `Prompt`, `Context`) make `F: Task → Prompt` a real structural claim, not a rename — and they are what let the identity and composition laws carry content."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "02-prompts-as-morphisms",
+      "siblings": ["02-prompts-as-morphisms", "03-natural-transformations", "04-cmp-query-language", "05-recursive-meta-prompting", "06-ship-your-own-composition"],
+      "ship_your_own": false
+    }
+  }
+}

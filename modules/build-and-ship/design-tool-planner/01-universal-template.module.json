@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "id": "01-universal-template",
+    "version": "v0.1.0",
+    "track": "build-and-ship",
+    "quest": "design-tool-planner",
+    "title": "The Universal Template",
+    "xp_reward": 100,
+    "estimated_minutes": 15,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "https://github.com/manutej/luxor-design-tool-planner"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# One template, any visual API, any AI generator\n\nThe Universal Design Tool Planning Template is not a Canva workflow wearing a disguise. It is a **meta-pattern** — a shape you fill in with your own API names, your own quality targets, and your own user personas. `UNIVERSAL-TEMPLATE-README.md` calls out the move in its second paragraph: the same five-step pipeline (`analyze → research → architect → plan → document`) applies whether you are wiring Claude to Figma plus DALL-E, to Sketch plus Stable Diffusion, or to Adobe Express plus Midjourney. The APIs change. The skeleton does not.\n\nThe skeleton is parameterised by **seven variables**. Four are required (`PROJECT_NAME`, `PRIMARY_API`, `SECONDARY_SERVICES`, `TARGET_USERS`) and three are optional with defaults (`SPEED_TARGET: < 30s`, `QUALITY_TARGET: 90%+`, `ARCHITECTURE_PATTERN: two-agent`). Pick values that describe your project, and the workflow produces the same six documents every time: `PROJECT-OVERVIEW.md`, `ARCHITECTURE.md`, `API-INTEGRATION.md`, `WORKFLOWS.md`, `README.md`, `PROJECT-SUMMARY.md`.\n\nWhy does this matter? Because the costly part of planning a design-automation tool is not choosing the API — it is *structuring* the decision. The template freezes the structure so you can spend your thinking on the variables that actually vary. The CANVA-CODE validation run proved the shape: 22 minutes, 9.18/10 average quality, 91% token efficiency, 3,822 lines of implementation-ready docs. Swap in Figma and DALL-E and you get the same shape.",
+      "markdown_es": "# Una plantilla, cualquier API visual, cualquier generador de IA\n\nLa Plantilla Universal de Planificación para Herramientas de Diseño no es un flujo de trabajo de Canva disfrazado. Es un **meta-patrón** — una forma que se completa con tus propios nombres de API, tus propios objetivos de calidad y tus propias personas de usuario. El archivo `UNIVERSAL-TEMPLATE-README.md` lo declara en su segundo párrafo: el mismo pipeline de cinco pasos (`analizar → investigar → diseñar → planear → documentar`) aplica tanto si conectas Claude a Figma más DALL-E, a Sketch más Stable Diffusion, o a Adobe Express más Midjourney. Las APIs cambian. El esqueleto no.\n\nEl esqueleto está parametrizado por **siete variables**. Cuatro son obligatorias (`PROJECT_NAME`, `PRIMARY_API`, `SECONDARY_SERVICES`, `TARGET_USERS`) y tres son opcionales con valores por defecto (`SPEED_TARGET: < 30s`, `QUALITY_TARGET: 90%+`, `ARCHITECTURE_PATTERN: two-agent`). Eliges valores que describen tu proyecto, y el flujo produce los mismos seis documentos cada vez.\n\nImporta porque la parte costosa de planificar una herramienta de automatización de diseño no es elegir la API — es *estructurar* la decisión. La plantilla congela la estructura para que gastes tu pensamiento en las variables que de verdad varían. La validación de CANVA-CODE probó la forma: 22 minutos, calidad promedio 9.18/10, eficiencia de tokens del 91%, 3.822 líneas de documentación lista para implementar.",
+      "word_count": 232,
+      "key_insight": "The APIs change. The skeleton does not. Seven variables parameterize every design-automation project; the five-step pipeline is universal.",
+      "key_insight_es": "Las APIs cambian. El esqueleto no. Siete variables parametrizan cada proyecto de automatización de diseño; el pipeline de cinco pasos es universal."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/cuboctahedron.svg",
+      "alt": "A diagram showing the universal template as a cuboctahedron frame with seven labeled vertices (PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, TARGET_USERS, SPEED_TARGET, QUALITY_TARGET, ARCHITECTURE_PATTERN) feeding into a five-step pipeline bar (analyze, research, architect, plan, document) that emits six stacked document rectangles labeled PROJECT-OVERVIEW, ARCHITECTURE, API-INTEGRATION, WORKFLOWS, README, and PROJECT-SUMMARY.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/cuboctahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "01-universal-template.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner fills in the seven template variables (PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, TARGET_USERS, SPEED_TARGET, QUALITY_TARGET, ARCHITECTURE_PATTERN) in a static form and sees the resulting YAML configuration rendered next to it — matching the exact shape shown in UNIVERSAL-TEMPLATE-README.md lines 287-322.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "UNIVERSAL-TEMPLATE-README.md",
+      "permalink": "https://github.com/manutej/luxor-design-tool-planner/blob/main/UNIVERSAL-TEMPLATE-README.md#L287-L322",
+      "excerpt": "### Required Variables\n\n```yaml\nPROJECT_NAME: \"Your project name\"\n  # Examples: \"FigmaAI\", \"CanvaBot\", \"SketchAssist\"\n\nPRIMARY_API: \"Your main visual API\"\n  # Options: Canva, Figma, Adobe Express, Sketch, InVision, Miro\n  # Determines: Visual scaffolding capabilities\n\nSECONDARY_SERVICES: \"Your AI generation service(s)\"\n  # Options: NanoBanana, DALL-E, Midjourney, Stable Diffusion, Leonardo.ai\n  # Determines: Image/icon/design generation quality and speed\n\nTARGET_USERS: \"Your designer personas\"\n  # Examples: product designers, marketing teams, content creators, freelancers\n  # Determines: Workflow design and success metrics\n```\n\n### Optional Variables\n\n```yaml\nSPEED_TARGET: \"Your performance goal\"\n  # Default: < 30s\n  # Options: < 15s (fast), < 30s (balanced), < 60s (quality)\n\nQUALITY_TARGET: \"Your quality threshold\"\n  # Default: 90%+\n  # Options: 85%+ (draft), 90%+ (production), 95%+ (premium), 99%+ (enterprise)\n\nARCHITECTURE_PATTERN: \"Your agent design\"\n  # Default: two-agent\n  # Options: single-agent, two-agent, multi-agent\n```",
+      "language": "yaml"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per UNIVERSAL-TEMPLATE-README.md, which four template variables are marked **Required** (as opposed to optional with defaults)?",
+          "options": [
+            "PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, SPEED_TARGET",
+            "PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, TARGET_USERS",
+            "PRIMARY_API, SECONDARY_SERVICES, SPEED_TARGET, QUALITY_TARGET"
+          ],
+          "correct": 1,
+          "explanation": "UNIVERSAL-TEMPLATE-README.md §Required Variables (lines 287-302) lists exactly four: PROJECT_NAME, PRIMARY_API, SECONDARY_SERVICES, TARGET_USERS. SPEED_TARGET, QUALITY_TARGET, and ARCHITECTURE_PATTERN are listed in §Optional Variables (lines 304-321) with documented defaults."
+        },
+        {
+          "prompt": "What is the documented default for `SPEED_TARGET` when a project does not override it?",
+          "options": [
+            "< 15s",
+            "< 30s",
+            "< 60s",
+            "< 2min"
+          ],
+          "correct": 1,
+          "explanation": "UNIVERSAL-TEMPLATE-README.md line 308 specifies `# Default: < 30s` for SPEED_TARGET. The fast (< 15s) and quality (< 60s) options are alternatives, not defaults."
+        },
+        {
+          "prompt": "The template's core five-step pipeline, as stated in UNIVERSAL-TEMPLATE-README.md line 22, is:",
+          "options": [
+            "research → analyze → design → build → ship",
+            "analyze → research → architect → plan → document",
+            "plan → prototype → test → iterate → deploy"
+          ],
+          "correct": 1,
+          "explanation": "UNIVERSAL-TEMPLATE-README.md §Core Pattern (line 22) shows the exact sequence: `[analyze-task-space] → [research-apis] → [design-architecture] → [plan-workflows] → [document-everything]`. This is the universal spine regardless of which APIs are plugged in."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "02-two-agent-pattern",
+      "siblings": ["01-universal-template", "02-two-agent-pattern", "03-mcp-protocol-layer", "04-five-step-pipeline", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

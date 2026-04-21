@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "06-categorical-proofs",
+    "version": "v0.1.0",
+    "track": "formal-verification",
+    "quest": "fstar-7-levels",
+    "title": "L6 — Categorical Proofs",
+    "xp_reward": 260,
+    "estimated_minutes": 40,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/fstar-framework"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Involutions, functoriality, naturality — proved in F*\n\nLevel 6 is where the 7-level framework earns its categorical name. F* types form a cartesian-closed category: objects are types, morphisms are total functions, products are pairs, exponentials are function types `a -> b`. Every pure function is a morphism; every polymorphic function is a natural transformation between functors; every self-inverse function is an involution, i.e., a morphism `f : A -> A` satisfying `f ∘ f = id_A`.\n\nThe Week 2 flagship proof is exactly that statement for `reverse`. An involution is a morphism whose square is the identity. In F*:\n\n```fstar\nlet rec reverse (#a:Type) (xs:list a) : list a =\n  match xs with\n  | [] -> []\n  | hd :: tl -> append (reverse tl) [hd]\n\nval reverse_reverse: #a:Type -> xs:list a ->\n  Lemma (reverse (reverse xs) == xs)\n```\n\nThe proof is **not** a one-liner. It decomposes into two helpers — `reverse_append` (which is naturality of `reverse` with respect to `append`: `reverse (xs ++ ys) == reverse ys ++ reverse xs`) and `reverse_singleton` — and then recurses structurally. Each helper is itself a lemma, and each lemma's return value is `()` because a lemma *proves*, it does not *compute*. The 'output' is the knowledge F* gains.\n\nRead the decomposition categorically and the pattern snaps into focus. `reverse` is a contravariant operation on the `List` functor; `reverse_append` is the statement that `reverse` is a *natural transformation* from `List a x List b` to `List b x List a`; and `reverse_reverse` is the claim that squaring this natural transformation yields the identity. F* does not let you write `functor`, `natural transformation`, or `adjoint` directly — but the proofs of their laws are exactly the shape you just wrote. This is L6: the categorical structure is latent, the proofs are explicit, and F* + Z3 connect the dots.",
+      "word_count": 294,
+      "key_insight": "At L6 the categorical laws are provable statements in F*'s logic: `reverse` is an involution iff `reverse_reverse` typechecks, and the proof decomposes naturally into the naturality lemma `reverse_append` plus structural induction."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/geodesic-sphere.svg",
+      "alt": "A commutative diagram for the involution proof. Top row: object `list a` on the left; arrow `reverse` points right to `list a`; arrow `reverse` again points right to `list a`. The composite `reverse ∘ reverse` is shown curving back to the original via a dashed arrow labeled `id_list a`. Below the diagram, three stacked boxes labeled in order: `Lemma reverse_singleton: reverse [x] == [x]`, `Lemma reverse_append: reverse (xs ++ ys) == reverse ys ++ reverse xs`, `Lemma reverse_reverse: reverse (reverse xs) == xs`. Arrows connect the helper lemmas up into the main proof, with the legend 'decompose, recurse, reassemble'.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/geodesic-sphere.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "06-categorical-proofs.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner inspects the three-lemma proof stack for `reverse_reverse` and marks which helper discharges each step of the `hd :: tl` inductive case: (a) IH application, (b) naturality of reverse over append, (c) reverse of singleton. Success fires when all three are assigned to the correct helper (`reverse_reverse tl`, `reverse_append`, `reverse_singleton`) and the simulator reports QED.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "instructor_guide/solutions/week_02_all_solutions.fst",
+      "permalink": "file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/instructor_guide/solutions/week_02_all_solutions.fst",
+      "excerpt": "val reverse_append: #a:Type -> xs:list a -> ys:list a ->\n  Lemma (reverse (append xs ys) == append (reverse ys) (reverse xs))\n\nlet rec reverse_append #a xs ys =\n  match xs with\n  | [] -> ()\n  | hd :: tl ->\n      reverse_append tl ys;\n      ()\n\nval reverse_reverse: #a:Type -> xs:list a ->\n  Lemma (reverse (reverse xs) == xs)\n\nlet rec reverse_reverse #a xs =\n  match xs with\n  | [] -> ()\n  | hd :: tl ->\n      reverse_reverse tl;\n      reverse_append (reverse tl) [hd];\n      reverse_singleton hd;\n      ()",
+      "language": "fstar"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Why is the body of every lemma in F* just `()` (unit)?",
+          "correct": 0,
+          "explanation": "Lemmas **prove** propositions, they do not compute values. The interesting content is in the *type* — `Lemma (reverse (reverse xs) == xs)` — and the `()` is a marker that the proof obligations introduced by the type have been discharged. The solutions file names this directly: 'the real output is the knowledge F* gains about the property being true.'"
+        },
+        {
+          "prompt": "Why is `reverse_append` (the statement that `reverse (xs ++ ys) == reverse ys ++ reverse xs`) required as a helper before the main involution proof?",
+          "correct": 2,
+          "explanation": "In the inductive case `hd :: tl` of `reverse_reverse`, expanding `reverse (reverse (hd :: tl))` yields `reverse (append (reverse tl) [hd])`. The SMT solver does not know how `reverse` distributes over `append`, so without the helper lemma the subsequent rewriting step stalls. The helper is naturality of reverse-over-append, and it is exactly the bridge F* needs."
+        },
+        {
+          "prompt": "Read categorically: the statement `reverse_reverse : reverse (reverse xs) == xs` says that `reverse` is an involution on `list a`. Which of these is an equivalent categorical claim?",
+          "correct": 1,
+          "explanation": "An involution is a morphism `f : A -> A` whose square is the identity: `f ∘ f = id_A`. For `reverse : list a -> list a`, that is exactly `reverse ∘ reverse == id_{list a}`, which — evaluated pointwise — is `reverse (reverse xs) == xs`. The F* proof and the categorical claim are the same statement in two notations."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "07-ship-your-own-framework",
+      "siblings": ["01-novice-proofs", "02-refinement-types", "03-dependent-types", "04-indexed-types", "05-effect-polymorphism", "07-ship-your-own-framework"],
+      "ship_your_own": false
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "07-ship-your-own-framework",
+    "version": "v0.1.0",
+    "track": "formal-verification",
+    "quest": "fstar-7-levels",
+    "title": "L7 — Ship Your Own 7-Level Framework",
+    "xp_reward": 300,
+    "estimated_minutes": 40,
+    "tier": "Master",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/Documents/LUXOR/PROJECTS/fstar-framework"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Ship a 7-level framework for a verification domain of your choice\n\nYou have just climbed the six rungs of the fstar-framework ladder: refinements at L1, compound refinements at L2, dependent termination metrics at L3, indexed-by-measure recursion at L4, effectful Hoare triples at L5, categorical laws at L6. Now the canonical last move of every LUXOR Academy Quest — the sovereignty clause — asks you to run the same ladder on a verification domain *you* care about.\n\nThe fstar-framework spec tells you the shape. L7 is labelled *Genius — Novel Proof Architectures + Research Innovation*. Pick a domain the existing framework does not cover — constant-time crypto, parser combinators, distributed consensus, bytecode verifiers, JIT timing. Classify your target task's complexity. Instantiate the level template. Example from the framework itself:\n\n```fstar\n// L7 Novel: timing-indexed Hoare logic\neffect JitST (a: Type) (pre: heap -> Type) (post: heap -> a -> heap -> Type) (time: nat) =\n  ST a pre (fun h0 x h1 -> post h0 x h1 /\\ timing_cost h0 h1 <= time)\n```\n\nThat is L7 in one block: a **custom effect** indexed by a polynomial timing bound, built atop L5's `ST`. Your deliverable is a seven-file repo — `L1_<domain>.fst` through `L7_<domain>.fst` — each with one working example, one template, and a one-line classification rule. A README that names the domain. A `classify.fst` mapping tasks to levels. And, in L7's spirit, at least one novel construction that the base framework does not already have.\n\nXP vests in two steps. **150 XP when you queue your repo URL here** — that records sovereignty of the work under your handle. **150 XP when Phase 3 mints the permalink** for the generated Quest — that means the Academy pipeline has extracted the six slots from your code and the permalink now teaches another learner the ladder you just built. The framework was built for you. Now build one for someone else.",
+      "word_count": 307,
+      "key_insight": "Level 7 is novel architecture: pick a domain, classify tasks by complexity, instantiate L1-L6 for your domain, and invent at least one construction (a custom effect, a new indexed family, a novel semantic model) the base framework does not already have."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/geodesic-sphere.svg",
+      "alt": "A flow diagram. Left: a repo-URL input box labeled `<your domain>-framework`. Arrow runs through a seven-node ladder L1 -> L2 -> L3 -> L4 -> L5 -> L6 -> L7, each node labeled with its technique (refinements, lemmas, dependent types, indexed families, effects, categorical laws, novel construction). L7 is highlighted and annotated `your custom: e.g., effect JitST, timing-indexed type, parser-state monad, consensus-round-indexed proof`. The pipeline emits a Quest permalink card on the right, stamped with the learner's handle and a six-slot schematic (primer, visual, interactive, artifact, self_check, next).",
+      "reduced_motion_fallback": "atlas/icons/synergetics/geodesic-sphere.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "07-ship-your-own-framework.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner pastes a GitHub repo URL into the form, selects a verification domain tag (`crypto`, `parsing`, `distributed`, `compilers`, `other`), and clicks `queue for Phase 3 pipeline`. Phase 1 stores the URL + tag locally and vests 150 XP; the remaining 150 XP unlocks when Phase 3 returns the generated Quest permalink. The submit button is a visual stub in Phase 1.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "FSTAR_META_PROMPTING_FRAMEWORK.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/PROJECTS/fstar-framework/FSTAR_META_PROMPTING_FRAMEWORK.md",
+      "excerpt": "### L7: Genius - Novel Proof Architectures + Research Innovation\n\n**Complexity**: New verification techniques, foundational extensions\n**Technique**: Custom type theories, novel effect systems, proof search\n**When**: Research frontiers, impossible-seeming properties, new domains\n\n**Example: JIT Compiler with Timing-Preserving Verification**\n```fstar\n// Novel: Prove JIT compilation preserves timing behavior\ntype timing_trace = list nat\n\n// Define operational semantics with timing\nval eval_with_timing: expr -> Tot (value * timing_trace)\n\n// JIT compilation preserves observable timing\nval jit_compile_timing_preserving:\n  e: expr ->\n  Lemma (snd (eval_with_timing e) ==\n         snd (eval_with_timing (jit_compile e)))\n\n// Novel technique: Timing-indexed Hoare logic\neffect JitST (a: Type) (pre: heap -> Type) (post: heap -> a -> heap -> Type) (time: nat) =\n  ST a pre (fun h0 x h1 -> post h0 x h1 /\\ timing_cost h0 h1 <= time)\n```\n\n**L7 Template**:\n```\nGiven novel verification challenge C:\n1. Analyze why existing techniques fail\n2. Identify missing theory (e.g., timing logic)\n```",
+      "language": "fstar"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "Per the fstar-framework's L7 definition, what distinguishes Level 7 from Level 6?",
+          "correct": 1,
+          "explanation": "The spec reads `L6 (established techniques) ⊂ L7 (established + novel)`. L6 exhausts the established playbook — semantic modelling, relational reasoning, categorical laws. L7 is the rung where you invent a construction the base framework does not already have: a custom effect like `JitST`, a novel indexed family, a new semantic model. Everything L1-L6 is a prerequisite; L7 is the extension."
+        },
+        {
+          "prompt": "The `JitST` effect in the L7 example is defined atop which earlier-level primitive?",
+          "correct": 2,
+          "explanation": "`effect JitST (a: Type) (pre: ...) (post: ...) (time: nat) = ST a pre (fun h0 x h1 -> post h0 x h1 /\\ timing_cost h0 h1 <= time)`. It is a **refinement of `ST`** — the L4/L5 stateful effect — adding a fourth parameter (the polynomial time bound) and conjoining a timing predicate to the postcondition. L7 extends L5; the novel part is the extra index, not a rewrite from scratch."
+        },
+        {
+          "prompt": "You paste your domain's repo URL into the form below. What does the Academy pipeline do with it, and when does the second half of the XP vest?",
+          "correct": 0,
+          "explanation": "Phase 1 captures the URL and stores it locally — **150 XP vests immediately** to record the sovereignty of your framework under your handle. The pipeline runs live in Phase 3: it extracts the six-slot schema from your code, validates it against `validators/slots.schema.json`, renders a draft `.module.json` plus HTML, and returns a permalink Quest. **The remaining 150 XP unlocks when that permalink is minted**, so your progress mirrors actual delivery."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": null,
+      "siblings": ["01-novice-proofs", "02-refinement-types", "03-dependent-types", "04-indexed-types", "05-effect-polymorphism", "06-categorical-proofs"],
+      "ship_your_own": true
+    }
+  }
+}

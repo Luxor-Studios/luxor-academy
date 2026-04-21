@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "id": "01-two-layer-protocol",
+    "version": "v0.1.0",
+    "track": "mcp-integration",
+    "quest": "mcp-from-zero",
+    "title": "The Two-Layer Protocol",
+    "xp_reward": 120,
+    "estimated_minutes": 20,
+    "tier": "Adept",
+    "license": "MIT",
+    "source_repo": "https://github.com/manutej/meta-prompting-plugin"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# Transport carries bytes. Protocol carries meaning.\n\nMCP is built from two layers stacked on top of each other, and the whole design pays off because that split is clean. The bottom layer is a **transport** — stdio pipes, a WebSocket, an HTTP stream — whose only job is to move opaque byte frames between a client process and a server process. The top layer is a **message protocol** — JSON-RPC 2.0 — whose only job is to turn those bytes into typed `request / response / notification` objects with method names, parameters, and ids.\n\nThe meta-prompting-plugin's `docs/theory/foundations.md` uses a lens that is almost perfect for this: it treats every system as four **primary objects** — `Task`, `Prompt`, `Context`, and a `Quality q ∈ [0,1]` scalar — connected by structure-preserving morphisms. Map that onto MCP and the split is obvious. The transport is a **functor** `Bytes → Frames`: it preserves order and identity, nothing more. The protocol is a **monad** `Frame →ⁿ Frame`: it chains requests, tracks ids, threads conversational state, and gates everything on well-typed payloads.\n\nWhy does the split matter? Because you can swap transports without rewriting a single handler. `StdioServerTransport` and a WebSocket transport both feed the same JSON-RPC layer the same JSON frames. Your `listTools` handler does not know — and does not need to know — whether its frame arrived over a pipe or a socket. Two layers; one responsibility each; any real MCP server you read will make this separation load-bearing.",
+      "word_count": 259,
+      "key_insight": "Transport is a functor over bytes; JSON-RPC is a monad over frames. Keep them separate and any transport plugs into any server."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/jitterbug.svg",
+      "alt": "Two horizontal bands stacked vertically. The bottom band is labelled `Transport Layer` and shows stdio pipes, a WebSocket, and an HTTP stream feeding byte frames into a central spine. The top band is labelled `JSON-RPC 2.0 Message Layer` and shows typed request/response/notification envelopes with method names and ids flowing along the spine. An arrow on the right labelled `swap transport` connects the stdio and WebSocket icons, emphasising that the upper layer does not change.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/jitterbug.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "01-two-layer-protocol.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner toggles the transport between `stdio` and `websocket` in the two-layer simulator and observes that the same JSON-RPC frame (`{ \"method\": \"tools/list\", \"id\": 1 }`) is emitted by both transports unchanged. The success pill appears after the learner has inspected both transports and confirmed the frame is identical.",
+      "interactive_kind_is_static_readable_in_phase_1": false
+    },
+    "artifact": {
+      "source_path": "docs/theory/foundations.md",
+      "permalink": "https://github.com/manutej/meta-prompting-plugin/blob/main/docs/theory/foundations.md#L10-L40",
+      "excerpt": "## The primary objects\n\n- **Task `T`** — a goal in natural language: \"implement X\", \"summarize Y\".\n- **Prompt `P`** — the string we actually send to the model.\n- **Context `C`** — the surrounding state: history, code, tool outputs.\n- **Quality `q ∈ [0,1]`** — a scalar we track alongside every transformation.\n\n## The primary morphisms (commands)\n\n### `/meta` — Functor `F : Task → Prompt`\n\nA functor is a structure-preserving map. `/meta` takes a task and produces a prompt such that:\n\n- **Identity:** `F(id_T) = id_P` — the \"do nothing\" task maps to the \"do nothing\" prompt.\n- **Composition:** `F(g ∘ f) = F(g) ∘ F(f)` — composing two tasks first and then mapping equals mapping each and then composing.\n\nIn practice: complexity classification is a functor. Tier `L3` tasks always produce `L3`-shaped prompts.\n\n### `/rmp` — Monad `M : Prompt →ⁿ Prompt`\n\nA monad is a way to chain computations that carry extra context. `M = (Prompt, return, bind)`:\n\n- `return : Prompt → M(Prompt)` — wrap a prompt in quality-tracking context.\n- `bind : M(Prompt) × (Prompt → M(Prompt)) → M(Prompt)` — refine, carrying quality forward.",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "MCP splits into two layers. Which pair correctly identifies them?",
+          "correct": 1,
+          "explanation": "MCP is a transport layer (stdio / WebSocket / HTTP — moves bytes) plus a JSON-RPC 2.0 message layer (method/params/id — moves meaning). The categorical reading in `docs/theory/foundations.md` calls transport a structure-preserving functor and the protocol a monad that chains typed frames."
+        },
+        {
+          "prompt": "In the foundations.md morphism table, what structure is `/rmp` modelled as?",
+          "correct": 2,
+          "explanation": "`docs/theory/foundations.md` line 28: `### /rmp — Monad M : Prompt →ⁿ Prompt`. `/rmp` iterates `refine >=> refine >=> ...` with quality carried forward — the same shape MCP's JSON-RPC layer uses when chaining request/response frames."
+        },
+        {
+          "prompt": "Why can an MCP server swap `StdioServerTransport` for a WebSocket transport without changing its tool handlers?",
+          "correct": 0,
+          "explanation": "Because the handler code only talks to the JSON-RPC message layer. The transport is a functor that preserves the shape of the frames it carries; swapping it substitutes one carrier for another while the monadic request/response layer above it stays intact."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "02-capability-negotiation",
+      "siblings": ["02-capability-negotiation", "03-three-primitives", "04-your-first-server", "05-client-integration-claude-code", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

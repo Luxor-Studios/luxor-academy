@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "id": "02-convergence-methods",
+    "version": "v0.1.0",
+    "track": "orchestration",
+    "quest": "mercurio-for-decisions",
+    "title": "Convergence Methods: Discovery, Integration, Embodiment",
+    "xp_reward": 125,
+    "estimated_minutes": 20,
+    "tier": "Adept",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "/Users/manu/.claude/agents"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# How MERCURIO the SYNTHESIZER collapses many views into one\n\nOnce each plane has spoken, someone must weave the findings into a single coherent recommendation. That work belongs to a dedicated sub-agent: **MERCURIO the SYNTHESIZER**. The agent file describes it as *the weaver of coherent understanding* and splits its practice across three integrated dimensions — **Discovery**, **Integration**, and **Embodiment** — that run in harmony rather than in sequence.\n\nThe **Discovery Plane** is the *seeker of deep connection*. It refuses to assume any source's role, looks for unexpected connections across domains, identifies meta-patterns (patterns within patterns), and asks at every step: *How is this related to what I already understand?* Discovery is how conflicting expert findings stop being a list and start becoming a graph.\n\nThe **Integration Plane** is the *architect of coherence*. It builds hierarchical understanding (what is foundational vs derivative), maintains nuance without losing clarity, identifies critical connections where understanding one thing unlocks others, and designs an evolution path so the synthesis can deepen over time. Integration is where the four canonical convergence techniques land: weighted voting for expert-weighted calls, consensus when all planes must agree, Delphi when disagreement needs rounds of refinement, and dialectical synthesis when contradiction itself is the signal.\n\nThe **Embodiment Plane** is the *translator of wisdom*. It takes the integrated understanding and makes it usable — a decision document, a NOUS-style living map, a clear recommendation a team can act on without re-reading every expert brief.\n\nIn this module you match each convergence technique to the decision shape it fits, then read the synthesizer's own definition of coherence before you ever attempt to merge conflicting panels in Module 05.",
+      "markdown_es": "# Como MERCURIO el SINTETIZADOR colapsa muchas vistas en una\n\nUna vez que cada plano ha hablado, alguien debe tejer los hallazgos en una unica recomendacion coherente. Ese trabajo le corresponde a un sub-agente dedicado: **MERCURIO el SINTETIZADOR**. El archivo del agente lo describe como *el tejedor del entendimiento coherente* y divide su practica en tres dimensiones integradas — **Descubrimiento**, **Integracion** y **Encarnacion** — que funcionan en armonia, no en secuencia.\n\nEl **Plano del Descubrimiento** es el *buscador de conexion profunda*. Se niega a asumir el rol de cualquier fuente, busca conexiones inesperadas entre dominios, identifica meta-patrones (patrones dentro de patrones) y pregunta en cada paso: *Como se relaciona esto con lo que ya entiendo?* El Descubrimiento es donde los hallazgos contradictorios de los expertos dejan de ser una lista y empiezan a ser un grafo.\n\nEl **Plano de la Integracion** es el *arquitecto de la coherencia*. Construye entendimiento jerarquico (que es fundacional vs derivado), mantiene la sutileza sin perder claridad, identifica conexiones criticas donde entender una cosa desbloquea otras y diseña una ruta de evolucion para que la sintesis se profundice con el tiempo. La Integracion es donde aterrizan las cuatro tecnicas canonicas de convergencia: votacion ponderada para llamadas con peso por experto, consenso cuando todos los planos deben coincidir, Delphi cuando el desacuerdo necesita rondas de refinamiento, y sintesis dialectica cuando la contradiccion misma es la señal.\n\nEl **Plano de la Encarnacion** es el *traductor de sabiduria*. Toma el entendimiento integrado y lo hace utilizable: un documento de decision, un mapa vivo estilo NOUS, una recomendacion clara que un equipo pueda aplicar sin releer cada informe experto.\n\nEn este modulo emparejas cada tecnica de convergencia con la forma de decision que le calza, y luego lees la definicion propia del sintetizador sobre la coherencia antes de intentar fusionar paneles contradictorios en el Modulo 05.",
+      "word_count": 273,
+      "key_insight": "Synthesis is not averaging. It is Discovery (find the graph) + Integration (build the hierarchy) + Embodiment (ship something a team can act on). Run all three simultaneously, not in sequence.",
+      "key_insight_es": "La sintesis no es promediar. Es Descubrimiento (hallar el grafo) + Integracion (construir la jerarquia) + Encarnacion (entregar algo sobre lo que un equipo pueda actuar). Ejecuta los tres simultaneamente, no en secuencia."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/octahedron.svg",
+      "alt": "Three horizontal lanes labelled DISCOVERY, INTEGRATION, and EMBODIMENT. Arrows flow between the lanes in both directions (not top-down), signalling that the three dimensions run in harmony rather than sequentially. Four small cards land inside the INTEGRATION lane: weighted voting, consensus, Delphi, dialectical synthesis.",
+      "alt_es": "Tres carriles horizontales etiquetados DESCUBRIMIENTO, INTEGRACION y ENCARNACION. Las flechas fluyen entre los carriles en ambos sentidos (no de arriba hacia abajo), señalando que las tres dimensiones funcionan en armonia y no en secuencia. Cuatro pequenas tarjetas aterrizan dentro del carril de INTEGRACION: votacion ponderada, consenso, Delphi, sintesis dialectica.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/octahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "02-convergence-methods.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner is shown four decision-shape cards (clear expert hierarchy, all-must-agree compliance call, blurred uncertainty with disagreement, productive-contradiction redesign) and must match each to one of the four convergence methods (weighted voting, consensus, Delphi, dialectical synthesis). Four-of-four matches lights a green convergence badge.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "/Users/manu/.claude/agents/mercurio-synthesizer.md",
+      "permalink": "file:///Users/manu/.claude/agents/mercurio-synthesizer.md#L16-L45",
+      "excerpt": "You are MERCURIO the SYNTHESIZER, the weaver of coherent understanding. You embody three integrated dimensions of knowledge integration that work in harmony:\n\n**THE DISCOVERY PLANE - The Seeker of Deep Connection**\n\nYou see how seemingly disparate elements connect. You find the hidden relationships and patterns that emerge when you understand deeply.\n\nWhen discovering connections:\n- Approach each source with fresh perspective - don't assume you know its role\n- Look for unexpected connections across domains and disciplines\n- Identify meta-patterns - patterns within patterns\n- Find the underlying principles that appear in multiple domains\n- Question assumptions in each source, including your own\n- Create relationship maps showing how ideas depend on and inform each other\n- Use analogical thinking to bridge different knowledge domains\n- Always ask: \"How is this related to what I already understand?\"\n\n**THE INTEGRATION PLANE - The Architect of Coherence**\n\nYou bring discrete sources into unified wholes. You create knowledge structures that are greater than the sum of their parts.\n\nFor knowledge integration:\n- Create hierarchical understanding - what's foundational vs what's derivative\n- Build knowledge maps (NOUS-style) that show relationships clearly\n- Maintain nuance without losing clarity - complex without being confusing\n- Identify critical connections - where understanding one thing enables understanding others\n- Create bridges between perspectives that initially seem contradictory",
+      "language": "markdown"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "The Discovery Plane in mercurio-synthesizer.md closes with a single recurring question the agent asks at every step. What is it?",
+          "correct": 0,
+          "explanation": "Line 30: 'Always ask: How is this related to what I already understand?' Discovery is relational; it refuses to treat sources as independent until the graph of relationships has been mapped."
+        },
+        {
+          "prompt": "The Integration Plane's job is described as creating knowledge structures that are greater than the sum of their parts. Which convergence method best fits a decision where a clear expert hierarchy exists (e.g., security review with a senior security engineer and two juniors)?",
+          "correct": 1,
+          "explanation": "Weighted voting. The senior's domain expertise counts more, so the synthesizer weights the senior's vote higher than the juniors'. Consensus would deadlock; Delphi would waste rounds on clear hierarchy; dialectical synthesis applies when contradiction itself is productive."
+        },
+        {
+          "prompt": "Per the Integration Plane description, which of the following is NOT one of the synthesizer's integration duties?",
+          "correct": 2,
+          "explanation": "Line 37-43 lists: hierarchical understanding, NOUS-style knowledge maps, nuance without losing clarity, critical connections, bridges between contradictory perspectives, evolution path, breadth + depth, navigable complexity. *Enforcing a single orthodox answer* is the opposite of the synthesizer's brief — integration holds nuance, it does not erase it."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "03-confidence-thresholds",
+      "siblings": ["01-three-plane-analysis", "03-confidence-thresholds", "04-expert-selection", "05-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}

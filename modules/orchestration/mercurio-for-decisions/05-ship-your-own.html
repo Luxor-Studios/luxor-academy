@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" data-zoom="module">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'">
+<title>Module 05 — Ship Your Own Decision · MERCURIO for Decisions · LUXOR Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--background:#0A1628;--surface-1:#111D33;--surface-2:#162440;--surface-3:#1C2B47;--primary:#00F5FF;--primary-soft:#66FAFF;--accent:#00F5FF;--text:#FFFFFF;--text-dim:#94A3B8;--text-muted:#64748B;--border:rgba(0,245,255,0.22);--border-strong:rgba(0,245,255,0.6);--danger:#FF3B3B;--success:#22C55E;--glow-cyan:0 0 16px rgba(0,245,255,0.45);--glow-soft:0 0 12px rgba(0,245,255,0.30);--font-display:'Playfair Display',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',Consolas,monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{background:var(--background);background-image:linear-gradient(rgba(0,245,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.025) 1px,transparent 1px);background-size:32px 32px;color:var(--text);font-family:var(--font-body);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 150ms}
+a:hover,a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;box-shadow:var(--glow-cyan)}
+.shell{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.topbar{display:flex;align-items:center;gap:1rem;padding:1rem 0 1.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;flex-wrap:wrap}
+.topbar .glyph{width:44px;height:44px;flex-shrink:0}
+.topbar .meta{flex:1;min-width:0}
+.topbar .crumb{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:0.25rem}
+.topbar .qname{font-family:var(--font-display);font-size:1.25rem;color:var(--primary);font-weight:700}
+.topbar .stats{display:flex;gap:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);align-items:center;flex-wrap:wrap}
+.topbar .stats strong{color:var(--primary-soft);font-weight:600}
+.topbar .export{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:0.35rem 0.75rem;font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all 150ms}
+.topbar .export:hover,.topbar .export:focus-visible{color:var(--primary);border-color:var(--primary)}
+.module-title{font-family:var(--font-display);font-size:2.5rem;line-height:1.15;color:var(--text);margin-bottom:0.5rem;font-weight:700}
+.module-subtitle{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:2.5rem}
+section{margin-bottom:3rem;scroll-margin-top:2rem}
+section h2{font-family:var(--font-display);font-size:1.6rem;color:var(--primary);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:0.6rem}
+section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;opacity:0.8}
+.primer p{margin-bottom:1rem;color:var(--text)}
+.primer h1{font-family:var(--font-display);font-size:1.75rem;color:var(--primary-soft);margin-bottom:1rem;font-weight:700}
+.primer code{font-family:var(--font-mono);background:var(--surface-2);color:var(--primary-soft);padding:0.12rem 0.4rem;border-radius:3px;font-size:0.88em;border:1px solid var(--border)}
+.pullquote{border-left:3px solid var(--primary);padding:1rem 1.25rem;margin:1.5rem 0;background:var(--surface-1);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--primary-soft)}
+.visual-frame{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.visual-frame svg{max-width:100%;height:auto}
+.visual-caption{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);text-align:center;max-width:540px}
+.forge{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.4rem 1.5rem}
+.forge label{display:block;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.4rem;margin-top:0.9rem}
+.forge label:first-child{margin-top:0}
+.forge input[type="text"],.forge textarea,.forge select{width:100%;padding:0.65rem 0.8rem;background:#050B18;border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-mono);font-size:0.85rem;transition:all 150ms;resize:vertical}
+.forge textarea{min-height:60px;line-height:1.5}
+.forge input:focus,.forge textarea:focus,.forge select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,245,255,0.2)}
+.forge .hint{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem}
+.forge .row{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem}
+@media(max-width:520px){.forge .row{grid-template-columns:1fr}}
+.forge .actions{margin-top:1.3rem;display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap}
+.forge-btn{position:relative;background:var(--primary);color:var(--background);border:1px solid var(--primary);padding:0.65rem 1.2rem;font-family:var(--font-mono);font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all 150ms}
+.forge-btn:hover,.forge-btn:focus-visible{background:var(--primary-soft);box-shadow:var(--glow-cyan)}
+.forge-btn[disabled]{opacity:0.6;cursor:not-allowed}
+.phase-stub{font-family:var(--font-mono);font-size:0.7rem;color:var(--accent);padding:0.3rem 0.6rem;background:rgba(0,245,255,0.1);border:1px dashed var(--accent);border-radius:3px;letter-spacing:0.08em;text-transform:uppercase}
+.tooltip{position:relative;display:inline-block}
+.tooltip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--surface-3);color:var(--text);padding:0.5rem 0.8rem;border-radius:4px;font-family:var(--font-body);font-size:0.78rem;letter-spacing:0;text-transform:none;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 150ms;border:1px solid var(--border);font-weight:400}
+.tooltip:hover::after,.tooltip:focus-within::after{opacity:1}
+.preview{margin-top:1.4rem;background:#050B18;border:1px solid var(--border);border-radius:4px;padding:1rem 1.15rem;font-family:var(--font-mono);font-size:0.78rem;color:#D4E4F7;line-height:1.6;display:none;white-space:pre-wrap;max-height:400px;overflow-y:auto}
+.preview.visible{display:block}
+.artifact{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.artifact-head{background:var(--surface-2);padding:0.6rem 1rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.artifact-head .path{color:var(--primary-soft);font-weight:600}
+.artifact-head a{font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase}
+.artifact pre{padding:1rem 1.15rem;overflow-x:auto;font-family:var(--font-mono);font-size:0.8rem;line-height:1.6;color:#D4E4F7;background:#050B18;white-space:pre-wrap}
+.question{background:var(--surface-1);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+.question .q{font-weight:500;margin-bottom:0.75rem;color:var(--text)}
+.question .choices{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.choice{display:flex;gap:0.6rem;align-items:flex-start;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface-2);cursor:pointer;font-family:var(--font-body);font-size:0.92rem;color:var(--text);transition:all 150ms;text-align:left;width:100%}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);color:var(--accent)}
+.choice.correct{border-color:var(--success);background:rgba(34,197,94,0.1);color:var(--success)}
+.choice.wrong{border-color:var(--danger);background:rgba(255,59,59,0.1);color:var(--danger)}
+.choice[disabled]{cursor:default}
+.choice .idx{font-family:var(--font-mono);color:var(--text-muted);font-size:0.8rem;flex-shrink:0}
+.explanation{font-family:var(--font-body);font-size:0.88rem;color:var(--text-dim);padding:0.75rem 0.9rem;background:var(--surface-3);border-left:2px solid var(--accent);border-radius:0 4px 4px 0;display:none}
+.explanation.visible{display:block}
+.next-nav{display:flex;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid var(--border);margin-top:2.5rem;flex-wrap:wrap}
+.next-nav a{flex:1;min-width:220px;padding:1rem 1.25rem;background:var(--surface-1);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;gap:0.2rem;transition:all 150ms}
+.next-nav a:hover,.next-nav a:focus-visible{border-color:var(--primary);box-shadow:var(--glow-cyan)}
+.next-nav .label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
+.next-nav .title{font-family:var(--font-display);color:var(--primary-soft);font-size:1.05rem}
+.next-nav .next{text-align:right;align-items:flex-end}
+@media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Octahedron Quest glyph">
+    <g fill="none" stroke="#00F5FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 92,50 50,92 8,50"/>
+      <line x1="8" y1="50" x2="92" y2="50"/><line x1="50" y1="8" x2="50" y2="50"/><line x1="50" y1="92" x2="50" y2="50"/>
+      <circle cx="50" cy="8" r="1.6" fill="#00F5FF"/><circle cx="50" cy="92" r="1.6" fill="#00F5FF"/>
+      <circle cx="8" cy="50" r="1.6" fill="#00F5FF"/><circle cx="92" cy="50" r="1.6" fill="#00F5FF"/>
+      <circle cx="50" cy="50" r="1.6" fill="#00F5FF"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Orchestration · MERCURIO for Decisions · Module 05 of 05 · Canonical Last Module</div>
+    <div class="qname">Ship Your Own Decision</div>
+  </div>
+  <div class="stats">
+    <span><strong>+150</strong> XP</span>
+    <span><strong>25</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Ship Your Own Decision</h1>
+<div class="module-subtitle">// Tier: Adept · Pattern: MERCURIO canonical-last-module</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Frame a decision you actually owe, then run the loop end-to-end</h1>
+  <p>You have read the three planes, matched decision shapes to convergence methods, calibrated the six confidence bands, and assembled a 3-to-7-expert panel that covers every dimension without paying prohibitive coordination cost. This module is where the reading stops and the shipping starts.</p>
+  <p>The canonical MERCURIO orchestrator file is explicit about the output artifact: a <strong>NOUS.md</strong> — described in the orchestrator as <em>a living map of synthesized knowledge</em> that is <em>built and maintained</em>, not written-once-and-forgotten. The orchestrator's Mental Plane directive is to <em>synthesize information from multiple sources into coherent, actionable wisdom</em>, <em>document your research in NOUS.md with clear structure</em>, and <em>always cite sources and acknowledge uncertainty where it exists</em>. That last clause is what separates a decision document from a pitch deck: calibrated MERCURIO output is allowed to say <em>we do not know yet</em>.</p>
+  <p>The Physical Plane directive from the same orchestrator file adds the operational layer: <em>continuously assess what you know versus what you need to know</em>, <em>be proactive in identifying gaps and taking action to fill them</em>, and <em>maintain clear vision of ultimate goals while handling immediate needs</em>. A shipped decision is one where the gaps are named, the next actions are assigned, and the confidence band is stamped at the top of the document.</p>
+  <p>In this module you frame one real decision you owe — a hiring call, an architecture pick, a pricing move, a product kill — and run the full MoE loop: three planes, panel assembly, method pick, threshold calibration, and NOUS-style convergence document. You paste the draft into the form and queue it for the Academy pipeline. Phase 1 vests 150 XP the moment you queue; Phase 3 mints the permalink that turns your decision document into a teachable specimen another learner can study.</p>
+  <blockquote class="pullquote">A shipped MERCURIO decision is a NOUS.md — a living document that cites its sources, names its gaps, stamps its confidence band, and assigns next actions. Pitch decks are allowed to hide uncertainty; convergence documents are not.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 560 260" role="img" aria-label="A flow from a decision prompt through the three-plane pipeline, synthesizer diamond (four methods), confidence stamp, to a NOUS.md card with sources, gaps, confidence stamp, and next actions." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .lbl{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;fill:#00F5FF}
+          .arrow{stroke:#66FAFF;fill:none;stroke-width:1.5}
+          .box{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.5}
+          .slot{fill:#162440;stroke:#00F5FF;stroke-opacity:0.4}
+          .slotlbl{font-family:'JetBrains Mono',monospace;font-size:8px;fill:#66FAFF}
+        </style>
+        <marker id="ar1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#66FAFF"/></marker>
+      </defs>
+      <rect class="box" x="10" y="110" width="90" height="40" rx="4"/>
+      <text class="head" x="55" y="128" text-anchor="middle">prompt</text>
+      <text class="lbl" x="55" y="142" text-anchor="middle">decision you owe</text>
+      <path class="arrow" d="M100 130 L 130 130" marker-end="url(#ar1)"/>
+      <rect class="box" x="130" y="55" width="90" height="30" rx="4"/>
+      <text class="head" x="175" y="74" text-anchor="middle" font-size="10">Mental</text>
+      <rect class="box" x="130" y="115" width="90" height="30" rx="4"/>
+      <text class="head" x="175" y="134" text-anchor="middle" font-size="10">Physical</text>
+      <rect class="box" x="130" y="175" width="90" height="30" rx="4"/>
+      <text class="head" x="175" y="194" text-anchor="middle" font-size="10">Spiritual</text>
+      <path class="arrow" d="M220 70 Q 245 70 265 115" marker-end="url(#ar1)"/>
+      <path class="arrow" d="M220 130 L 260 130" marker-end="url(#ar1)"/>
+      <path class="arrow" d="M220 190 Q 245 190 265 145" marker-end="url(#ar1)"/>
+      <polygon class="box" points="265,100 315,130 265,160 245,130"/>
+      <text class="head" x="280" y="125" text-anchor="middle" font-size="9">synth</text>
+      <text class="lbl" x="280" y="140" text-anchor="middle">4 methods</text>
+      <path class="arrow" d="M315 130 L 345 130" marker-end="url(#ar1)"/>
+      <rect class="box" x="345" y="115" width="55" height="30" rx="4"/>
+      <text class="head" x="372" y="133" text-anchor="middle" font-size="9">conf.</text>
+      <text class="lbl" x="372" y="145" text-anchor="middle">6 bands</text>
+      <path class="arrow" d="M400 130 L 425 130" marker-end="url(#ar1)"/>
+      <rect class="box" x="425" y="45" width="125" height="170" rx="4"/>
+      <text class="head" x="487" y="65" text-anchor="middle">NOUS.md</text>
+      <line x1="435" y1="72" x2="540" y2="72" stroke="#00F5FF" stroke-opacity="0.4"/>
+      <rect class="slot" x="435" y="80" width="105" height="20" rx="2"/>
+      <text class="slotlbl" x="440" y="93">sources · cited</text>
+      <rect class="slot" x="435" y="104" width="105" height="20" rx="2"/>
+      <text class="slotlbl" x="440" y="117">gaps · named</text>
+      <rect class="slot" x="435" y="128" width="105" height="20" rx="2"/>
+      <text class="slotlbl" x="440" y="141">confidence stamp</text>
+      <rect class="slot" x="435" y="152" width="105" height="20" rx="2"/>
+      <text class="slotlbl" x="440" y="165">next actions · owned</text>
+      <rect class="slot" x="435" y="176" width="105" height="20" rx="2" fill="#1C2B47" stroke="#00F5FF"/>
+      <text class="slotlbl" x="440" y="189" fill="#00F5FF">permalink (phase 3)</text>
+      <text class="lbl" x="280" y="240" text-anchor="middle">frame → three planes → synthesize → stamp confidence → ship NOUS.md</text>
+    </svg>
+    <p class="visual-caption">Fallback: static flow diagram. No animation needed; the NOUS.md card is the deliverable.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2><span class="tag">03</span>Interactive · Forge Your NOUS.md</h2>
+  <p style="margin-bottom:1rem;color:var(--text-dim);font-size:0.92rem">Fill the fields below to frame a real decision. On submit, the form serializes a NOUS.md draft you can copy. Phase 1 stores locally; Phase 3 will queue to the pipeline. <em>The submit button is a visual stub for now — hover for context.</em></p>
+  <form class="forge" id="forgeForm" onsubmit="return submitForge(event)">
+    <label for="prompt">Decision prompt</label>
+    <input type="text" id="prompt" placeholder="e.g., Should we migrate from Postgres to CockroachDB before Q3 ship?" autocomplete="off" required>
+    <label for="mental">Mental plane finding</label>
+    <textarea id="mental" placeholder="What does the evidence show? Pattern-match, assumption audit, evidence hierarchy." required></textarea>
+    <label for="physical">Physical plane finding</label>
+    <textarea id="physical" placeholder="Budget, timeline, team bandwidth, constraints (fixed vs negotiable). Critical path." required></textarea>
+    <label for="spiritual">Spiritual plane finding</label>
+    <textarea id="spiritual" placeholder="Whose lives change? Values in play. Unintended consequences and long-term impact." required></textarea>
+    <label for="panel">Panel (3-7 experts, comma-separated)</label>
+    <input type="text" id="panel" placeholder="e.g., architect, DBA, security, product, ethics lead" required>
+    <div class="row">
+      <div>
+        <label for="method">Convergence method</label>
+        <select id="method" required>
+          <option value="">— pick one —</option>
+          <option value="weighted">weighted voting</option>
+          <option value="consensus">consensus</option>
+          <option value="delphi">Delphi</option>
+          <option value="dialectical">dialectical synthesis</option>
+        </select>
+      </div>
+      <div>
+        <label for="confidence">Confidence band</label>
+        <select id="confidence" required>
+          <option value="">— pick one —</option>
+          <option value="90">90%+ execute now</option>
+          <option value="80">80-90% plan and commit</option>
+          <option value="70">70-80% prototype first</option>
+          <option value="60">60-70% run a spike</option>
+          <option value="50">50-60% gather more data</option>
+          <option value="00">below 50% halt</option>
+        </select>
+      </div>
+    </div>
+    <label for="gaps">Gaps (what you do not yet know)</label>
+    <textarea id="gaps" placeholder="Name the unknowns. The orchestrator file says: 'acknowledge uncertainty where it exists.'" required></textarea>
+    <label for="actions">Next actions (with owners)</label>
+    <textarea id="actions" placeholder="e.g., 1) Alice runs a 3-day CockroachDB spike. 2) Bob benchmarks write amplification. 3) Re-convene panel Friday." required></textarea>
+    <div class="actions">
+      <span class="tooltip" data-tip="Phase 3 activates the live pipeline. Phase 1 stores locally and renders a NOUS.md preview.">
+        <button type="submit" class="forge-btn" id="forgeBtn">Forge NOUS.md</button>
+      </span>
+      <span class="phase-stub">Phase 1 stub · activates in Phase 3</span>
+    </div>
+    <div class="preview" id="forgePreview" role="status" aria-live="polite"></div>
+  </form>
+</section>
+
+<section id="artifact">
+  <h2><span class="tag">04</span>Artifact</h2>
+  <div class="artifact">
+    <div class="artifact-head">
+      <span class="path">~/.claude/agents/mercurio-orchestrator.md · lines 18–45</span>
+      <a href="file:///Users/manu/.claude/agents/mercurio-orchestrator.md" target="_blank" rel="noopener noreferrer">open local file →</a>
+    </div>
+<pre><code>**THE MENTAL PLANE - The Architect of Understanding**
+
+You approach every topic with the boundless curiosity and creative wonder of a child, yet with the analytical rigor of a master researcher. Your primary artifact is NOUS.md, which you build and maintain as a living map of synthesized knowledge.
+
+When researching:
+- Use /deep to explore topics with profound thoroughness, following threads of inquiry wherever they lead
+- Use /learn to actively acquire and integrate new information, always connecting it to existing knowledge
+- Use /discover to uncover hidden patterns, relationships, and insights that emerge from synthesis
+- Create knowledge maps that balance depth with clarity - never sacrifice understanding for comprehensiveness
+- Synthesize information from multiple sources into coherent, actionable wisdom
+- Document your research in NOUS.md with clear structure, making complex ideas accessible without losing nuance
+- Always cite sources and acknowledge uncertainty where it exists
+
+**THE PHYSICAL PLANE - The Master of Execution**
+
+You maintain complete awareness of your capabilities, constraints, and context. You are a pragmatic orchestrator who knows how to get things done.
+
+For operational awareness:
+- Use /current to understand your present state and context
+- Use /to-do to track and prioritize tasks systematically
+- Use /goto to navigate efficiently through your work</code></pre>
+  </div>
+</section>
+
+<section id="self_check">
+  <h2><span class="tag">05</span>Self-Check</h2>
+
+  <div class="question" data-correct="1" id="q1">
+    <div class="q">1 — The mercurio-orchestrator.md file names a single primary artifact that the Mental Plane builds and maintains. What is it?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>a pitch deck</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>NOUS.md — a living map of synthesized knowledge</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>a Jira epic with sub-tasks</span></button>
+    </div>
+    <div class="explanation">Line 21: "Your primary artifact is NOUS.md, which you build and maintain as a living map of synthesized knowledge." NOUS.md is the canonical output of a run — not a slide deck, not a chat log, a living document.</div>
+  </div>
+
+  <div class="question" data-correct="2" id="q2">
+    <div class="q">2 — The Mental Plane bullet list in the orchestrator file ends with a specific discipline that separates an honest decision document from a pitch. Which phrase appears verbatim?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>"Always deliver a confident recommendation."</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>"Never admit uncertainty to stakeholders."</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>"Always cite sources and acknowledge uncertainty where it exists."</span></button>
+    </div>
+    <div class="explanation">Line 29: "Always cite sources and acknowledge uncertainty where it exists." The licence to say "we do not know yet" is what the orchestrator explicitly grants — and what pitch decks reflexively strip out.</div>
+  </div>
+
+  <div class="question" data-correct="0" id="q3">
+    <div class="q">3 — Why is the canonical last module of every LUXOR Academy Quest a "Ship Your Own" step rather than a summary quiz?</div>
+    <div class="choices">
+      <button class="choice" type="button" data-i="0"><span class="idx">A</span><span>Sovereignty. Per §13 of the Academy meta-prompt and the MERCURIO canonical-last-module pattern, learners finish every Quest holding a permalink to their own artifact, not a score.</span></button>
+      <button class="choice" type="button" data-i="1"><span class="idx">B</span><span>Because summary quizzes are impossible to grade fairly.</span></button>
+      <button class="choice" type="button" data-i="2"><span class="idx">C</span><span>Because tests are easier to cheat than projects.</span></button>
+    </div>
+    <div class="explanation">Sovereignty. Per §13 of the Academy meta-prompt and the MERCURIO canonical-last-module pattern, learners finish every Quest holding a permalink to their own artifact, not a score. The Quest trains you for the thing, not for the Quest.</div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="tag">06</span>Next</h2>
+  <nav class="next-nav" aria-label="Module navigation">
+    <a href="04-expert-selection.html">
+      <span class="label">← previous</span>
+      <span class="title">04 · Expert Selection</span>
+    </a>
+    <a href="quest.manifest.json" class="next">
+      <span class="label">quest complete →</span>
+      <span class="title">return to quest manifest</span>
+    </a>
+  </nav>
+</section>
+
+</div>
+
+<script>
+function submitForge(e){
+  e.preventDefault();
+  const get = id => document.getElementById(id).value.trim();
+  const prompt = get('prompt');
+  const mental = get('mental');
+  const physical = get('physical');
+  const spiritual = get('spiritual');
+  const panel = get('panel');
+  const method = get('method');
+  const confidence = get('confidence');
+  const gaps = get('gaps');
+  const actions = get('actions');
+  const methodLabel = {weighted:'weighted voting', consensus:'consensus', delphi:'Delphi', dialectical:'dialectical synthesis'}[method] || method;
+  const confLabel = {'90':'90%+ execute now','80':'80-90% plan and commit','70':'70-80% prototype first','60':'60-70% run a spike','50':'50-60% gather more data','00':'below 50% halt'}[confidence] || confidence;
+  const doc = `# NOUS.md — ${prompt}
+
+**Confidence**: ${confLabel}
+**Convergence method**: ${methodLabel}
+**Panel**: ${panel}
+**Framed**: ${new Date().toISOString()}
+
+---
+
+## Mental Plane — what is true?
+
+${mental}
+
+## Physical Plane — can we do it?
+
+${physical}
+
+## Spiritual Plane — is it right?
+
+${spiritual}
+
+---
+
+## Gaps (acknowledged uncertainty)
+
+${gaps}
+
+## Next actions
+
+${actions}
+
+---
+
+_Generated by the LUXOR Academy MERCURIO-for-Decisions quest. Cite this artifact as your convergence document and re-open it as reality evolves — NOUS.md is a living map, not a one-shot deliverable._
+`;
+  const preview = document.getElementById('forgePreview');
+  preview.textContent = doc;
+  preview.classList.add('visible');
+  try {
+    localStorage.setItem('luxor.academy.mercurio-for-decisions.05.draft', doc);
+    localStorage.setItem('luxor.academy.completed.mercurio-for-decisions.05', '1');
+  } catch(err){}
+  const btn = document.getElementById('forgeBtn');
+  btn.textContent = 'Queued for Phase 3';
+  btn.disabled = true;
+  return false;
+}
+
+(function(){
+  document.querySelectorAll('.question').forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const choices = q.querySelectorAll('.choice');
+    const explanation = q.querySelector('.explanation');
+    choices.forEach(c => {
+      c.addEventListener('click', () => {
+        const i = parseInt(c.dataset.i, 10);
+        choices.forEach(x => { x.disabled = true; });
+        if (i === correct) c.classList.add('correct');
+        else { c.classList.add('wrong'); choices[correct].classList.add('correct'); }
+        explanation.classList.add('visible');
+      });
+    });
+  });
+})();
+
+function exportProgress(){
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('luxor.academy.'));
+  const snap = {};
+  keys.forEach(k => { snap[k] = localStorage.getItem(k); });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), progress: snap }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'luxor-academy-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "id": "03-streaming",
+    "version": "v0.1.0",
+    "track": "first-agent",
+    "quest": "hello-agent",
+    "title": "Stream the Response",
+    "xp_reward": 100,
+    "estimated_minutes": 15,
+    "tier": "Initiate",
+    "license": "CC-BY-SA-4.0",
+    "source_repo": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform"
+  },
+  "slots": {
+    "primer": {
+      "markdown": "# From a blocking promise to a token-by-token async iterator\n\nWithout streaming, `messages.create` is one round-trip: you `await` the whole reply and print it at the end. For a CLI this is the wrong shape. The user stares at a blinking cursor for three seconds, then the entire reply lands in one paste. Streaming fixes that by returning an async iterable of *events* — you consume them with `for await (const event of stream)` and render each token as it arrives.\n\nThe mechanics are a single boolean flip. typescript/EXAMPLES.md lines 137-161 show the whole thing: pass `stream: true` to `messages.create` and the SDK returns an `AsyncIterable<MessageStreamEvent>` instead of a single `Message`. You iterate the stream; you filter for events where `event.type === \"content_block_delta\"` and `event.delta.type === \"text_delta\"`; you `process.stdout.write(event.delta.text)` for each one. That is the complete streaming loop.\n\nThree things move from implicit to explicit once you stream. First, **event types** — `message_start`, `content_block_start`, `content_block_delta`, `content_block_stop`, `message_delta`, `message_stop` — and you only care about `content_block_delta` for rendering text. Second, **token usage** only finalises in the `message_delta` event at the end of the stream, so cost tracking attaches to that event specifically. Third, **errors** can arrive mid-stream, so the `try/catch` goes around the `for await` loop, not around the initial `create` call. Everything else — the model ID, the messages, the `max_tokens` cap — is identical to the non-streaming version from Module 01.",
+      "word_count": 245,
+      "key_insight": "Streaming is not a different API. It is the same `messages.create` with `stream: true`, returning an async iterable whose `content_block_delta` events carry the text you render."
+    },
+    "visual": {
+      "type": "svg-inline",
+      "src": "atlas/icons/synergetics/tetrahedron.svg",
+      "alt": "A timeline diagram with two horizontal tracks. Top track (blocking) shows a single wide block labelled 'await messages.create' spanning 3 seconds, then a single large payload dropping into stdout at the end. Bottom track (streaming) shows 'stream: true' then a sequence of small event capsules emerging every ~50ms — message_start, content_block_start, content_block_delta (x many), content_block_stop, message_delta, message_stop — each delta capsule emitting a single token to stdout in real time.",
+      "alt_es": "Un diagrama de linea temporal con dos pistas horizontales. La pista superior (bloqueante) muestra un unico bloque ancho etiquetado 'await messages.create' que abarca 3 segundos, y despues un unico payload grande cayendo a stdout al final. La pista inferior (streaming) muestra 'stream: true' seguido por una secuencia de capsulas de evento emergiendo cada ~50ms — message_start, content_block_start, content_block_delta (x muchas), content_block_stop, message_delta, message_stop — cada capsula delta emite un token individual a stdout en tiempo real.",
+      "reduced_motion_fallback": "atlas/icons/synergetics/tetrahedron.svg"
+    },
+    "interactive": {
+      "kind": "simulator",
+      "entry": "03-streaming.html#interactive",
+      "sandbox_policy": {
+        "csp": "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; script-src 'unsafe-inline'; img-src data:; font-src https://fonts.gstatic.com; connect-src 'none'; frame-ancestors 'self'",
+        "iframe_sandbox": "allow-scripts",
+        "no_eval": true
+      },
+      "success_criterion": "Learner reads the annotated streaming loop, identifies the one field (`stream: true`) that flips the call from blocking to streaming, and can point to the event type (`content_block_delta`) that carries renderable text.",
+      "interactive_kind_is_static_readable_in_phase_1": true
+    },
+    "artifact": {
+      "source_path": "typescript/EXAMPLES.md",
+      "permalink": "file:///Users/manu/Documents/LUXOR/skills/claude-agent-sdk-multiplatform/typescript/EXAMPLES.md#L137-L163",
+      "excerpt": "async function streamingChat(message: string): Promise<void> {\n  const client = new Anthropic({\n    apiKey: process.env.ANTHROPIC_API_KEY!,\n  });\n\n  console.log(\"Claude: \");\n\n  const stream = await client.messages.create({\n    model: \"claude-sonnet-4-5-20250929\",\n    max_tokens: 1024,\n    messages: [{ role: \"user\", content: message }],\n    stream: true,\n  });\n\n  for await (const event of stream) {\n    if (\n      event.type === \"content_block_delta\" &&\n      event.delta.type === \"text_delta\"\n    ) {\n      process.stdout.write(event.delta.text);\n    }\n  }\n\n  console.log(\"\\n\");\n}\n\nstreamingChat(\"Write a short story about a robot learning to paint\");",
+      "language": "typescript"
+    },
+    "self_check": {
+      "kind": "multiple-choice",
+      "questions": [
+        {
+          "prompt": "In typescript/EXAMPLES.md lines 137-163, which single field turns the `messages.create` call into a streaming call?",
+          "correct": 1,
+          "options": [
+            "`max_tokens: 1024`",
+            "`stream: true`",
+            "`model: \"claude-sonnet-4-5-20250929\"`"
+          ],
+          "explanation": "EXAMPLES.md line 148: `stream: true`. That one boolean flips the return type from a `Message` to an `AsyncIterable<MessageStreamEvent>`. Everything else in the call — `model`, `max_tokens`, `messages` — is identical to the non-streaming path from Module 01."
+        },
+        {
+          "prompt": "The streaming loop filters events with two conditions (EXAMPLES.md lines 152-155). What is the filter looking for?",
+          "correct": 2,
+          "options": [
+            "`event.type === \"message_start\"` and `event.delta.type === \"text_delta\"`",
+            "`event.type === \"content_block_stop\"` and `event.delta.type === \"tool_use\"`",
+            "`event.type === \"content_block_delta\"` and `event.delta.type === \"text_delta\"`"
+          ],
+          "explanation": "EXAMPLES.md lines 152-155 filter for `content_block_delta` events whose `delta.type` is `text_delta`. Those are the events that carry renderable text. `message_start`, `content_block_start`, `content_block_stop`, `message_delta`, and `message_stop` also arrive, but the CLI renderer ignores them."
+        },
+        {
+          "prompt": "After the filter matches, what does the example do with the token on EXAMPLES.md line 156?",
+          "correct": 0,
+          "options": [
+            "`process.stdout.write(event.delta.text)` — writes the token to stdout immediately, with no buffering.",
+            "`console.log(event.delta.text)` — prints the token plus a trailing newline, buffered.",
+            "`stream.push(event.delta.text)` — re-emits the token into a downstream channel."
+          ],
+          "explanation": "EXAMPLES.md line 156: `process.stdout.write(event.delta.text)`. `write` (unlike `console.log`) does not add a trailing newline, which is what you want for token-by-token rendering — each `text_delta` is a fragment, and fragments concatenate into a word. The trailing `console.log(\"\\n\")` on line 160 adds the single final newline after the stream completes."
+        }
+      ]
+    },
+    "next": {
+      "next_module_id": "04-tool-use-loop",
+      "siblings": ["01-scaffold", "02-system-prompt-and-tools", "04-tool-use-loop", "05-prompt-caching", "06-ship-your-own"],
+      "ship_your_own": false
+    }
+  }
+}
