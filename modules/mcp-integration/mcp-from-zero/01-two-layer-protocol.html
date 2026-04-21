@@ -175,16 +175,17 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 540 280" role="img" aria-label="Two horizontal bands stacked vertically. The bottom band is labelled Transport Layer and shows stdio pipes, a WebSocket, and an HTTP stream feeding byte frames into a central spine. The top band is labelled JSON-RPC 2.0 Message Layer and shows typed request/response/notification envelopes with method names and ids flowing along the spine." xmlns="http://www.w3.org/2000/svg">
+    <svg class="lkd" style="--lkd-accent:#FF4DD8" viewBox="0 0 660 360" role="img" aria-label="Two horizontal bands stacked vertically. The bottom band is labelled Transport Layer and shows stdio pipes, a WebSocket, and an HTTP stream feeding byte frames into a central spine. The top band is labelled JSON-RPC 2.0 Message Layer and shows typed request/response/notification envelopes with method names and ids flowing along the spine." xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>
+          /* local legacy classes kept for fallback text nodes */
           .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
           .head{font-family:'Playfair Display',serif;font-size:13px;fill:#FF4DD8}
           .box{fill:#111D33;stroke:#FF4DD8;stroke-opacity:0.45}
           .boxok{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.55}
           .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2}
           .mono{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#D4E4F7}
-        
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -464,38 +465,67 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
+        <marker id="lkd-arrow-1" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#FF4DD8"/>
+        </marker>
+        <marker id="lkd-arrow-1-dim" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+        </marker>
       </defs>
 
-      <!-- Upper band: JSON-RPC layer -->
-      <text class="head" x="20" y="20">JSON-RPC 2.0 MESSAGE LAYER · monad (Frame →ⁿ Frame)</text>
-      <rect class="boxok" x="20" y="32" width="500" height="70" rx="4"/>
-      <text class="mono" x="32" y="52">{ "jsonrpc": "2.0", "id": 1, "method": "tools/list" }</text>
-      <text class="mono" x="32" y="68">{ "jsonrpc": "2.0", "id": 1, "result": { "tools": [ … ] } }</text>
-      <text class="mono" x="32" y="84">{ "jsonrpc": "2.0", "method": "notifications/initialized" }</text>
-      <text class="label" x="32" y="98">↳ typed request / response / notification</text>
+      <!-- ── LAYER TITLE BAR ── -->
+      <rect class="lkd-panel" x="18" y="14" width="624" height="32" rx="5"/>
+      <text class="lkd-head" x="330" y="35" text-anchor="middle">MCP Two-Layer Protocol</text>
 
-      <!-- Divider spine -->
-      <line class="arrow" x1="270" y1="105" x2="270" y2="170" stroke-dasharray="4 3"/>
-      <text class="label" x="278" y="140">same frames,</text>
-      <text class="label" x="278" y="154">either transport</text>
+      <!-- ══ TOP BAND: JSON-RPC MESSAGE LAYER ══ -->
+      <rect class="lkd-node" x="18" y="58" width="624" height="116" rx="6"/>
+      <text class="lkd-head" x="330" y="80" text-anchor="middle">JSON-RPC 2.0 — Message Layer</text>
+      <text class="lkd-note" x="330" y="96" text-anchor="middle">typed envelopes · method + id · request / response / notification</text>
 
-      <!-- Lower band: Transport -->
-      <text class="head" x="20" y="195">TRANSPORT LAYER · functor (Bytes → Frames)</text>
-      <rect class="box" x="20" y="208" width="150" height="52" rx="4"/>
-      <text class="label" x="32" y="226">stdio pipes</text>
-      <text class="mono" x="32" y="244">StdioServerTransport</text>
+      <!-- Message example boxes -->
+      <rect class="lkd-node-dim" x="36" y="106" width="274" height="56" rx="4"/>
+      <text class="lkd-label" x="48" y="124">request</text>
+      <text class="lkd-code" x="48" y="142">{ "jsonrpc":"2.0", "id":1,</text>
+      <text class="lkd-code" x="48" y="156">  "method":"tools/list" }</text>
 
-      <rect class="box" x="195" y="208" width="150" height="52" rx="4"/>
-      <text class="label" x="207" y="226">websocket</text>
-      <text class="mono" x="207" y="244">WebSocketTransport</text>
+      <rect class="lkd-node-dim" x="332" y="106" width="294" height="56" rx="4"/>
+      <text class="lkd-label" x="344" y="124">response / notification</text>
+      <text class="lkd-code" x="344" y="142">{ "id":1, "result":{"tools":[…]} }</text>
+      <text class="lkd-code" x="344" y="156">{ "method":"notifications/initialized" }</text>
 
-      <rect class="box" x="370" y="208" width="150" height="52" rx="4"/>
-      <text class="label" x="382" y="226">http stream</text>
-      <text class="mono" x="382" y="244">HttpServerTransport</text>
+      <!-- ── DIVIDER + SEPARATION NOTE ── -->
+      <line x1="330" y1="182" x2="330" y2="218" stroke="#FF4DD8" stroke-opacity="0.45" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <text class="lkd-op" x="330" y="205" text-anchor="middle">same frames — any transport</text>
 
-      <path class="arrow" d="M95 208 L95 180 L270 170"/>
-      <path class="arrow" d="M270 208 L270 170"/>
-      <path class="arrow" d="M445 208 L445 180 L270 170"/>
+      <!-- Uplift arrows from transport to message layer -->
+      <path d="M120 226 L120 182" stroke="#FF4DD8" stroke-opacity="0.5" fill="none" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#lkd-arrow-1)"/>
+      <path d="M330 226 L330 182" stroke="#FF4DD8" stroke-opacity="0.5" fill="none" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#lkd-arrow-1)"/>
+      <path d="M540 226 L540 182" stroke="#FF4DD8" stroke-opacity="0.5" fill="none" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#lkd-arrow-1)"/>
+
+      <!-- ══ BOTTOM BAND: TRANSPORT LAYER ══ -->
+      <rect class="lkd-node" x="18" y="226" width="624" height="106" rx="6"/>
+      <text class="lkd-head" x="330" y="248" text-anchor="middle">Transport Layer</text>
+      <text class="lkd-note" x="330" y="264" text-anchor="middle">functor  Bytes → Frames  — swap freely; nothing above changes</text>
+
+      <!-- Transport option 1 -->
+      <rect class="lkd-node-pill" x="36" y="272" width="172" height="46" rx="8"/>
+      <text class="lkd-label" x="122" y="291" text-anchor="middle">stdio pipes</text>
+      <text class="lkd-code"  x="122" y="308" text-anchor="middle">StdioServerTransport</text>
+
+      <!-- Transport option 2 -->
+      <rect class="lkd-node-pill" x="244" y="272" width="172" height="46" rx="8"/>
+      <text class="lkd-label" x="330" y="291" text-anchor="middle">WebSocket</text>
+      <text class="lkd-code"  x="330" y="308" text-anchor="middle">WebSocketTransport</text>
+
+      <!-- Transport option 3 -->
+      <rect class="lkd-node-pill" x="452" y="272" width="172" height="46" rx="8"/>
+      <text class="lkd-label" x="538" y="291" text-anchor="middle">HTTP stream</text>
+      <text class="lkd-code"  x="538" y="308" text-anchor="middle">HttpServerTransport</text>
+
+      <!-- Footer note -->
+      <text class="lkd-note" x="330" y="348" text-anchor="middle">Transport is the only thing that differs between local stdio tools and remote HTTP services.</text>
     </svg>
     <p class="visual-caption">Any transport feeds the same JSON-RPC frames up to the same handler. Swap the bottom band — nothing above it changes.</p>
   </div>

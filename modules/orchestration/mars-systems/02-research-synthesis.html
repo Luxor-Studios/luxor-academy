@@ -125,7 +125,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--prima
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 560 280" role="img" aria-label="Three-column classification diagram: raw constraint claims on the left funnel into three bins — HARD (accept and design around), SOFT (negotiate where high ROI), SELF-IMPOSED (challenge and test). The self-imposed bin is highlighted as the highest-leverage surface." xmlns="http://www.w3.org/2000/svg">
+    <svg class="lkd" style="--lkd-accent:#00F5FF" viewBox="0 0 700 400" role="img" aria-label="Three-column classification diagram: raw constraint claims on the left funnel into three bins — HARD (accept and design around), SOFT (negotiate where high ROI), SELF-IMPOSED (challenge and test). The self-imposed bin is highlighted as the highest-leverage surface." xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>
           .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
@@ -138,7 +138,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--prima
           .bself{stroke:#00F5FF;stroke-opacity:1;fill:#0B2030}
           .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2;stroke-opacity:0.7}
           .note{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#F5D06B}
-        
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -418,48 +418,91 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--prima
 }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
+        <marker id="lkd-arrow-5" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+        </marker>
+        <marker id="lkd-arrow-5-dim" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+        </marker>
       </defs>
-      <text class="head" x="20" y="22">raw claims</text>
-      <rect class="box bhard" x="20" y="34" width="160" height="24" rx="3"/><text class="label" x="28" y="51">regulatory filing required</text>
-      <rect class="box bsoft" x="20" y="64" width="160" height="24" rx="3"/><text class="label" x="28" y="81">budget is $2M</text>
-      <rect class="box bself" x="20" y="94" width="160" height="24" rx="3"/><text class="label" x="28" y="111">customers won't accept that</text>
-      <rect class="box bhard" x="20" y="124" width="160" height="24" rx="3"/><text class="label" x="28" y="141">3-year contract signed</text>
-      <rect class="box bsoft" x="20" y="154" width="160" height="24" rx="3"/><text class="label" x="28" y="171">timeline is 6 months</text>
-      <rect class="box bself" x="20" y="184" width="160" height="24" rx="3"/><text class="label" x="28" y="201">we've always done it this way</text>
 
-      <text class="cap" x="230" y="28">HARD</text>
-      <rect class="box bhard" x="220" y="38" width="110" height="70" rx="3"/>
-      <text class="labelacc" x="275" y="58" text-anchor="middle">cannot change</text>
-      <text class="label"    x="275" y="76" text-anchor="middle">laws, contracts,</text>
-      <text class="label"    x="275" y="90" text-anchor="middle">physics</text>
-      <text class="label"    x="275" y="104" text-anchor="middle">accept &amp; design around</text>
+      <!-- Title -->
+      <text class="lkd-head" x="350" y="26" text-anchor="middle">Constraint Classification Funnel</text>
+      <text class="lkd-note" x="350" y="44" text-anchor="middle">Every stated constraint belongs to exactly one bucket — only the bucket determines your response strategy</text>
 
-      <text class="cap" x="230" y="128">SOFT</text>
-      <rect class="box bsoft" x="220" y="138" width="110" height="70" rx="3"/>
-      <text class="labelacc" x="275" y="158" text-anchor="middle">expensive to move</text>
-      <text class="label"    x="275" y="176" text-anchor="middle">budget, timeline,</text>
-      <text class="label"    x="275" y="190" text-anchor="middle">staffing</text>
-      <text class="label"    x="275" y="204" text-anchor="middle">negotiate where high ROI</text>
+      <!-- ── COLUMN HEADERS ── -->
+      <text class="lkd-head" x="115" y="68" text-anchor="middle" style="fill:#94A3B8">RAW CLAIMS</text>
+      <text class="lkd-head" x="330" y="68" text-anchor="middle" style="fill:#FEBC2E">HARD</text>
+      <text class="lkd-head" x="490" y="68" text-anchor="middle" style="fill:#E9B949">SOFT</text>
+      <text class="lkd-head" x="628" y="68" text-anchor="middle" style="fill:#00F5FF">SELF-IMPOSED</text>
 
-      <text class="cap" x="395" y="80">SELF-IMPOSED</text>
-      <rect class="box bself" x="380" y="92" width="160" height="110" rx="3"/>
-      <text class="labelacc" x="460" y="114" text-anchor="middle">assumed hard</text>
-      <text class="labelacc" x="460" y="130" text-anchor="middle">actually changeable</text>
-      <text class="label" x="460" y="152" text-anchor="middle">"we've always..."</text>
-      <text class="label" x="460" y="168" text-anchor="middle">"customers won't..."</text>
-      <text class="label" x="460" y="184" text-anchor="middle">"not possible here..."</text>
-      <text class="labelacc" x="460" y="198" text-anchor="middle">challenge &amp; test</text>
+      <!-- ── RAW CLAIM CHIPS (left column) ── -->
+      <!-- chip 1: HARD -->
+      <rect class="box bhard" x="22" y="82" width="186" height="28" rx="4"/>
+      <text class="label" x="30" y="101">regulatory filing required</text>
+      <!-- chip 2: SOFT -->
+      <rect class="box bsoft" x="22" y="118" width="186" height="28" rx="4"/>
+      <text class="label" x="30" y="137">budget is $2M</text>
+      <!-- chip 3: SELF -->
+      <rect class="box bself" x="22" y="154" width="186" height="28" rx="4"/>
+      <text class="label" x="30" y="173">customers won't accept that</text>
+      <!-- chip 4: HARD -->
+      <rect class="box bhard" x="22" y="190" width="186" height="28" rx="4"/>
+      <text class="label" x="30" y="209">3-year contract signed</text>
+      <!-- chip 5: SOFT -->
+      <rect class="box bsoft" x="22" y="226" width="186" height="28" rx="4"/>
+      <text class="label" x="30" y="245">timeline is 6 months</text>
+      <!-- chip 6: SELF -->
+      <rect class="box bself" x="22" y="262" width="186" height="28" rx="4"/>
+      <text class="label" x="30" y="281">we've always done it this way</text>
 
-      <!-- arrow: raw → funnel -->
-      <path class="arrow" d="M185 48 L218 52"/>
-      <path class="arrow" d="M185 78 L218 158"/>
-      <path class="arrow" d="M185 108 L380 130"/>
-      <path class="arrow" d="M185 138 L218 70"/>
-      <path class="arrow" d="M185 168 L218 170"/>
-      <path class="arrow" d="M185 198 L380 160"/>
+      <!-- Arrows from raw → buckets -->
+      <path d="M208 96 L256 120" stroke="#FEBC2E" stroke-opacity="0.6" fill="none" stroke-width="1.2" marker-end="url(#lkd-arrow-5)"/>
+      <path d="M208 132 L422 155" stroke="#E9B949" stroke-opacity="0.6" fill="none" stroke-width="1.2" marker-end="url(#lkd-arrow-5)"/>
+      <path d="M208 168 L560 165" stroke="#00F5FF" stroke-opacity="0.8" fill="none" stroke-width="1.4" marker-end="url(#lkd-arrow-5)"/>
+      <path d="M208 204 L256 156" stroke="#FEBC2E" stroke-opacity="0.6" fill="none" stroke-width="1.2" marker-end="url(#lkd-arrow-5)"/>
+      <path d="M208 240 L422 195" stroke="#E9B949" stroke-opacity="0.6" fill="none" stroke-width="1.2" marker-end="url(#lkd-arrow-5)"/>
+      <path d="M208 276 L560 205" stroke="#00F5FF" stroke-opacity="0.8" fill="none" stroke-width="1.4" marker-end="url(#lkd-arrow-5)"/>
 
-      <text class="note" x="20" y="240">highest-leverage surface: re-classifying a self-imposed claim opens design space.</text>
-      <text class="label" x="20" y="258">source: EPISTEMIC-DIMENSION-PLAYBOOK.md §Constraint Classification (lines 100-133)</text>
+      <!-- ── HARD BUCKET ── -->
+      <rect x="252" y="82" width="150" height="160" rx="6" fill="#111D33" stroke="#FEBC2E" stroke-opacity="0.8" stroke-width="1.5"/>
+      <text class="label" x="327" y="110" text-anchor="middle" style="fill:#FEBC2E">cannot change</text>
+      <text class="label" x="327" y="132" text-anchor="middle">laws / physics</text>
+      <text class="label" x="327" y="152" text-anchor="middle">contracts</text>
+      <line x1="268" y1="165" x2="386" y2="165" stroke="#FEBC2E" stroke-opacity="0.3" stroke-width="1"/>
+      <text class="label" x="327" y="185" text-anchor="middle" style="fill:#E9B949">→ accept &amp; design around</text>
+      <text class="lkd-note" x="327" y="205" text-anchor="middle">cannot be negotiated</text>
+      <text class="lkd-note" x="327" y="220" text-anchor="middle">at any price</text>
+
+      <!-- ── SOFT BUCKET ── -->
+      <rect x="418" y="82" width="150" height="160" rx="6" fill="#111D33" stroke="#E9B949" stroke-opacity="0.8" stroke-width="1.5"/>
+      <text class="label" x="493" y="110" text-anchor="middle" style="fill:#E9B949">expensive to move</text>
+      <text class="label" x="493" y="132" text-anchor="middle">budget, timeline</text>
+      <text class="label" x="493" y="152" text-anchor="middle">staffing</text>
+      <line x1="434" y1="165" x2="552" y2="165" stroke="#E9B949" stroke-opacity="0.3" stroke-width="1"/>
+      <text class="label" x="493" y="185" text-anchor="middle" style="fill:#E9B949">→ negotiate high-ROI</text>
+      <text class="lkd-note" x="493" y="205" text-anchor="middle">worth pushing when</text>
+      <text class="lkd-note" x="493" y="220" text-anchor="middle">leverage is clear</text>
+
+      <!-- ── SELF-IMPOSED BUCKET (highlighted) ── -->
+      <rect x="556" y="82" width="130" height="200" rx="6" fill="#0B2030" stroke="#00F5FF" stroke-opacity="1" stroke-width="2"/>
+      <text class="label" x="621" y="106" text-anchor="middle" style="fill:#00F5FF">assumed hard</text>
+      <text class="label" x="621" y="126" text-anchor="middle" style="fill:#00F5FF">actually soft</text>
+      <line x1="568" y1="138" x2="674" y2="138" stroke="#00F5FF" stroke-opacity="0.3" stroke-width="1"/>
+      <text class="lkd-note" x="621" y="158" text-anchor="middle">"we've always…"</text>
+      <text class="lkd-note" x="621" y="176" text-anchor="middle">"customers won't…"</text>
+      <text class="lkd-note" x="621" y="194" text-anchor="middle">"not possible here…"</text>
+      <line x1="568" y1="205" x2="674" y2="205" stroke="#00F5FF" stroke-opacity="0.3" stroke-width="1"/>
+      <text class="label" x="621" y="222" text-anchor="middle" style="fill:#00F5FF">→ challenge &amp; test</text>
+      <text class="lkd-note" x="621" y="240" text-anchor="middle">highest-leverage</text>
+      <text class="lkd-note" x="621" y="256" text-anchor="middle">design surface</text>
+
+      <!-- Footer note -->
+      <rect class="lkd-panel" x="22" y="300" width="662" height="40" rx="5"/>
+      <text class="lkd-label" x="353" y="316" text-anchor="middle">Re-classifying one self-imposed claim as soft or absent opens the full solution space.</text>
+      <text class="lkd-note"  x="353" y="333" text-anchor="middle">Source: EPISTEMIC-DIMENSION-PLAYBOOK.md §Constraint Classification (lines 100–133)</text>
     </svg>
     <p class="visual-caption">Fallback: static three-column classifier. Self-imposed constraints are highlighted cyan as the only bucket where synthesis creates new possibility space.</p>
   </div>

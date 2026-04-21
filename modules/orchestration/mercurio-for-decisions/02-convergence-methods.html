@@ -131,7 +131,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 540 260" role="img" aria-label="Three horizontal lanes labelled DISCOVERY, INTEGRATION, EMBODIMENT with bidirectional arrows between them, and four method cards landing inside the INTEGRATION lane." xmlns="http://www.w3.org/2000/svg">
+    <svg class="lkd" style="--lkd-accent:#00F5FF" viewBox="0 0 700 420" role="img" aria-label="Three horizontal lanes labelled DISCOVERY, INTEGRATION, EMBODIMENT with bidirectional arrows between them, and four method cards landing inside the INTEGRATION lane." xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>
           .lane{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.35}
@@ -140,7 +140,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
           .arrow{stroke:#66FAFF;fill:none;stroke-width:1.5}
           .card{fill:#162440;stroke:#00F5FF;stroke-opacity:0.7}
           .cardText{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#66FAFF}
-        
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -420,25 +420,81 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
-        <marker id="a1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#66FAFF"/></marker>
-        <marker id="a2" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#66FAFF"/></marker>
+        <marker id="lkd-arrow-8" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+        </marker>
+        <marker id="lkd-arrow-8-rev" viewBox="0 0 10 10" refX="1" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M9,1 L0,5 L9,9 Z" fill="#00F5FF"/>
+        </marker>
       </defs>
-      <rect class="lane" x="20" y="20" width="500" height="50" rx="4"/>
-      <text class="laneLabel" x="32" y="40">DISCOVERY</text>
-      <text class="sub" x="32" y="58">seeker of deep connection · meta-patterns · relational graph</text>
-      <rect class="lane" x="20" y="100" width="500" height="60" rx="4"/>
-      <text class="laneLabel" x="32" y="120">INTEGRATION</text>
-      <rect class="card" x="150" y="128" width="80" height="22" rx="3"/><text class="cardText" x="190" y="143" text-anchor="middle">weighted</text>
-      <rect class="card" x="240" y="128" width="70" height="22" rx="3"/><text class="cardText" x="275" y="143" text-anchor="middle">consensus</text>
-      <rect class="card" x="320" y="128" width="56" height="22" rx="3"/><text class="cardText" x="348" y="143" text-anchor="middle">Delphi</text>
-      <rect class="card" x="386" y="128" width="100" height="22" rx="3"/><text class="cardText" x="436" y="143" text-anchor="middle">dialectical</text>
-      <rect class="lane" x="20" y="190" width="500" height="50" rx="4"/>
-      <text class="laneLabel" x="32" y="210">EMBODIMENT</text>
-      <text class="sub" x="32" y="228">translator of wisdom · NOUS.md · shipping-grade recommendation</text>
-      <path class="arrow" d="M80 70 L80 100" marker-end="url(#a1)"/>
-      <path class="arrow" d="M110 100 L110 70" marker-end="url(#a2)"/>
-      <path class="arrow" d="M80 160 L80 190" marker-end="url(#a1)"/>
-      <path class="arrow" d="M110 190 L110 160" marker-end="url(#a2)"/>
+
+      <!-- Title -->
+      <text class="lkd-head" x="350" y="28" text-anchor="middle">MERCURIO Synthesizer — Three Simultaneous Planes</text>
+      <text class="lkd-note" x="350" y="46" text-anchor="middle">Discovery, Integration, Embodiment run in parallel — not in sequence</text>
+
+      <!-- ══ LANE 1: DISCOVERY ══ -->
+      <rect class="lane" x="18" y="60" width="664" height="86" rx="6"/>
+      <text class="laneLabel" x="38" y="84">DISCOVERY</text>
+      <text class="sub" x="38" y="104">seeker of deep connection · meta-patterns · relational graph</text>
+      <text class="sub" x="38" y="120">Ask: "How is this related to what I already understand?"</text>
+      <rect class="card" x="520" y="72" width="150" height="60" rx="5"/>
+      <text class="cardText" x="595" y="92" text-anchor="middle">Input</text>
+      <text class="sub"      x="595" y="112" text-anchor="middle">expert findings</text>
+      <text class="sub"      x="595" y="126" text-anchor="middle">→ relational graph</text>
+
+      <!-- ══ BIDIRECTIONAL ARROWS (Discovery ↔ Integration) ══ -->
+      <path d="M88 146 L88 184" stroke="#66FAFF" fill="none" stroke-width="1.5" marker-end="url(#lkd-arrow-8)"/>
+      <path d="M112 184 L112 146" stroke="#66FAFF" fill="none" stroke-width="1.5" marker-end="url(#lkd-arrow-8)"/>
+      <text class="sub" x="132" y="168" text-anchor="start">continuous exchange</text>
+
+      <!-- ══ LANE 2: INTEGRATION ══ -->
+      <rect class="lane" x="18" y="184" width="664" height="120" rx="6"/>
+      <text class="laneLabel" x="38" y="208">INTEGRATION</text>
+      <text class="sub" x="38" y="226">architect of coherence · builds hierarchical understanding · identifies critical connections</text>
+
+      <!-- Four method cards — evenly spaced with breathing room -->
+      <!-- Card 1: Weighted Voting -->
+      <rect class="card" x="38" y="238" width="148" height="52" rx="5"/>
+      <text class="cardText" x="112" y="260" text-anchor="middle">Weighted Voting</text>
+      <text class="sub"      x="112" y="278" text-anchor="middle">asymmetric expertise</text>
+
+      <!-- Card 2: Consensus -->
+      <rect class="card" x="204" y="238" width="148" height="52" rx="5"/>
+      <text class="cardText" x="278" y="260" text-anchor="middle">Consensus</text>
+      <text class="sub"      x="278" y="278" text-anchor="middle">all-must-agree calls</text>
+
+      <!-- Card 3: Delphi -->
+      <rect class="card" x="370" y="238" width="148" height="52" rx="5"/>
+      <text class="cardText" x="444" y="260" text-anchor="middle">Delphi</text>
+      <text class="sub"      x="444" y="278" text-anchor="middle">iterative refinement</text>
+
+      <!-- Card 4: Dialectical -->
+      <rect class="card" x="536" y="238" width="148" height="52" rx="5"/>
+      <text class="cardText" x="610" y="260" text-anchor="middle">Dialectical</text>
+      <text class="sub"      x="610" y="278" text-anchor="middle">contradiction → synthesis</text>
+
+      <!-- ══ BIDIRECTIONAL ARROWS (Integration ↔ Embodiment) ══ -->
+      <path d="M88 304 L88 342" stroke="#66FAFF" fill="none" stroke-width="1.5" marker-end="url(#lkd-arrow-8)"/>
+      <path d="M112 342 L112 304" stroke="#66FAFF" fill="none" stroke-width="1.5" marker-end="url(#lkd-arrow-8)"/>
+      <text class="sub" x="132" y="326" text-anchor="start">feeds translation</text>
+
+      <!-- ══ LANE 3: EMBODIMENT ══ -->
+      <rect class="lane" x="18" y="342" width="664" height="52" rx="6"/>
+      <text class="laneLabel" x="38" y="366">EMBODIMENT</text>
+      <text class="sub" x="38" y="383">translator of wisdom · NOUS.md · shipping-grade recommendation a team can act on</text>
+
+      <!-- Output cards inside embodiment -->
+      <rect class="card" x="460" y="352" width="100" height="32" rx="4"/>
+      <text class="cardText" x="510" y="374" text-anchor="middle">Decision doc</text>
+
+      <rect class="card" x="572" y="352" width="100" height="32" rx="4"/>
+      <text class="cardText" x="622" y="374" text-anchor="middle">NOUS.md</text>
+
+      <!-- Footer -->
+      <rect class="lkd-panel" x="18" y="406" width="664" height="28" rx="4"/>
+      <text class="lkd-note" x="350" y="424" text-anchor="middle">Synthesis is not averaging. It is Discovery (find the graph) + Integration (build the hierarchy) + Embodiment (ship it).</text>
     </svg>
     <p class="visual-caption">Fallback: static diagram. Three lanes; arrows flow both ways. The methods live inside Integration but only fire after Discovery maps the graph.</p>
   </div>

@@ -204,7 +204,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
     
-    <svg viewBox="0 0 540 280" role="img" aria-label="Termination metric diagram for fibonacci." xmlns="http://www.w3.org/2000/svg">
+    <svg class="lkd" style="--lkd-accent:#39FF14" viewBox="0 0 660 360" role="img" aria-label="Termination metric diagram for fibonacci." xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>
           .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
@@ -214,7 +214,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
           .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
           .xmark{fill:#FF3B3B;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
           .check{fill:#39FF14;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
-        
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -494,33 +494,64 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
-        <marker id="a3" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        <marker id="lkd-arrow-3" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#39FF14"/>
+        </marker>
+        <marker id="lkd-arrow-3-dim" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
         </marker>
       </defs>
-      <text class="head" x="20" y="20">WITH decreases n</text>
-      <rect class="box" x="20" y="30" width="220" height="110" rx="3"/>
-      <text class="label" x="32" y="48">let rec fibonacci (n:nat) : nat</text>
-      <text class="label" x="32" y="64">  decreases n</text>
-      <text class="label" x="32" y="80">  = if n = 0 then 0</text>
-      <text class="label" x="32" y="96">    else if n = 1 then 1</text>
-      <text class="label" x="32" y="112">    else fib (n-1) + fib (n-2)</text>
-      <text class="check" x="32" y="132">✓ Tot nat — proof: n-1 &lt; n, n-2 &lt; n</text>
 
-      <text class="head" x="300" y="20">WITHOUT decreases</text>
-      <rect class="box fail" x="300" y="30" width="220" height="110" rx="3"/>
-      <text class="label" x="312" y="48">let rec fibonacci (n:nat) : nat</text>
-      <text class="label" x="312" y="64">  (* no clause *)</text>
-      <text class="label" x="312" y="80">  = if n = 0 then 0</text>
-      <text class="label" x="312" y="96">    else if n = 1 then 1</text>
-      <text class="label" x="312" y="112">    else fib (n-1) + fib (n-2)</text>
-      <text class="xmark" x="312" y="132">✗ termination check failed</text>
+      <!-- Title -->
+      <text class="lkd-head" x="330" y="30" text-anchor="middle">Termination Metric: the decreases clause</text>
+      <text class="lkd-note" x="330" y="50" text-anchor="middle">F* infers the effect — Tot (total) or Dv (divergent) — from the presence of a metric value</text>
 
-      <path class="arrow" d="M130 160 L130 200" marker-end="url(#a3)"/>
-      <path class="arrow" d="M410 160 L410 200" marker-end="url(#a3)"/>
-      <text class="label" x="20" y="220">effect: Tot (total)</text>
-      <text class="label" x="300" y="220">effect: must be Dv (divergent)</text>
-      <text class="label" x="20" y="250">decreases is a dependent-type feature — the metric is a value in the type.</text>
+      <!-- ══ LEFT PANEL: WITH decreases n ══ -->
+      <rect class="lkd-node" x="20" y="64" width="290" height="170" rx="6"/>
+      <text class="lkd-head" x="165" y="86" text-anchor="middle">WITH   decreases n</text>
+
+      <!-- Code block -->
+      <rect class="lkd-node-dim" x="36" y="96" width="258" height="108" rx="4"/>
+      <text class="lkd-code" x="48" y="116">let rec fibonacci (n:nat) : nat</text>
+      <text class="lkd-code" x="48" y="134">  decreases n</text>
+      <text class="lkd-code" x="48" y="152">  = if n = 0 then 0</text>
+      <text class="lkd-code" x="48" y="170">    else if n = 1 then 1</text>
+      <text class="lkd-code" x="48" y="188">    else fib (n-1) + fib (n-2)</text>
+
+      <!-- Proof obligations -->
+      <text class="lkd-op" x="48" y="224">n-1 &lt; n   and   n-2 &lt; n   (n ≥ 2)</text>
+
+      <!-- Effect badge: green -->
+      <rect x="36" y="244" width="258" height="30" rx="999" fill="#0A1A0C" stroke="#39FF14" stroke-opacity="0.8" stroke-width="1.4"/>
+      <text class="lkd-ok" x="165" y="265" text-anchor="middle">✓  effect: Tot nat  — provably total</text>
+
+      <!-- ══ MIDDLE COLUMN: KEY INSIGHT ══ -->
+      <rect class="lkd-node-dim" x="330" y="64" width="10" height="210" rx="3"/>
+      <text class="lkd-op" x="340" y="170" text-anchor="middle" writing-mode="tb">metric = value in type</text>
+
+      <!-- ══ RIGHT PANEL: WITHOUT decreases ══ -->
+      <rect class="lkd-node" x="356" y="64" width="290" height="170" rx="6" stroke="#FF3B3B" stroke-opacity="0.55"/>
+      <text class="lkd-head" x="501" y="86" text-anchor="middle" style="fill:#FF4C4C">WITHOUT decreases</text>
+
+      <rect class="lkd-node-dim" x="372" y="96" width="258" height="108" rx="4"/>
+      <text class="lkd-code" x="384" y="116">let rec fibonacci (n:nat) : nat</text>
+      <text class="lkd-code" x="384" y="134" style="fill:#4A5A7A">  (* no clause *)</text>
+      <text class="lkd-code" x="384" y="152">  = if n = 0 then 0</text>
+      <text class="lkd-code" x="384" y="170">    else if n = 1 then 1</text>
+      <text class="lkd-code" x="384" y="188">    else fib (n-1) + fib (n-2)</text>
+
+      <text class="lkd-note" x="384" y="224">no proof obligation supplied</text>
+
+      <!-- Effect badge: red -->
+      <rect x="372" y="244" width="258" height="30" rx="999" fill="#180A0A" stroke="#FF3B3B" stroke-opacity="0.8" stroke-width="1.4"/>
+      <text class="lkd-err" x="501" y="265" text-anchor="middle">✗  termination check failed → Dv</text>
+
+      <!-- ── Bottom insight ── -->
+      <rect class="lkd-panel" x="20" y="300" width="626" height="44" rx="5"/>
+      <text class="lkd-label" x="333" y="318" text-anchor="middle">decreases is a dependent-type feature: the metric is a value that lives in the type.</text>
+      <text class="lkd-note"  x="333" y="336" text-anchor="middle">F* downgrades effect from Tot → Dv when no decreasing witness is provided.</text>
     </svg>
     <p class="visual-caption">A two-panel diagram. Left panel shows the fibonacci type <code>nat -&gt; nat</code> with <code>decreases n</code> annotated, and arrows from the two recursive calls <code>fibonacci (n-1)</code> and <code>fibonacci (n-2)</code> pointing back at the metric box <code>n</code>, each labeled with the proof obligation <code>n-1 &lt; n</code> and <code>n-2 &lt; n</code> in the context <code>n &gt;= 2</code>. Right panel shows the same function with <code>decreases n</code> removed and the compile error <code>termination check failed: no decreasing metric supplied</code>, plus a note that without the clause F* demotes the effect from <code>Tot</code> to <code>Dv</code>.</p>
   </div>

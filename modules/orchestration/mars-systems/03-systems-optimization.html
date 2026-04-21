@@ -134,7 +134,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--prima
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 560 280" role="img" aria-label="Two-panel contrast. Left: four departments each with green local-metric arrows up but a red composite arrow down. Right: the same four departments routed into a single composite metric rising together." xmlns="http://www.w3.org/2000/svg">
+    <svg class="lkd" style="--lkd-accent:#00F5FF" viewBox="0 0 700 400" role="img" aria-label="Two-panel contrast. Left: four departments each with green local-metric arrows up but a red composite arrow down. Right: the same four departments routed into a single composite metric rising together." xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>
           .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
@@ -145,7 +145,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--prima
           .box{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.5;stroke-width:1.2}
           .comp{fill:#0B2030;stroke:#00F5FF;stroke-width:1.6}
           .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2;stroke-opacity:0.7}
-        
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -425,50 +425,104 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--prima
 }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
-        <marker id="a1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        <marker id="lkd-arrow-6" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#00F5FF"/>
+        </marker>
+        <marker id="lkd-arrow-6-ok" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#22C55E"/>
+        </marker>
+        <marker id="lkd-arrow-6-err" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#FF3B3B"/>
         </marker>
       </defs>
 
-      <text class="head" x="20" y="22">LOCAL optimization</text>
-      <rect class="box" x="20" y="34" width="100" height="26" rx="3"/>
-      <text class="label" x="28" y="51">Finance ↑</text>
-      <rect class="box" x="20" y="66" width="100" height="26" rx="3"/>
-      <text class="label" x="28" y="83">Sales ↑</text>
-      <rect class="box" x="20" y="98" width="100" height="26" rx="3"/>
-      <text class="label" x="28" y="115">Operations ↑</text>
-      <rect class="box" x="20" y="130" width="100" height="26" rx="3"/>
-      <text class="label" x="28" y="147">HR ↑</text>
-      <rect class="box" x="20" y="172" width="100" height="30" rx="3"/>
-      <text class="label" x="28" y="192">Org health ↓</text>
-      <text class="bad" x="80" y="222" text-anchor="middle">✗ departments succeed,</text>
-      <text class="bad" x="80" y="238" text-anchor="middle">organization fails</text>
+      <!-- Title -->
+      <text class="lkd-head" x="350" y="26" text-anchor="middle">Local vs System Optimization</text>
+      <text class="lkd-note" x="350" y="44" text-anchor="middle">Departments can each improve and the system can still fail — unless all serve a single composite metric</text>
 
-      <text class="head" x="340" y="22">SYSTEM optimization</text>
-      <rect class="box" x="340" y="34" width="100" height="26" rx="3"/>
-      <text class="label" x="348" y="51">Finance</text>
-      <rect class="box" x="340" y="66" width="100" height="26" rx="3"/>
-      <text class="label" x="348" y="83">Sales</text>
-      <rect class="box" x="340" y="98" width="100" height="26" rx="3"/>
-      <text class="label" x="348" y="115">Operations</text>
-      <rect class="box" x="340" y="130" width="100" height="26" rx="3"/>
-      <text class="label" x="348" y="147">HR</text>
+      <!-- ══ LEFT PANEL: LOCAL ══ -->
+      <rect class="lkd-panel" x="18" y="58" width="296" height="280" rx="6"/>
+      <text class="lkd-head" x="166" y="82" text-anchor="middle" style="fill:#FF3B3B">LOCAL Optimization</text>
+      <text class="lkd-note" x="166" y="100" text-anchor="middle">each unit maximises its own metric</text>
 
-      <rect class="comp" x="460" y="34" width="90" height="122" rx="3"/>
-      <text class="labelacc" x="505" y="52" text-anchor="middle">COMPOSITE</text>
-      <text class="label"    x="505" y="72" text-anchor="middle">customer sat</text>
-      <text class="label"    x="505" y="86" text-anchor="middle">+ employee eng</text>
-      <text class="label"    x="505" y="100" text-anchor="middle">+ financial</text>
-      <text class="label"    x="505" y="114" text-anchor="middle">+ innovation</text>
-      <text class="labelacc" x="505" y="138" text-anchor="middle">↑</text>
+      <!-- Dept boxes left -->
+      <rect class="box" x="34"  y="112" width="120" height="34" rx="4"/>
+      <text class="label" x="50" y="134">Finance</text>
+      <text class="good"  x="148" y="134">↑</text>
 
-      <path class="arrow" d="M440 47 L460 50" marker-end="url(#a1)"/>
-      <path class="arrow" d="M440 79 L460 80" marker-end="url(#a1)"/>
-      <path class="arrow" d="M440 111 L460 110" marker-end="url(#a1)"/>
-      <path class="arrow" d="M440 143 L460 140" marker-end="url(#a1)"/>
+      <rect class="box" x="34" y="154" width="120" height="34" rx="4"/>
+      <text class="label" x="50" y="176">Sales</text>
+      <text class="good"  x="148" y="176">↑</text>
 
-      <text class="good" x="460" y="222">✓ whole reinforces</text>
-      <text class="label" x="20" y="268">source: INTEGRATIVE-DIMENSION-PLAYBOOK.md §System Optimization (lines 279-325)</text>
+      <rect class="box" x="34" y="196" width="120" height="34" rx="4"/>
+      <text class="label" x="50" y="218">Operations</text>
+      <text class="good"  x="148" y="218">↑</text>
+
+      <rect class="box" x="34" y="238" width="120" height="34" rx="4"/>
+      <text class="label" x="50" y="260">HR</text>
+      <text class="good"  x="148" y="260">↑</text>
+
+      <!-- Composite result: red -->
+      <rect x="172" y="112" width="122" height="160" rx="5" fill="#180A0A" stroke="#FF3B3B" stroke-opacity="0.8" stroke-width="1.5"/>
+      <text class="label" x="233" y="148" text-anchor="middle" style="fill:#FF3B3B">ORG HEALTH</text>
+      <path d="M233 155 L233 230" stroke="#FF3B3B" stroke-opacity="0.7" fill="none" stroke-width="2" marker-end="url(#lkd-arrow-6-err)"/>
+      <text class="lkd-note" x="233" y="248" text-anchor="middle">composite falls</text>
+
+      <!-- Local arrows from depts to their own metric -->
+      <path d="M154 129 L172 148" stroke="#22C55E" stroke-opacity="0.7" fill="none" stroke-width="1.2" marker-end="url(#lkd-arrow-6-ok)"/>
+      <path d="M154 171 L172 171" stroke="#22C55E" stroke-opacity="0.7" fill="none" stroke-width="1.2" marker-end="url(#lkd-arrow-6-ok)"/>
+      <path d="M154 213 L172 213" stroke="#22C55E" stroke-opacity="0.7" fill="none" stroke-width="1.2" marker-end="url(#lkd-arrow-6-ok)"/>
+      <path d="M154 255 L172 255" stroke="#22C55E" stroke-opacity="0.7" fill="none" stroke-width="1.2" marker-end="url(#lkd-arrow-6-ok)"/>
+
+      <!-- Verdict left -->
+      <text class="bad" x="166" y="308" text-anchor="middle">✗ departments win — organisation fails</text>
+
+      <!-- ══ MIDDLE DIVIDER ══ -->
+      <line x1="350" y1="58" x2="350" y2="358" stroke="#00F5FF" stroke-opacity="0.2" stroke-width="1" stroke-dasharray="5 3"/>
+      <text class="lkd-op" x="350" y="200" text-anchor="middle" writing-mode="tb" transform="rotate(-90 350 200)">contrast</text>
+
+      <!-- ══ RIGHT PANEL: SYSTEM ══ -->
+      <rect class="lkd-panel" x="384" y="58" width="298" height="280" rx="6"/>
+      <text class="lkd-head" x="533" y="82" text-anchor="middle" style="fill:#22C55E">SYSTEM Optimization</text>
+      <text class="lkd-note" x="533" y="100" text-anchor="middle">all units serve one composite metric</text>
+
+      <!-- Dept boxes right (dim — they're inputs) -->
+      <rect class="lkd-node-dim" x="398" y="112" width="120" height="34" rx="4"/>
+      <text class="label" x="414" y="134">Finance</text>
+
+      <rect class="lkd-node-dim" x="398" y="154" width="120" height="34" rx="4"/>
+      <text class="label" x="414" y="176">Sales</text>
+
+      <rect class="lkd-node-dim" x="398" y="196" width="120" height="34" rx="4"/>
+      <text class="label" x="414" y="218">Operations</text>
+
+      <rect class="lkd-node-dim" x="398" y="238" width="120" height="34" rx="4"/>
+      <text class="label" x="414" y="260">HR</text>
+
+      <!-- Arrows to composite -->
+      <path d="M518 129 L538 160" stroke="#00F5FF" stroke-opacity="0.7" fill="none" stroke-width="1.4" marker-end="url(#lkd-arrow-6)"/>
+      <path d="M518 171 L538 185" stroke="#00F5FF" stroke-opacity="0.7" fill="none" stroke-width="1.4" marker-end="url(#lkd-arrow-6)"/>
+      <path d="M518 213 L538 213" stroke="#00F5FF" stroke-opacity="0.7" fill="none" stroke-width="1.4" marker-end="url(#lkd-arrow-6)"/>
+      <path d="M518 255 L538 240" stroke="#00F5FF" stroke-opacity="0.7" fill="none" stroke-width="1.4" marker-end="url(#lkd-arrow-6)"/>
+
+      <!-- Composite metric block: highlighted -->
+      <rect x="536" y="148" width="130" height="122" rx="6" fill="#0B1D20" stroke="#00F5FF" stroke-opacity="0.9" stroke-width="1.8"/>
+      <text class="label"    x="601" y="170" text-anchor="middle" style="fill:#00F5FF">COMPOSITE</text>
+      <text class="lkd-note" x="601" y="188" text-anchor="middle">customer sat</text>
+      <text class="lkd-note" x="601" y="204" text-anchor="middle">employee eng</text>
+      <text class="lkd-note" x="601" y="220" text-anchor="middle">financial health</text>
+      <text class="lkd-note" x="601" y="236" text-anchor="middle">innovation rate</text>
+      <text class="good"     x="601" y="258" text-anchor="middle">↑ rises together</text>
+
+      <!-- Verdict right -->
+      <text class="good" x="533" y="308" text-anchor="middle">✓ whole system reinforces</text>
+
+      <!-- Footer -->
+      <rect class="lkd-panel" x="18" y="352" width="664" height="30" rx="4"/>
+      <text class="lkd-note" x="350" y="372" text-anchor="middle">Source: INTEGRATIVE-DIMENSION-PLAYBOOK.md §System Optimization (lines 279–325)</text>
     </svg>
     <p class="visual-caption">Left: each department's green arrow is the system's red arrow. Right: all four serve a single cyan composite — nobody can hit it by sacrificing another department.</p>
   </div>

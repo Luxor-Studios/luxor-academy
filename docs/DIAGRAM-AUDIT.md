@@ -198,3 +198,24 @@ The following diagrams were not redrawn (scored 3.0–3.9) but would benefit fro
 - **Primary font-size lift**: from 8–10px to 12–16px across all 10 diagrams
 - **viewBox expansions**: 8 of 10 (average increase ~8% width, ~12% height)
 - **Halo coverage**: 100% of rewritten text elements carry `paint-order: stroke fill` + navy stroke
+
+---
+
+## Wave 2 Completed
+
+**Date**: 2026-04-20
+**Auditor**: LibreUIUX Specialist (Wave 2 — structural restructure pass)
+**Method**: Full SVG content replacement using `.lkd` kit classes, expanded viewBoxes, module-local arrow markers, clear reading-order hierarchy.
+
+| # | File | viewBox (before → after) | Structural change | Readability gain |
+|---|------|--------------------------|-------------------|-----------------|
+| 1 | `mcp-integration/mcp-from-zero/01-two-layer-protocol.html` | 540×280 → **660×360** | Replaced ambiguous central divider with explicit two-band panels (lkd-node), three transport pill nodes at bottom, arrow trio lifting Bytes→Frames; band labels promoted to lkd-head | Layer boundary now obvious at a glance; transport swap story told by visual separation, not text alone |
+| 2 | `formal-verification/fstar-7-levels/03-dependent-types.html` | 540×280 → **660×360** | Split into left (WITH decreases) and right (WITHOUT decreases) full-height panels; code inside lkd-node-dim blocks; green/red effect badge pills; proof obligations extracted to lkd-op row | Signatures no longer crowd; Tot vs Dv verdict readable without scanning raw code |
+| 3 | `formal-verification/fstar-7-levels/04-indexed-types.html` | 540×280 → **660×380** | Vertical tree layout with generous row spacing (60px between levels); index metric annotated on left margin as a descending scale (8→4→2→1); level-2 nodes dimmed to show supporting role | Index/value relationship visible as a true descending ladder; branch lines no longer overlap node text |
+| 4 | `categorical-meta-prompting/cmp-foundations/02-prompts-as-morphisms.html` | 560×300 → **700×400** | Decomposition chain and composition example placed in separate lkd-panel containers with clear section titles; functor law trio moved to a bottom chip row, eliminating overlap with composition row | Two concerns (decomposition / composition) separated spatially; quality law chip is copy-ready reference |
+| 5 | `orchestration/mars-systems/02-research-synthesis.html` | 560×280 → **700×400** | Left raw-claims column given 186px width; arrows now route to correct bucket column explicitly; three bin panels given proportional height matching content; self-imposed bucket highlighted with stronger cyan border + taller allocation | Funnel routing legible; SELF-IMPOSED bucket visually dominant as highest-leverage surface |
+| 6 | `orchestration/mars-systems/03-systems-optimization.html` | 560×280 → **700×400** | Two panels side-by-side with full-height inner dept stacks; composite metric block enlarged to 130×122px with named sub-metrics; green/red verdict row below each panel; divider clearly labels "contrast" | Dept→composite arrows traceable; verdicts readable without hovering; contrast axis explicit |
+| 7 | `mcp-integration/mcp-from-zero/04-your-first-server.html` | 540×260 → **660×360** | Replaced compressed circles with three full-height lkd-node rect stations (INSTALL / RESTART / VERIFY), each with internal sub-step breakdown; iterate dashed loop retains position below; step-number labels on forward arrows | Server setup flow now reads as a linear left-to-right procedure with sub-steps visible, not three undifferentiated circles |
+| 8 | `orchestration/mercurio-for-decisions/02-convergence-methods.html` | 540×260 → **700×420** | Three lanes expanded to give INTEGRATION 120px height; four method cards enlarged to 148×52px with sub-labels; DISCOVERY and EMBODIMENT get concrete role descriptions; bidirectional arrows retain position but labels added | Method cards no longer clip; each lane communicates its role without requiring the primer to decode |
+
+**Wave 2 net changes**: 8 files modified, all SVG element blocks replaced, viewBoxes expanded 22–40%, `.lkd` class + `--lkd-accent` inline style added to all SVG roots, module-local `lkd-arrow-{N}` marker IDs prevent ID collision across pages.

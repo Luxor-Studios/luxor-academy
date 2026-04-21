@@ -126,7 +126,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 560 300" role="img" aria-label="Decomposition of F: Task → Prompt as F_template ∘ F_tier ∘ F_domain, with a composition example showing g ∘ f." xmlns="http://www.w3.org/2000/svg">
+    <svg class="lkd" style="--lkd-accent:#A78BFA" viewBox="0 0 700 400" role="img" aria-label="Decomposition of F: Task → Prompt as F_template ∘ F_tier ∘ F_domain, with a composition example showing g ∘ f." xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>
           .node{fill:#111D33;stroke:#A78BFA;stroke-opacity:0.6;stroke-width:1.5}
@@ -135,7 +135,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
           .op{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#A78BFA}
           .law{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
           .head{font-family:'Playfair Display',serif;font-size:13px;fill:#C4B5FD}
-        
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -415,53 +415,102 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
-        <marker id="arrV" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>
+        <marker id="lkd-arrow-4v" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#A78BFA"/>
+        </marker>
+        <marker id="lkd-arrow-4v-dim" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
         </marker>
       </defs>
 
-      <text class="head" x="20" y="22">F = F_template ∘ F_tier ∘ F_domain</text>
+      <!-- ══ SECTION 1: Functor Decomposition ══ -->
+      <text class="lkd-head" x="350" y="28" text-anchor="middle">F: Task → Prompt  =  F_template ∘ F_tier ∘ F_domain</text>
 
-      <rect class="node" x="20" y="38" width="110" height="44" rx="6"/>
-      <text class="nlabel" x="75" y="64" text-anchor="middle">Task</text>
+      <!-- Background panel for decomposition row -->
+      <rect class="lkd-panel" x="18" y="40" width="664" height="90" rx="6"/>
 
-      <path class="arr" d="M130 60 L175 60" marker-end="url(#arrV)"/>
-      <text class="op" x="152" y="52" text-anchor="middle">F_domain</text>
+      <!-- Node: Task -->
+      <rect class="lkd-node" x="34" y="56" width="100" height="52" rx="6"/>
+      <text class="lkd-head" x="84" y="86" text-anchor="middle">Task</text>
 
-      <rect class="node" x="175" y="38" width="90" height="44" rx="6"/>
-      <text class="nlabel" x="220" y="64" text-anchor="middle">Domain</text>
+      <!-- Arrow 1: F_domain -->
+      <path d="M134 82 L206 82" stroke="#A78BFA" fill="none" stroke-width="1.75" marker-end="url(#lkd-arrow-4v)"/>
+      <text class="lkd-op" x="170" y="73" text-anchor="middle">F_domain</text>
+      <text class="lkd-note" x="170" y="110" text-anchor="middle">adds context</text>
 
-      <path class="arr" d="M265 60 L310 60" marker-end="url(#arrV)"/>
-      <text class="op" x="287" y="52" text-anchor="middle">F_tier</text>
+      <!-- Node: Domain -->
+      <rect class="lkd-node" x="206" y="56" width="120" height="52" rx="6"/>
+      <text class="lkd-head"  x="266" y="82" text-anchor="middle">Domain</text>
+      <text class="lkd-note"  x="266" y="98" text-anchor="middle">math / code / …</text>
 
-      <rect class="node" x="310" y="38" width="90" height="44" rx="6"/>
-      <text class="nlabel" x="355" y="64" text-anchor="middle">Tier L1-L7</text>
+      <!-- Arrow 2: F_tier -->
+      <path d="M326 82 L394 82" stroke="#A78BFA" fill="none" stroke-width="1.75" marker-end="url(#lkd-arrow-4v)"/>
+      <text class="lkd-op" x="360" y="73" text-anchor="middle">F_tier</text>
+      <text class="lkd-note" x="360" y="110" text-anchor="middle">applies level</text>
 
-      <path class="arr" d="M400 60 L445 60" marker-end="url(#arrV)"/>
-      <text class="op" x="422" y="52" text-anchor="middle">F_template</text>
+      <!-- Node: Tier -->
+      <rect class="lkd-node" x="394" y="56" width="130" height="52" rx="6"/>
+      <text class="lkd-head" x="459" y="82"  text-anchor="middle">Tier L1–L7</text>
+      <text class="lkd-note" x="459" y="98"  text-anchor="middle">novice → genius</text>
 
-      <rect class="node" x="445" y="38" width="100" height="44" rx="6"/>
-      <text class="nlabel" x="495" y="64" text-anchor="middle">Prompt</text>
+      <!-- Arrow 3: F_template -->
+      <path d="M524 82 L594 82" stroke="#A78BFA" fill="none" stroke-width="1.75" marker-end="url(#lkd-arrow-4v)"/>
+      <text class="lkd-op" x="559" y="73" text-anchor="middle">F_template</text>
+      <text class="lkd-note" x="559" y="110" text-anchor="middle">formats output</text>
 
-      <text class="head" x="20" y="140">Composition: g ∘ f  with quality rule</text>
-      <rect class="node" x="20" y="158" width="100" height="44" rx="6"/>
-      <text class="nlabel" x="70" y="184" text-anchor="middle">Task</text>
+      <!-- Node: Prompt -->
+      <rect class="lkd-node" x="594" y="56" width="80" height="52" rx="6"/>
+      <text class="lkd-head" x="634" y="86" text-anchor="middle">Prompt</text>
 
-      <path class="arr" d="M120 180 L215 180" marker-end="url(#arrV)"/>
-      <text class="op" x="167" y="172" text-anchor="middle">f (q=0.90)</text>
+      <!-- ══ DIVIDER ══ -->
+      <line x1="18" y1="148" x2="682" y2="148" stroke="#A78BFA" stroke-opacity="0.25" stroke-width="1"/>
 
-      <rect class="node" x="215" y="158" width="110" height="44" rx="6"/>
-      <text class="nlabel" x="270" y="184" text-anchor="middle">Prompt</text>
+      <!-- ══ SECTION 2: Composition Example ══ -->
+      <text class="lkd-head" x="350" y="172" text-anchor="middle">Composition Law:   g ∘ f   with quality sequence rule</text>
 
-      <path class="arr" d="M325 180 L420 180" marker-end="url(#arrV)"/>
-      <text class="op" x="372" y="172" text-anchor="middle">g (q=0.70)</text>
+      <!-- Background panel for composition row -->
+      <rect class="lkd-panel" x="18" y="184" width="664" height="86" rx="6"/>
 
-      <rect class="node" x="420" y="158" width="110" height="44" rx="6"/>
-      <text class="nlabel" x="475" y="184" text-anchor="middle">Response</text>
+      <!-- Node: Task -->
+      <rect class="lkd-node" x="34" y="200" width="100" height="52" rx="6"/>
+      <text class="lkd-head" x="84" y="230" text-anchor="middle">Task</text>
 
-      <text class="law" x="20" y="235">quality(g ∘ f) = min(0.90, 0.70) = 0.70   ·   sequence rule</text>
-      <text class="law" x="20" y="253">F(g ∘ f) = F(g) ∘ F(f)   ·   composition preserved</text>
-      <text class="law" x="20" y="271">F(id_Task) = id_Prompt   ·   identity preserved</text>
+      <!-- Arrow: f -->
+      <path d="M134 226 L254 226" stroke="#A78BFA" fill="none" stroke-width="1.75" marker-end="url(#lkd-arrow-4v)"/>
+      <text class="lkd-op"   x="194" y="216" text-anchor="middle">f</text>
+      <text class="lkd-note" x="194" y="258" text-anchor="middle">q = 0.90</text>
+
+      <!-- Node: Intermediate Prompt -->
+      <rect class="lkd-node" x="254" y="200" width="148" height="52" rx="6"/>
+      <text class="lkd-head" x="328" y="226" text-anchor="middle">Prompt</text>
+      <text class="lkd-note" x="328" y="242" text-anchor="middle">intermediate</text>
+
+      <!-- Arrow: g -->
+      <path d="M402 226 L522 226" stroke="#A78BFA" fill="none" stroke-width="1.75" marker-end="url(#lkd-arrow-4v)"/>
+      <text class="lkd-op"   x="462" y="216" text-anchor="middle">g</text>
+      <text class="lkd-note" x="462" y="258" text-anchor="middle">q = 0.70</text>
+
+      <!-- Node: Response -->
+      <rect class="lkd-node" x="522" y="200" width="150" height="52" rx="6"/>
+      <text class="lkd-head" x="597" y="230" text-anchor="middle">Response</text>
+
+      <!-- ══ SECTION 3: Functor Laws ══ -->
+      <rect class="lkd-panel" x="18" y="284" width="664" height="96" rx="6"/>
+      <text class="lkd-head" x="350" y="304" text-anchor="middle">Functor Laws (must hold for F to be a functor)</text>
+
+      <rect class="lkd-chip" x="34"  y="316" width="194" height="50" rx="4"/>
+      <text class="lkd-op"   x="131" y="334" text-anchor="middle">Composition</text>
+      <text class="lkd-code" x="131" y="354" text-anchor="middle">F(g ∘ f) = F(g) ∘ F(f)</text>
+
+      <rect class="lkd-chip" x="254" y="316" width="196" height="50" rx="4"/>
+      <text class="lkd-op"   x="352" y="334" text-anchor="middle">Identity</text>
+      <text class="lkd-code" x="352" y="354" text-anchor="middle">F(id_Task) = id_Prompt</text>
+
+      <rect class="lkd-chip" x="476" y="316" width="196" height="50" rx="4"/>
+      <text class="lkd-op"   x="574" y="334" text-anchor="middle">Quality (sequence rule)</text>
+      <text class="lkd-code" x="574" y="354" text-anchor="middle">min(0.90, 0.70) = 0.70</text>
     </svg>
     <p class="visual-caption">Fallback: static diagram. F decomposes into three sub-functors. The sequence rule min(q₁, q₂) governs quality of composed prompts.</p>
   </div>

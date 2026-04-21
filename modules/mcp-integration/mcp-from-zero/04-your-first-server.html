@@ -133,7 +133,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 540 260" role="img" aria-label="A loop diagram with three labelled stations: INSTALL (a terminal icon running INSTALL.sh and writing to ~/.claude.json), RESTART (a Claude Code window icon cycling), and VERIFY (a terminal icon showing a single successful tools/list response with one tool entry). Curved arrows connect the three stations into a closed loop; a fourth arrow from VERIFY back to INSTALL is dashed and labelled iterate." xmlns="http://www.w3.org/2000/svg">
+    <svg class="lkd" style="--lkd-accent:#FF4DD8" viewBox="0 0 660 360" role="img" aria-label="A loop diagram with three labelled stations: INSTALL (a terminal icon running INSTALL.sh and writing to ~/.claude.json), RESTART (a Claude Code window icon cycling), and VERIFY (a terminal icon showing a single successful tools/list response with one tool entry). Curved arrows connect the three stations into a closed loop; a fourth arrow from VERIFY back to INSTALL is dashed and labelled iterate." xmlns="http://www.w3.org/2000/svg">
       <defs>
         <style>
           .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
@@ -141,7 +141,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
           .node{fill:#111D33;stroke:#FF4DD8;stroke-opacity:0.5}
           .arrow{stroke:#00F5FF;fill:none;stroke-width:1.4}
           .mono{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#D4E4F7}
-        
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -421,27 +421,89 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
-        <marker id="m4" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/></marker>
+        <marker id="lkd-arrow-7" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#FF4DD8"/>
+        </marker>
+        <marker id="lkd-arrow-7-dim" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 Z" fill="#4A5A7A"/>
+        </marker>
       </defs>
-      <circle class="node" cx="110" cy="130" r="50"/>
-      <text class="head" x="82" y="128">INSTALL</text>
-      <text class="mono" x="72" y="146">./INSTALL.sh</text>
-      <text class="label" x="70" y="162">+ ~/.claude.json</text>
 
-      <circle class="node" cx="270" cy="130" r="50"/>
-      <text class="head" x="245" y="128">RESTART</text>
-      <text class="mono" x="240" y="146">claude code</text>
-      <text class="label" x="244" y="162">reload config</text>
+      <!-- Title -->
+      <text class="lkd-head" x="330" y="26" text-anchor="middle">First MCP Server: Install → Restart → Verify Loop</text>
+      <text class="lkd-note" x="330" y="44" text-anchor="middle">Three stations, one cycle — each iteration extends your tool list by one verified handler</text>
 
-      <circle class="node" cx="430" cy="130" r="50"/>
-      <text class="head" x="405" y="128">VERIFY</text>
-      <text class="mono" x="398" y="146">tools/list → [1]</text>
-      <text class="label" x="400" y="162">handler fired</text>
+      <!-- ── STATION 1: INSTALL ── -->
+      <rect class="lkd-node" x="30" y="64" width="180" height="176" rx="10"/>
+      <text class="lkd-head" x="120" y="90" text-anchor="middle">INSTALL</text>
+      <line x1="46" y1="98" x2="194" y2="98" stroke="#FF4DD8" stroke-opacity="0.3" stroke-width="1"/>
 
-      <path class="arrow" d="M160 130 L220 130" marker-end="url(#m4)"/>
-      <path class="arrow" d="M320 130 L380 130" marker-end="url(#m4)"/>
-      <path class="arrow" stroke-dasharray="4 3" d="M430 180 Q270 240 110 180" marker-end="url(#m4)"/>
-      <text class="label" x="220" y="230">iterate — add more tools</text>
+      <!-- Sub-steps -->
+      <rect class="lkd-node-dim" x="46" y="108" width="148" height="28" rx="4"/>
+      <text class="lkd-code" x="60" y="127">npm init + index.ts</text>
+
+      <rect class="lkd-node-dim" x="46" y="144" width="148" height="28" rx="4"/>
+      <text class="lkd-code" x="60" y="163">./INSTALL.sh</text>
+
+      <rect class="lkd-node-dim" x="46" y="180" width="148" height="28" rx="4"/>
+      <text class="lkd-code" x="60" y="199">~/.claude.json ← wired</text>
+
+      <!-- Step badge -->
+      <rect x="46" y="218" width="148" height="14" rx="7" fill="#150B18" stroke="#FF4DD8" stroke-opacity="0.6" stroke-width="1"/>
+      <text class="lkd-note" x="120" y="229" text-anchor="middle">writes config, defines handler</text>
+
+      <!-- Arrow 1→2 -->
+      <path d="M210 152 L280 152" stroke="#FF4DD8" fill="none" stroke-width="1.8" marker-end="url(#lkd-arrow-7)"/>
+      <text class="lkd-op" x="245" y="142" text-anchor="middle">step 1</text>
+
+      <!-- ── STATION 2: RESTART ── -->
+      <rect class="lkd-node" x="280" y="64" width="180" height="176" rx="10"/>
+      <text class="lkd-head" x="370" y="90" text-anchor="middle">RESTART</text>
+      <line x1="296" y1="98" x2="444" y2="98" stroke="#FF4DD8" stroke-opacity="0.3" stroke-width="1"/>
+
+      <rect class="lkd-node-dim" x="296" y="108" width="148" height="28" rx="4"/>
+      <text class="lkd-code" x="310" y="127">claude code  (quit+reopen)</text>
+
+      <rect class="lkd-node-dim" x="296" y="144" width="148" height="28" rx="4"/>
+      <text class="lkd-code" x="310" y="163">reads config fresh</text>
+
+      <rect class="lkd-node-dim" x="296" y="180" width="148" height="28" rx="4"/>
+      <text class="lkd-code" x="310" y="199">spawns server process</text>
+
+      <rect x="296" y="218" width="148" height="14" rx="7" fill="#150B18" stroke="#FF4DD8" stroke-opacity="0.6" stroke-width="1"/>
+      <text class="lkd-note" x="370" y="229" text-anchor="middle">config loaded into memory</text>
+
+      <!-- Arrow 2→3 -->
+      <path d="M460 152 L530 152" stroke="#FF4DD8" fill="none" stroke-width="1.8" marker-end="url(#lkd-arrow-7)"/>
+      <text class="lkd-op" x="495" y="142" text-anchor="middle">step 2</text>
+
+      <!-- ── STATION 3: VERIFY ── -->
+      <rect class="lkd-node" x="530" y="64" width="112" height="176" rx="10"/>
+      <text class="lkd-head" x="586" y="90" text-anchor="middle">VERIFY</text>
+      <line x1="546" y1="98" x2="626" y2="98" stroke="#FF4DD8" stroke-opacity="0.3" stroke-width="1"/>
+
+      <rect class="lkd-node-dim" x="546" y="108" width="80" height="28" rx="4"/>
+      <text class="lkd-code" x="560" y="127">tools/list</text>
+
+      <rect class="lkd-node-dim" x="546" y="144" width="80" height="28" rx="4"/>
+      <text class="lkd-code" x="560" y="163">→ [ tool ]</text>
+
+      <rect x="546" y="180" width="80" height="28" rx="7" fill="#0A1A0C" stroke="#22C55E" stroke-opacity="0.8" stroke-width="1.3"/>
+      <text class="lkd-code" x="560" y="199" style="fill:#22C55E">✓ 1 tool</text>
+
+      <rect x="546" y="218" width="80" height="14" rx="7" fill="#150B18" stroke="#FF4DD8" stroke-opacity="0.6" stroke-width="1"/>
+      <text class="lkd-note" x="586" y="229" text-anchor="middle">handshake done</text>
+
+      <!-- ── ITERATE ARROW (VERIFY → INSTALL) ── -->
+      <path d="M586 240 Q586 306 330 306 Q74 306 120 240"
+            stroke="#4A5A7A" fill="none" stroke-width="1.4" stroke-dasharray="5 3"
+            marker-end="url(#lkd-arrow-7-dim)"/>
+      <text class="lkd-note" x="330" y="298" text-anchor="middle">iterate — add more tool handlers</text>
+
+      <!-- Step label on iterate -->
+      <text class="lkd-note" x="330" y="320" text-anchor="middle">step 3: repeat until all required tools verified</text>
     </svg>
     <p class="visual-caption">Three stations, one loop. Install wires config, restart loads it, verify confirms the handshake.</p>
   </div>

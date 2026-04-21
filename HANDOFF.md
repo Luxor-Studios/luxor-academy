@@ -18,6 +18,7 @@
 | **Live deploy** | <https://luxor-academy.vercel.app> · Forge BARQUE quest: <https://luxor-academy.vercel.app/novice/build-and-ship/forge-barque/> · deploy recipe: `docs/DEPLOY.md` |
 | **Phase B shipped** | 7 new quests forged via parallel subagents. All 44 modules validator-green. Full site is Content-live at https://luxor-academy.vercel.app. Commit `4288b61`. |
 | **Phase C roadmap** | `docs/ROADMAP-EXPANSION.md` — 24 new quests across 10 plugin clusters. Academy reframed as tutorial layer for `luxor-claude-marketplace`. HEKAT = full 4-quest track. `codebase-to-course` as meta-flywheel. Research backing: `docs/ROADMAP-research-inventory.md` + `docs/ROADMAP-research-meta.md`. |
+| **Phase D pending** | **Diagram + primer polish.** User reviewed live site 2026-04-21, found residual overlap in design-tool-planner/01, 04, 05 + flagged "walls of text" pedagogy. Full design principles + 5 primer-structural patterns documented in `decisions.md`. Gold standard = hand-crafted forge-barque modules. Every future subagent brief MUST reference `decisions.md`. |
 
 ## Resume command
 
