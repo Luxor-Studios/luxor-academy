@@ -51,6 +51,7 @@ section{margin-bottom:3rem}
 
 
 
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -92,26 +93,23 @@ section{margin-bottom:3rem}
 .lkd-accent-gold    { --lkd-accent: #E9B949; }
 
 /* ----------------------------------------------------------
-   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
-      Works in all modern browsers + Chromium SVG renderers.
+   3. GLOBAL TEXT DEFAULTS — halo only (does NOT force fill or
+      font-family; modules keep their own text-class hierarchies)
    ---------------------------------------------------------- */
 .lkd text {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: var(--lkd-fs-label);
-  fill: var(--lkd-text);
   paint-order: stroke fill;
   stroke: var(--lkd-halo);
-  stroke-width: 4px;
+  stroke-width: 2.5px;
   stroke-linejoin: round;
 }
 
-/* Display heading — Playfair for visual weight */
+/* Display heading — Playfair for visual weight (opt-in via class) */
 .lkd text.lkd-head {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: var(--lkd-fs-head);
   font-weight: 700;
   fill: var(--lkd-accent);
-  stroke-width: 5px;
+  stroke-width: 4px;
 }
 
 /* Standard body label */
@@ -122,16 +120,24 @@ section{margin-bottom:3rem}
 
 /* Operator / accent inline label */
 .lkd text.lkd-op {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-op);
   fill: var(--lkd-accent);
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 /* Muted footnote / sublabel */
 .lkd text.lkd-note {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-note);
   fill: var(--lkd-dim);
-  stroke-width: 3px;
+  stroke-width: 2px;
+}
+
+/* Standard body label — opt-in helper */
+.lkd text.lkd-body, .lkd text.lkd-default {
+  font-family: 'JetBrains Mono', monospace;
+  fill: var(--lkd-text);
 }
 
 /* Monospace code fragment inside diagram */

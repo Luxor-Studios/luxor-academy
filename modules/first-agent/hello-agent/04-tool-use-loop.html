@@ -130,64 +130,6 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
 }
-</style>
-</head>
-<body>
-<div class="shell">
-
-<header class="topbar">
-  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Tetrahedron Quest glyph">
-    <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="50,12 86,78 14,78"/>
-      <line x1="50" y1="12" x2="50" y2="58"/>
-      <line x1="14" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
-      <line x1="86" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
-      <circle cx="50" cy="12" r="1.5" fill="#E9B949"/>
-      <circle cx="86" cy="78" r="1.5" fill="#E9B949"/>
-      <circle cx="14" cy="78" r="1.5" fill="#E9B949"/>
-      <circle cx="50" cy="58" r="1.5" fill="#E9B949"/>
-    </g>
-  </svg>
-  <div class="meta">
-    <div class="crumb">First Agent · Hello Agent · Module 04 of 06</div>
-    <div class="qname">Close the Tool-Use Loop</div>
-  </div>
-  <div class="stats">
-    <span><strong>+125</strong> XP</span>
-    <span><strong>22</strong> min</span>
-    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
-  </div>
-</header>
-
-<h1 class="module-title">Close the Tool-Use Loop</h1>
-<div class="module-subtitle">// Tier: Initiate · Source: claude-agent-sdk-multiplatform</div>
-
-<section id="primer" class="primer">
-  <h2><span class="tag">01</span>Primer</h2>
-  <h1>The three states of an agent loop: end_turn, tool_use, iterate</h1>
-  <p>Module 02 taught you to declare a tool schema. Module 04 teaches you what the agent actually <em>does</em> when Claude decides to call it. The answer is a tight <code>while (true)</code> loop with exactly two exit/continuation branches, keyed on <code>response.stop_reason</code>.</p>
-  <p>The typescript/GUIDE.md loop on lines 388-440 is the canonical shape. You initialize <code>messages</code> with the user's turn. Inside the loop you call <code>messages.create</code> with the tools array. The response comes back with a <code>stop_reason</code>. If it is <code>"end_turn"</code>, Claude has produced the final text — return it and exit. If it is <code>"tool_use"</code>, the response's <code>content</code> array contains one or more <code>tool_use</code> blocks, each with a <code>name</code>, an <code>id</code>, and an <code>input</code> object that validates against your schema. You <strong>append the assistant's message verbatim</strong> (<code>messages.push({ role: "assistant", content: response.content })</code>), then <strong>execute the tool function</strong> (a lookup by <code>block.name</code>), then <strong>append a <code>user</code> message whose content is an array of <code>tool_result</code> blocks</strong> (one per tool call, correlated by <code>tool_use_id</code> to the original <code>id</code>), then loop. Claude sees the tool results on the next iteration and either calls another tool or returns <code>end_turn</code>.</p>
-  <p>The two loop invariants that matter: (1) every <code>tool_use</code> must be answered by a <code>tool_result</code> with the same <code>tool_use_id</code> — the SDK rejects the next request otherwise; (2) the assistant turn you push back must be <code>response.content</code> unchanged, not a re-serialisation. Break either invariant and the loop either 400s immediately or silently drops context.</p>
-  <blockquote class="pullquote">The agent loop is a state machine with two labels: <code>end_turn</code> exits, <code>tool_use</code> executes-and-continues. The <code>tool_result</code> block ties the loop back to the <code>tool_use</code> block via <code>tool_use_id</code> — that ID is the single thread that keeps the conversation coherent.</blockquote>
-</section>
-
-<section id="visual">
-  <h2><span class="tag">02</span>Visual</h2>
-  <div class="visual-frame">
-    <svg viewBox="0 0 540 300" role="img" aria-label="A state machine diagram showing messages.create leading to a diamond labelled stop_reason, with an end_turn edge going to a terminal return node and a tool_use edge leading through push-assistant, execute, push-tool_result before looping back." xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <style>
-          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-          .head{font-family:'Playfair Display',serif;font-size:12px;fill:#E9B949}
-          .node{fill:#111D33;stroke:#E9B949;stroke-opacity:0.55;stroke-width:1.2}
-          .diamond{fill:#162440;stroke:#E9B949;stroke-opacity:0.85;stroke-width:1.4}
-          .terminal{fill:#0A1628;stroke:#22C55E;stroke-opacity:0.85;stroke-width:1.4}
-          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
-          .arrow.loop{stroke:#E9B949}
-          .tag{fill:#F5D06B;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
-          .bad-tag{fill:#22C55E;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
-        
-
 
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
@@ -230,26 +172,23 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-accent-gold    { --lkd-accent: #E9B949; }
 
 /* ----------------------------------------------------------
-   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
-      Works in all modern browsers + Chromium SVG renderers.
+   3. GLOBAL TEXT DEFAULTS — halo only (does NOT force fill or
+      font-family; modules keep their own text-class hierarchies)
    ---------------------------------------------------------- */
 .lkd text {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: var(--lkd-fs-label);
-  fill: var(--lkd-text);
   paint-order: stroke fill;
   stroke: var(--lkd-halo);
-  stroke-width: 4px;
+  stroke-width: 2.5px;
   stroke-linejoin: round;
 }
 
-/* Display heading — Playfair for visual weight */
+/* Display heading — Playfair for visual weight (opt-in via class) */
 .lkd text.lkd-head {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: var(--lkd-fs-head);
   font-weight: 700;
   fill: var(--lkd-accent);
-  stroke-width: 5px;
+  stroke-width: 4px;
 }
 
 /* Standard body label */
@@ -260,16 +199,24 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 
 /* Operator / accent inline label */
 .lkd text.lkd-op {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-op);
   fill: var(--lkd-accent);
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 /* Muted footnote / sublabel */
 .lkd text.lkd-note {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-note);
   fill: var(--lkd-dim);
-  stroke-width: 3px;
+  stroke-width: 2px;
+}
+
+/* Standard body label — opt-in helper */
+.lkd text.lkd-body, .lkd text.lkd-default {
+  font-family: 'JetBrains Mono', monospace;
+  fill: var(--lkd-text);
 }
 
 /* Monospace code fragment inside diagram */
@@ -640,6 +587,65 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-codeblock .tok-fn { color: #FDA4AF; }
 .lkd-codeblock .tok-com { color: #6B7280; font-style: italic; }
 /* END-LUXOR-DIAGRAM-KIT */
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Tetrahedron Quest glyph">
+    <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,12 86,78 14,78"/>
+      <line x1="50" y1="12" x2="50" y2="58"/>
+      <line x1="14" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
+      <line x1="86" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
+      <circle cx="50" cy="12" r="1.5" fill="#E9B949"/>
+      <circle cx="86" cy="78" r="1.5" fill="#E9B949"/>
+      <circle cx="14" cy="78" r="1.5" fill="#E9B949"/>
+      <circle cx="50" cy="58" r="1.5" fill="#E9B949"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">First Agent · Hello Agent · Module 04 of 06</div>
+    <div class="qname">Close the Tool-Use Loop</div>
+  </div>
+  <div class="stats">
+    <span><strong>+125</strong> XP</span>
+    <span><strong>22</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Close the Tool-Use Loop</h1>
+<div class="module-subtitle">// Tier: Initiate · Source: claude-agent-sdk-multiplatform</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>The three states of an agent loop: end_turn, tool_use, iterate</h1>
+  <p>Module 02 taught you to declare a tool schema. Module 04 teaches you what the agent actually <em>does</em> when Claude decides to call it. The answer is a tight <code>while (true)</code> loop with exactly two exit/continuation branches, keyed on <code>response.stop_reason</code>.</p>
+  <p>The typescript/GUIDE.md loop on lines 388-440 is the canonical shape. You initialize <code>messages</code> with the user's turn. Inside the loop you call <code>messages.create</code> with the tools array. The response comes back with a <code>stop_reason</code>. If it is <code>"end_turn"</code>, Claude has produced the final text — return it and exit. If it is <code>"tool_use"</code>, the response's <code>content</code> array contains one or more <code>tool_use</code> blocks, each with a <code>name</code>, an <code>id</code>, and an <code>input</code> object that validates against your schema. You <strong>append the assistant's message verbatim</strong> (<code>messages.push({ role: "assistant", content: response.content })</code>), then <strong>execute the tool function</strong> (a lookup by <code>block.name</code>), then <strong>append a <code>user</code> message whose content is an array of <code>tool_result</code> blocks</strong> (one per tool call, correlated by <code>tool_use_id</code> to the original <code>id</code>), then loop. Claude sees the tool results on the next iteration and either calls another tool or returns <code>end_turn</code>.</p>
+  <p>The two loop invariants that matter: (1) every <code>tool_use</code> must be answered by a <code>tool_result</code> with the same <code>tool_use_id</code> — the SDK rejects the next request otherwise; (2) the assistant turn you push back must be <code>response.content</code> unchanged, not a re-serialisation. Break either invariant and the loop either 400s immediately or silently drops context.</p>
+  <blockquote class="pullquote">The agent loop is a state machine with two labels: <code>end_turn</code> exits, <code>tool_use</code> executes-and-continues. The <code>tool_result</code> block ties the loop back to the <code>tool_use</code> block via <code>tool_use_id</code> — that ID is the single thread that keeps the conversation coherent.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 540 300" role="img" aria-label="A state machine diagram showing messages.create leading to a diamond labelled stop_reason, with an end_turn edge going to a terminal return node and a tool_use edge leading through push-assistant, execute, push-tool_result before looping back." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:12px;fill:#E9B949}
+          .node{fill:#111D33;stroke:#E9B949;stroke-opacity:0.55;stroke-width:1.2}
+          .diamond{fill:#162440;stroke:#E9B949;stroke-opacity:0.85;stroke-width:1.4}
+          .terminal{fill:#0A1628;stroke:#22C55E;stroke-opacity:0.85;stroke-width:1.4}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.5}
+          .arrow.loop{stroke:#E9B949}
+          .tag{fill:#F5D06B;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
+          .bad-tag{fill:#22C55E;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
+        
+
+
 </style>
         <marker id="a1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
           <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>

@@ -150,69 +150,6 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
 }
-</style>
-</head>
-<body>
-<div class="shell">
-
-<header class="topbar">
-  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Geodesic sphere — F* in Seven Levels glyph">
-    <g fill="none" stroke="#39FF14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="50" cy="50" r="42"/>
-      <ellipse cx="50" cy="50" rx="42" ry="14" opacity="0.85"/>
-      <ellipse cx="50" cy="50" rx="14" ry="42" opacity="0.85"/>
-      <ellipse cx="50" cy="50" rx="28" ry="42" opacity="0.55"/>
-      <polygon points="50,8 78,28 68,62 32,62 22,28" opacity="0.85"/>
-      <polygon points="50,92 22,72 32,38 68,38 78,72" opacity="0.85"/>
-      <circle cx="50" cy="8" r="1.4" fill="#39FF14"/>
-      <circle cx="50" cy="92" r="1.4" fill="#39FF14"/>
-      <circle cx="8" cy="50" r="1.4" fill="#39FF14"/>
-      <circle cx="92" cy="50" r="1.4" fill="#39FF14"/>
-    </g>
-  </svg>
-  <div class="meta">
-    <div class="crumb">Formal Verification · F* in Seven Levels · Module 04 of 07</div>
-    <div class="qname">L4 — Indexed Types</div>
-  </div>
-  <div class="stats">
-    <span><strong>+220</strong> XP</span>
-    <span><strong>35</strong> min</span>
-    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
-  </div>
-</header>
-
-<h1 class="module-title">L4 — Indexed Types</h1>
-<div class="module-subtitle">// Tier: Master · Source: fstar-framework · Level 4/7</div>
-
-<section id="primer" class="primer">
-  <h2><span class="tag">01</span>Primer</h2>
-  <h1>Lists indexed by length — non-structural recursion, tamed</h1>
-  <p>Level 4 starts to pay. An <em>indexed</em> type family attaches a value — typically a length, a height, or a phase — to each instance of a data structure, so shape errors fail at the type level. The Week 2 mini-project is the classic example: verified merge sort, whose recursion splits its argument into two halves and is therefore <strong>not structural</strong> on <code>tl</code>. F* cannot guess the metric; you must hand it one.</p>
-  <p>The predicates are indexed by a list. The sortedness check walks pairs:</p>
-  <pre><code class="lang-fstar">let rec sorted (xs:list int) : bool =
-  match xs with
-  | [] -&gt; true
-  | [x] -&gt; true
-  | x :: y :: rest -&gt; x &lt;= y &amp;&amp; sorted (y :: rest)</code></pre>
-  <p>And termination of <code>merge_sort</code> itself relies on the <strong>length-indexed view</strong> of the list. The mini-project spells it out in bold: the recursion is not structural, so you must supply <code>decreases (length xs)</code>. F* then verifies that <code>split</code> produces two strictly-shorter sublists — an obligation on <code>length</code>, not on the list constructor — and closes the proof. The <em>index</em> (length) is the termination metric; the <em>data</em> (the list) is the computational content; F* keeps them separate and synchronised through the type.</p>
-  <p>That is the L4 shift in attitude. At L3 you proved termination of <code>fibonacci</code> on a raw <code>nat</code>. At L4 you prove it on a measure <em>over</em> the data — a function from your structure into a well-founded ordering. The indexed family is the pattern: length-indexed vectors, height-indexed trees, phase-indexed state machines, merge-sort-indexed-by-list-length. Once you can see the index, you can see why the recursion terminates, and F* will see it with you.</p>
-  <blockquote class="pullquote">At L4 the termination metric is a *measure* over the data, not the data itself: <code>decreases (length xs)</code> turns non-structural divide-and-conquer into a termination proof F* can check.</blockquote>
-</section>
-
-<section id="visual">
-  <h2><span class="tag">02</span>Visual</h2>
-  <div class="visual-frame">
-    
-    <svg class="lkd" style="--lkd-accent:#39FF14" viewBox="0 0 660 380" role="img" aria-label="merge_sort recursion tree indexed by list length." xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <style>
-          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#39FF14}
-          .box{fill:#111D33;stroke:#39FF14;stroke-opacity:0.4}
-          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2}
-          .idx{fill:#39FF14;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700}
-
-
 
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
@@ -255,26 +192,23 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-accent-gold    { --lkd-accent: #E9B949; }
 
 /* ----------------------------------------------------------
-   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
-      Works in all modern browsers + Chromium SVG renderers.
+   3. GLOBAL TEXT DEFAULTS — halo only (does NOT force fill or
+      font-family; modules keep their own text-class hierarchies)
    ---------------------------------------------------------- */
 .lkd text {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: var(--lkd-fs-label);
-  fill: var(--lkd-text);
   paint-order: stroke fill;
   stroke: var(--lkd-halo);
-  stroke-width: 4px;
+  stroke-width: 2.5px;
   stroke-linejoin: round;
 }
 
-/* Display heading — Playfair for visual weight */
+/* Display heading — Playfair for visual weight (opt-in via class) */
 .lkd text.lkd-head {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: var(--lkd-fs-head);
   font-weight: 700;
   fill: var(--lkd-accent);
-  stroke-width: 5px;
+  stroke-width: 4px;
 }
 
 /* Standard body label */
@@ -285,16 +219,24 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 
 /* Operator / accent inline label */
 .lkd text.lkd-op {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-op);
   fill: var(--lkd-accent);
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 /* Muted footnote / sublabel */
 .lkd text.lkd-note {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-note);
   fill: var(--lkd-dim);
-  stroke-width: 3px;
+  stroke-width: 2px;
+}
+
+/* Standard body label — opt-in helper */
+.lkd text.lkd-body, .lkd text.lkd-default {
+  font-family: 'JetBrains Mono', monospace;
+  fill: var(--lkd-text);
 }
 
 /* Monospace code fragment inside diagram */
@@ -665,6 +607,70 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-codeblock .tok-fn { color: #FDA4AF; }
 .lkd-codeblock .tok-com { color: #6B7280; font-style: italic; }
 /* END-LUXOR-DIAGRAM-KIT */
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Geodesic sphere — F* in Seven Levels glyph">
+    <g fill="none" stroke="#39FF14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="50" cy="50" r="42"/>
+      <ellipse cx="50" cy="50" rx="42" ry="14" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="14" ry="42" opacity="0.85"/>
+      <ellipse cx="50" cy="50" rx="28" ry="42" opacity="0.55"/>
+      <polygon points="50,8 78,28 68,62 32,62 22,28" opacity="0.85"/>
+      <polygon points="50,92 22,72 32,38 68,38 78,72" opacity="0.85"/>
+      <circle cx="50" cy="8" r="1.4" fill="#39FF14"/>
+      <circle cx="50" cy="92" r="1.4" fill="#39FF14"/>
+      <circle cx="8" cy="50" r="1.4" fill="#39FF14"/>
+      <circle cx="92" cy="50" r="1.4" fill="#39FF14"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Formal Verification · F* in Seven Levels · Module 04 of 07</div>
+    <div class="qname">L4 — Indexed Types</div>
+  </div>
+  <div class="stats">
+    <span><strong>+220</strong> XP</span>
+    <span><strong>35</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">L4 — Indexed Types</h1>
+<div class="module-subtitle">// Tier: Master · Source: fstar-framework · Level 4/7</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Lists indexed by length — non-structural recursion, tamed</h1>
+  <p>Level 4 starts to pay. An <em>indexed</em> type family attaches a value — typically a length, a height, or a phase — to each instance of a data structure, so shape errors fail at the type level. The Week 2 mini-project is the classic example: verified merge sort, whose recursion splits its argument into two halves and is therefore <strong>not structural</strong> on <code>tl</code>. F* cannot guess the metric; you must hand it one.</p>
+  <p>The predicates are indexed by a list. The sortedness check walks pairs:</p>
+  <pre><code class="lang-fstar">let rec sorted (xs:list int) : bool =
+  match xs with
+  | [] -&gt; true
+  | [x] -&gt; true
+  | x :: y :: rest -&gt; x &lt;= y &amp;&amp; sorted (y :: rest)</code></pre>
+  <p>And termination of <code>merge_sort</code> itself relies on the <strong>length-indexed view</strong> of the list. The mini-project spells it out in bold: the recursion is not structural, so you must supply <code>decreases (length xs)</code>. F* then verifies that <code>split</code> produces two strictly-shorter sublists — an obligation on <code>length</code>, not on the list constructor — and closes the proof. The <em>index</em> (length) is the termination metric; the <em>data</em> (the list) is the computational content; F* keeps them separate and synchronised through the type.</p>
+  <p>That is the L4 shift in attitude. At L3 you proved termination of <code>fibonacci</code> on a raw <code>nat</code>. At L4 you prove it on a measure <em>over</em> the data — a function from your structure into a well-founded ordering. The indexed family is the pattern: length-indexed vectors, height-indexed trees, phase-indexed state machines, merge-sort-indexed-by-list-length. Once you can see the index, you can see why the recursion terminates, and F* will see it with you.</p>
+  <blockquote class="pullquote">At L4 the termination metric is a *measure* over the data, not the data itself: <code>decreases (length xs)</code> turns non-structural divide-and-conquer into a termination proof F* can check.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    
+    <svg class="lkd" style="--lkd-accent:#39FF14" viewBox="0 0 660 380" role="img" aria-label="merge_sort recursion tree indexed by list length." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#39FF14}
+          .box{fill:#111D33;stroke:#39FF14;stroke-opacity:0.4}
+          .arrow{stroke:#00F5FF;fill:none;stroke-width:1.2}
+          .idx{fill:#39FF14;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700}
+
+
+
 </style>
         <marker id="lkd-arrow-4" viewBox="0 0 10 10" refX="9" refY="5"
                 markerWidth="6" markerHeight="6" orient="auto-start-reverse">

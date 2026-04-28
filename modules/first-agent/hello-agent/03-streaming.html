@@ -132,63 +132,6 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
 }
-</style>
-</head>
-<body>
-<div class="shell">
-
-<header class="topbar">
-  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Tetrahedron Quest glyph">
-    <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="50,12 86,78 14,78"/>
-      <line x1="50" y1="12" x2="50" y2="58"/>
-      <line x1="14" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
-      <line x1="86" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
-      <circle cx="50" cy="12" r="1.5" fill="#E9B949"/>
-      <circle cx="86" cy="78" r="1.5" fill="#E9B949"/>
-      <circle cx="14" cy="78" r="1.5" fill="#E9B949"/>
-      <circle cx="50" cy="58" r="1.5" fill="#E9B949"/>
-    </g>
-  </svg>
-  <div class="meta">
-    <div class="crumb">First Agent · Hello Agent · Module 03 of 06</div>
-    <div class="qname">Stream the Response</div>
-  </div>
-  <div class="stats">
-    <span><strong>+100</strong> XP</span>
-    <span><strong>15</strong> min</span>
-    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
-  </div>
-</header>
-
-<h1 class="module-title">Stream the Response</h1>
-<div class="module-subtitle">// Tier: Initiate · Source: claude-agent-sdk-multiplatform</div>
-
-<section id="primer" class="primer">
-  <h2><span class="tag">01</span>Primer</h2>
-  <h1>From a blocking promise to a token-by-token async iterator</h1>
-  <p>Without streaming, <code>messages.create</code> is one round-trip: you <code>await</code> the whole reply and print it at the end. For a CLI this is the wrong shape. The user stares at a blinking cursor for three seconds, then the entire reply lands in one paste. Streaming fixes that by returning an async iterable of <em>events</em> — you consume them with <code>for await (const event of stream)</code> and render each token as it arrives.</p>
-  <p>The mechanics are a single boolean flip. typescript/EXAMPLES.md lines 137-161 show the whole thing: pass <code>stream: true</code> to <code>messages.create</code> and the SDK returns an <code>AsyncIterable&lt;MessageStreamEvent&gt;</code> instead of a single <code>Message</code>. You iterate the stream; you filter for events where <code>event.type === "content_block_delta"</code> and <code>event.delta.type === "text_delta"</code>; you <code>process.stdout.write(event.delta.text)</code> for each one. That is the complete streaming loop.</p>
-  <p>Three things move from implicit to explicit once you stream. First, <strong>event types</strong> — <code>message_start</code>, <code>content_block_start</code>, <code>content_block_delta</code>, <code>content_block_stop</code>, <code>message_delta</code>, <code>message_stop</code> — and you only care about <code>content_block_delta</code> for rendering text. Second, <strong>token usage</strong> only finalises in the <code>message_delta</code> event at the end of the stream, so cost tracking attaches to that event specifically. Third, <strong>errors</strong> can arrive mid-stream, so the <code>try/catch</code> goes around the <code>for await</code> loop, not around the initial <code>create</code> call. Everything else — the model ID, the messages, the <code>max_tokens</code> cap — is identical to the non-streaming version from Module 01.</p>
-  <blockquote class="pullquote">Streaming is not a different API. It is the same <code>messages.create</code> with <code>stream: true</code>, returning an async iterable whose <code>content_block_delta</code> events carry the text you render.</blockquote>
-</section>
-
-<section id="visual">
-  <h2><span class="tag">02</span>Visual</h2>
-  <div class="visual-frame">
-    <svg viewBox="0 0 540 220" role="img" aria-label="A timeline comparison. Top track (blocking) shows one wide block labelled await messages.create spanning 3 seconds then a single large payload at the end. Bottom track (streaming) shows stream true then a sequence of small event capsules emerging in real time — content_block_delta events carrying tokens to stdout." xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <style>
-          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#E9B949}
-          .axis{stroke:#94A3B8;stroke-opacity:0.4;stroke-width:1}
-          .block{fill:#162440;stroke:#E9B949;stroke-opacity:0.55}
-          .chunk{fill:#162440;stroke:#E9B949;stroke-opacity:0.55}
-          .payload{fill:#0A1628;stroke:#22C55E;stroke-opacity:0.8}
-          .bad{fill:#0A1628;stroke:#FF3B3B;stroke-opacity:0.5}
-          .tokens{fill:#F5D06B;font-family:'JetBrains Mono',monospace;font-size:10px}
-        
-
 
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
@@ -231,26 +174,23 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-accent-gold    { --lkd-accent: #E9B949; }
 
 /* ----------------------------------------------------------
-   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
-      Works in all modern browsers + Chromium SVG renderers.
+   3. GLOBAL TEXT DEFAULTS — halo only (does NOT force fill or
+      font-family; modules keep their own text-class hierarchies)
    ---------------------------------------------------------- */
 .lkd text {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: var(--lkd-fs-label);
-  fill: var(--lkd-text);
   paint-order: stroke fill;
   stroke: var(--lkd-halo);
-  stroke-width: 4px;
+  stroke-width: 2.5px;
   stroke-linejoin: round;
 }
 
-/* Display heading — Playfair for visual weight */
+/* Display heading — Playfair for visual weight (opt-in via class) */
 .lkd text.lkd-head {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: var(--lkd-fs-head);
   font-weight: 700;
   fill: var(--lkd-accent);
-  stroke-width: 5px;
+  stroke-width: 4px;
 }
 
 /* Standard body label */
@@ -261,16 +201,24 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 
 /* Operator / accent inline label */
 .lkd text.lkd-op {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-op);
   fill: var(--lkd-accent);
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 /* Muted footnote / sublabel */
 .lkd text.lkd-note {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-note);
   fill: var(--lkd-dim);
-  stroke-width: 3px;
+  stroke-width: 2px;
+}
+
+/* Standard body label — opt-in helper */
+.lkd text.lkd-body, .lkd text.lkd-default {
+  font-family: 'JetBrains Mono', monospace;
+  fill: var(--lkd-text);
 }
 
 /* Monospace code fragment inside diagram */
@@ -641,6 +589,64 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-codeblock .tok-fn { color: #FDA4AF; }
 .lkd-codeblock .tok-com { color: #6B7280; font-style: italic; }
 /* END-LUXOR-DIAGRAM-KIT */
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Tetrahedron Quest glyph">
+    <g fill="none" stroke="#E9B949" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,12 86,78 14,78"/>
+      <line x1="50" y1="12" x2="50" y2="58"/>
+      <line x1="14" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
+      <line x1="86" y1="78" x2="50" y2="58" stroke-dasharray="3 3" opacity="0.65"/>
+      <circle cx="50" cy="12" r="1.5" fill="#E9B949"/>
+      <circle cx="86" cy="78" r="1.5" fill="#E9B949"/>
+      <circle cx="14" cy="78" r="1.5" fill="#E9B949"/>
+      <circle cx="50" cy="58" r="1.5" fill="#E9B949"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">First Agent · Hello Agent · Module 03 of 06</div>
+    <div class="qname">Stream the Response</div>
+  </div>
+  <div class="stats">
+    <span><strong>+100</strong> XP</span>
+    <span><strong>15</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Stream the Response</h1>
+<div class="module-subtitle">// Tier: Initiate · Source: claude-agent-sdk-multiplatform</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>From a blocking promise to a token-by-token async iterator</h1>
+  <p>Without streaming, <code>messages.create</code> is one round-trip: you <code>await</code> the whole reply and print it at the end. For a CLI this is the wrong shape. The user stares at a blinking cursor for three seconds, then the entire reply lands in one paste. Streaming fixes that by returning an async iterable of <em>events</em> — you consume them with <code>for await (const event of stream)</code> and render each token as it arrives.</p>
+  <p>The mechanics are a single boolean flip. typescript/EXAMPLES.md lines 137-161 show the whole thing: pass <code>stream: true</code> to <code>messages.create</code> and the SDK returns an <code>AsyncIterable&lt;MessageStreamEvent&gt;</code> instead of a single <code>Message</code>. You iterate the stream; you filter for events where <code>event.type === "content_block_delta"</code> and <code>event.delta.type === "text_delta"</code>; you <code>process.stdout.write(event.delta.text)</code> for each one. That is the complete streaming loop.</p>
+  <p>Three things move from implicit to explicit once you stream. First, <strong>event types</strong> — <code>message_start</code>, <code>content_block_start</code>, <code>content_block_delta</code>, <code>content_block_stop</code>, <code>message_delta</code>, <code>message_stop</code> — and you only care about <code>content_block_delta</code> for rendering text. Second, <strong>token usage</strong> only finalises in the <code>message_delta</code> event at the end of the stream, so cost tracking attaches to that event specifically. Third, <strong>errors</strong> can arrive mid-stream, so the <code>try/catch</code> goes around the <code>for await</code> loop, not around the initial <code>create</code> call. Everything else — the model ID, the messages, the <code>max_tokens</code> cap — is identical to the non-streaming version from Module 01.</p>
+  <blockquote class="pullquote">Streaming is not a different API. It is the same <code>messages.create</code> with <code>stream: true</code>, returning an async iterable whose <code>content_block_delta</code> events carry the text you render.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 540 220" role="img" aria-label="A timeline comparison. Top track (blocking) shows one wide block labelled await messages.create spanning 3 seconds then a single large payload at the end. Bottom track (streaming) shows stream true then a sequence of small event capsules emerging in real time — content_block_delta events carrying tokens to stdout." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#E9B949}
+          .axis{stroke:#94A3B8;stroke-opacity:0.4;stroke-width:1}
+          .block{fill:#162440;stroke:#E9B949;stroke-opacity:0.55}
+          .chunk{fill:#162440;stroke:#E9B949;stroke-opacity:0.55}
+          .payload{fill:#0A1628;stroke:#22C55E;stroke-opacity:0.8}
+          .bad{fill:#0A1628;stroke:#FF3B3B;stroke-opacity:0.5}
+          .tokens{fill:#F5D06B;font-family:'JetBrains Mono',monospace;font-size:10px}
+        
+
+
 </style>
       </defs>
       <text class="head" x="20" y="22">blocking</text>

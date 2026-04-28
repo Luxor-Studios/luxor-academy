@@ -124,58 +124,6 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 
 @media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
-</style>
-</head>
-<body>
-<div class="shell">
-
-<header class="topbar">
-  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Jitterbug Track glyph">
-    <g fill="none" stroke="#FF4DD8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29" opacity="0.35"/>
-      <polygon points="50,18 78,66 22,66"/>
-      <polygon points="50,82 22,34 78,34"/>
-      <circle cx="50" cy="50" r="2" fill="#FF4DD8" stroke="none"/>
-    </g>
-  </svg>
-  <div class="meta">
-    <div class="crumb">MCP Integration · MCP from Zero · Module 02 of 06</div>
-    <div class="qname">Capability Negotiation</div>
-  </div>
-  <div class="stats">
-    <span><strong>+140</strong> XP</span>
-    <span><strong>25</strong> min</span>
-    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
-  </div>
-</header>
-
-<h1 class="module-title">Capability Negotiation</h1>
-<div class="module-subtitle">// Tier: Adept · Source: meta-prompting-plugin/skills/integrations/mcp-categorical/SKILL.md</div>
-
-<section id="primer" class="primer">
-  <h2><span class="tag">01</span>Primer</h2>
-  <h1>The handshake that decides what each side can say</h1>
-  <p>Nothing useful travels over MCP until both ends have agreed on what each of them speaks. That agreement happens in the very first message pair — the <code>initialize</code> handshake — and the word to watch for is <strong>capabilities</strong>.</p>
-  <p>A client opens the transport, sends an <code>initialize</code> request advertising its protocol version and its own capability bag, and waits. The server answers with its matching capability bag. Only the capabilities that appear in <em>both</em> bags are valid for the rest of the session. <code>tools</code>, <code>resources</code>, <code>prompts</code>, <code>logging</code>, <code>sampling</code> — each is a separate switch, and the switches are set once at the top of the conversation.</p>
-  <p>The <code>mcp-categorical</code> skill makes this concrete in the simplest possible TypeScript server. Look at the <code>new Server(...)</code> line: the second argument is a literal capability declaration, <code>{ capabilities: { tools: {} } }</code>. That object is the payload the server ships back during <code>initialize</code>. Writing <code>{ tools: {} }</code> tells the client: <em>I speak tools; I do not speak resources or prompts.</em> If the client later sends a <code>resources/list</code> request, the server is free (and correct) to reject it.</p>
-  <p>That means your first architectural decision as a server author is not <em>which</em> tool to register. It is <em>which primitive families</em> you will claim in this capability object. The handshake is a cut — every promise your server will keep, and every promise it will refuse to keep, is declared in that one literal.</p>
-  <blockquote class="pullquote"><code>initialize</code> is not a greeting. It is a cut. The <code>capabilities</code> object is a contract the server signs, once, before any real request arrives.</blockquote>
-</section>
-
-<section id="visual">
-  <h2><span class="tag">02</span>Visual</h2>
-  <div class="visual-frame">
-    <svg viewBox="0 0 540 300" role="img" aria-label="A handshake sequence diagram between a Client column on the left and a Server column on the right. The client sends an initialize request carrying a capabilities sampling+roots bag. The server answers with an initialize response carrying capabilities tools+resources. A dashed box in the centre labelled intersection highlights the keys present in both bags." xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <style>
-          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#FF4DD8}
-          .box{fill:#111D33;stroke:#FF4DD8;stroke-opacity:0.45}
-          .arrow{stroke:#00F5FF;fill:#00F5FF;stroke-width:1.2}
-          .mono{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#D4E4F7}
-          .intersect{fill:#162440;stroke:#22C55E;stroke-opacity:0.65;stroke-dasharray:4 3}
-        
-
 
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
@@ -218,26 +166,23 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-accent-gold    { --lkd-accent: #E9B949; }
 
 /* ----------------------------------------------------------
-   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
-      Works in all modern browsers + Chromium SVG renderers.
+   3. GLOBAL TEXT DEFAULTS — halo only (does NOT force fill or
+      font-family; modules keep their own text-class hierarchies)
    ---------------------------------------------------------- */
 .lkd text {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: var(--lkd-fs-label);
-  fill: var(--lkd-text);
   paint-order: stroke fill;
   stroke: var(--lkd-halo);
-  stroke-width: 4px;
+  stroke-width: 2.5px;
   stroke-linejoin: round;
 }
 
-/* Display heading — Playfair for visual weight */
+/* Display heading — Playfair for visual weight (opt-in via class) */
 .lkd text.lkd-head {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: var(--lkd-fs-head);
   font-weight: 700;
   fill: var(--lkd-accent);
-  stroke-width: 5px;
+  stroke-width: 4px;
 }
 
 /* Standard body label */
@@ -248,16 +193,24 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 
 /* Operator / accent inline label */
 .lkd text.lkd-op {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-op);
   fill: var(--lkd-accent);
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 /* Muted footnote / sublabel */
 .lkd text.lkd-note {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-note);
   fill: var(--lkd-dim);
-  stroke-width: 3px;
+  stroke-width: 2px;
+}
+
+/* Standard body label — opt-in helper */
+.lkd text.lkd-body, .lkd text.lkd-default {
+  font-family: 'JetBrains Mono', monospace;
+  fill: var(--lkd-text);
 }
 
 /* Monospace code fragment inside diagram */
@@ -628,6 +581,59 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-codeblock .tok-fn { color: #FDA4AF; }
 .lkd-codeblock .tok-com { color: #6B7280; font-style: italic; }
 /* END-LUXOR-DIAGRAM-KIT */
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Jitterbug Track glyph">
+    <g fill="none" stroke="#FF4DD8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 86,29 86,71 50,92 14,71 14,29" opacity="0.35"/>
+      <polygon points="50,18 78,66 22,66"/>
+      <polygon points="50,82 22,34 78,34"/>
+      <circle cx="50" cy="50" r="2" fill="#FF4DD8" stroke="none"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">MCP Integration · MCP from Zero · Module 02 of 06</div>
+    <div class="qname">Capability Negotiation</div>
+  </div>
+  <div class="stats">
+    <span><strong>+140</strong> XP</span>
+    <span><strong>25</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Capability Negotiation</h1>
+<div class="module-subtitle">// Tier: Adept · Source: meta-prompting-plugin/skills/integrations/mcp-categorical/SKILL.md</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>The handshake that decides what each side can say</h1>
+  <p>Nothing useful travels over MCP until both ends have agreed on what each of them speaks. That agreement happens in the very first message pair — the <code>initialize</code> handshake — and the word to watch for is <strong>capabilities</strong>.</p>
+  <p>A client opens the transport, sends an <code>initialize</code> request advertising its protocol version and its own capability bag, and waits. The server answers with its matching capability bag. Only the capabilities that appear in <em>both</em> bags are valid for the rest of the session. <code>tools</code>, <code>resources</code>, <code>prompts</code>, <code>logging</code>, <code>sampling</code> — each is a separate switch, and the switches are set once at the top of the conversation.</p>
+  <p>The <code>mcp-categorical</code> skill makes this concrete in the simplest possible TypeScript server. Look at the <code>new Server(...)</code> line: the second argument is a literal capability declaration, <code>{ capabilities: { tools: {} } }</code>. That object is the payload the server ships back during <code>initialize</code>. Writing <code>{ tools: {} }</code> tells the client: <em>I speak tools; I do not speak resources or prompts.</em> If the client later sends a <code>resources/list</code> request, the server is free (and correct) to reject it.</p>
+  <p>That means your first architectural decision as a server author is not <em>which</em> tool to register. It is <em>which primitive families</em> you will claim in this capability object. The handshake is a cut — every promise your server will keep, and every promise it will refuse to keep, is declared in that one literal.</p>
+  <blockquote class="pullquote"><code>initialize</code> is not a greeting. It is a cut. The <code>capabilities</code> object is a contract the server signs, once, before any real request arrives.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 540 300" role="img" aria-label="A handshake sequence diagram between a Client column on the left and a Server column on the right. The client sends an initialize request carrying a capabilities sampling+roots bag. The server answers with an initialize response carrying capabilities tools+resources. A dashed box in the centre labelled intersection highlights the keys present in both bags." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+          .head{font-family:'Playfair Display',serif;font-size:13px;fill:#FF4DD8}
+          .box{fill:#111D33;stroke:#FF4DD8;stroke-opacity:0.45}
+          .arrow{stroke:#00F5FF;fill:#00F5FF;stroke-width:1.2}
+          .mono{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#D4E4F7}
+          .intersect{fill:#162440;stroke:#22C55E;stroke-opacity:0.65;stroke-dasharray:4 3}
+        
+
+
 </style>
         <marker id="a2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
           <path d="M0,0 L10,5 L0,10 z" fill="#00F5FF"/>

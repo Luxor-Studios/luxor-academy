@@ -135,3 +135,69 @@ From now on, every subagent forging or refactoring module content MUST receive:
 > "The UI and the functionality are the first impression that people have of us, so we need to make sure it's top-notch and locked in."
 
 Every visual, every callout, every code block is being graded against this. Polish is not optional.
+
+---
+
+## 2026-04-28 · User feedback round #3 — kit injection regression
+
+User reviewed live site and reported "visual cards are broken everywhere, including BARQUE." Investigation found two compounding bugs:
+
+### Bug #1 — kit injected inside SVG `<defs><style>` block (forge-barque corrupted)
+
+**Root cause:** `scripts/inject-diagram-kit.mjs` used `lastIndexOf("</style>")` to choose the injection point. In hand-crafted modules (forge-barque), there are TWO `<style>` blocks: one in the document `<head>`, one inside `<svg><defs><style>` for SVG-scoped class definitions. `lastIndexOf` found the SVG-internal closing tag and injected the kit there, breaking the SVG structure.
+
+**Fix:** changed to `indexOf("</style>")` so the kit always lands in the document head's style block. Re-ran with `--force`; the strip phase removed the misplaced kit and the inject phase placed it correctly. Verified on `01-venv-shebang-trap.html`: kit at lines 147–602 (in head); SVG-internal `</style>` at line 663 (untouched).
+
+### Bug #2 — `.lkd text { fill: …; font-family: … }` overrode subagent custom-class hierarchy
+
+**Root cause:** Wave 1 subagents wrote SVGs with `<svg class="lkd" …>` to opt into the kit's halo. But the kit's `.lkd text` rule also forced `fill: white` and `font-family: monospace` on every text descendant, overriding custom classes like `.sub` (10px gray-blue), `.laneLabel` (cyan Playfair), `.cardText` (cyan dim). Result: dim hierarchical labels were yanked to bright white + monospace and gained a 4px halo, which destroyed tiny (10px) text into illegible smudges.
+
+**Fix:** the `.lkd text` rule now sets only halo properties (`paint-order: stroke fill; stroke: var(--lkd-halo); stroke-width: 2.5px`). Fill and font-family are now opt-in via specific classes (`.lkd-head`, `.lkd-label`, `.lkd-op`, `.lkd-note`, `.lkd-body`). Custom classes inside `.lkd` containers retain their own fill/font-family. Stroke-width also reduced 4px → 2.5px (default) and 5px → 4px (heads) so 10–12px labels remain crisp.
+
+### Lessons captured
+
+1. **Marker-based injection scripts must use unambiguous DOM positions.** `indexOf` for the document head is reliable; `lastIndexOf` is brittle when modules embed `<style>` inside SVG `<defs>`. Future kit-related scripts should target `</head>` or a dedicated comment marker, not `</style>`.
+2. **CSS opt-out beats CSS opt-in for hierarchy preservation.** A kit utility should set the *minimum* needed (halo) and let module authors layer on the rest. Forcing fill/font-family makes the kit hostile to mixed authoring (kit classes + module-local classes).
+3. **The halo's stroke-width has a font-size sweet spot.** 4px is too thick at <12px text. 2.5px works from 10px to 24px. Going forward: anything under 10px is too small to halo at all and should be flagged in audit.
+
+---
+
+## Plan to review the rest
+
+### Wave 4 audit checklist (all 40 subagent-generated modules)
+
+For each module, check:
+
+1. **Does the SVG have `class="lkd"` and use only kit utility classes (`.lkd-head`, `.lkd-label`, `.lkd-op`, `.lkd-note`)?** → Halo + typography work as designed.
+2. **Does the SVG have `class="lkd"` plus custom classes (`.sub`, `.laneLabel`, etc.)?** → Halo applies; custom classes keep their fill/font (now that the kit fix landed). Verify visually.
+3. **Does any text element use font-size < 11px?** → Flag for redraw; halos won't render cleanly.
+4. **Does the diagram fit its viewBox without label clipping?** → Inspect aria-label vs visible content.
+5. **Does the primer section have at least one `.lkd-callout` or mini-diagram per ~150 words?** → If not, queue for Wave 5 primer refactor.
+6. **Does the artifact section use the new `.lkd-codeblock` container?** → If not, queue for Wave 5 artifact upgrade.
+
+### Triage tiers
+
+- **Tier A — broken on live:** the 3 user-flagged DTPs from feedback round #2 (DTP-01 ✅ fixed, DTP-04 ✅ fixed, DTP-05 ❌ still pending), plus any module where Wave 4 audit step #4 fails (clipping/overlap).
+- **Tier B — readable but unpolished:** modules passing audit steps #1-4 but failing #5-6 (no callouts, plain code blocks). Defer to Wave 5.
+- **Tier C — polished, leave alone:** modules at forge-barque parity. Audit-pass on all 6 steps.
+
+### Approach for Wave 4 reviews
+
+- **Audit:** main thread or `general-purpose` subagent — runs the 6-step checklist per module, writes scorecard to `docs/DIAGRAM-AUDIT-WAVE4.md`.
+- **Tier-A redraws:** `libreui-specialist` subagents, ONE FILE PER SUBAGENT (lessons from Wave 3 stalls). Brief includes `decisions.md` + the gold-standard forge-barque file path.
+- **Tier-B refactors:** Wave 5, batched. Primer + artifact upgrades follow patterns from `decisions.md` §"The 'Break up text walls' pattern."
+
+### Verification protocol
+
+After each redraw or kit change:
+1. `node validators/six-slots.js modules/*/*/*.module.json` → 44/44 PASS
+2. Browser-test: open the changed module HTML directly, confirm SVG renders without overlap
+3. Visual check: compare against forge-barque equivalent — 80% as polished or iterate
+
+### What WON'T be done in Wave 4
+
+- New quests (Phase C work — `docs/ROADMAP-EXPANSION.md` queue)
+- i18n renderer activation
+- Phase 1 human gate
+
+These wait until Wave 4 audit pass + Tier-A redraws ship.

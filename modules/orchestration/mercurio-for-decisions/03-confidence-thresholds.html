@@ -78,56 +78,6 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .next-nav .next{text-align:right;align-items:flex-end}
 @media (max-width:520px){.module-title{font-size:2rem}section h2{font-size:1.35rem}.topbar .stats{font-size:0.7rem}.band{flex-direction:column;align-items:flex-start;gap:0.3rem}.band .range{min-width:0}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}}
-</style>
-</head>
-<body>
-<div class="shell">
-
-<header class="topbar">
-  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Octahedron Quest glyph">
-    <g fill="none" stroke="#00F5FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="50,8 92,50 50,92 8,50"/>
-      <line x1="8" y1="50" x2="92" y2="50"/><line x1="50" y1="8" x2="50" y2="50"/><line x1="50" y1="92" x2="50" y2="50"/>
-      <circle cx="50" cy="8" r="1.6" fill="#00F5FF"/><circle cx="50" cy="92" r="1.6" fill="#00F5FF"/>
-      <circle cx="8" cy="50" r="1.6" fill="#00F5FF"/><circle cx="92" cy="50" r="1.6" fill="#00F5FF"/>
-      <circle cx="50" cy="50" r="1.6" fill="#00F5FF"/>
-    </g>
-  </svg>
-  <div class="meta">
-    <div class="crumb">Orchestration · MERCURIO for Decisions · Module 03 of 05</div>
-    <div class="qname">Confidence Thresholds</div>
-  </div>
-  <div class="stats">
-    <span><strong>+100</strong> XP</span>
-    <span><strong>16</strong> min</span>
-    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
-  </div>
-</header>
-
-<h1 class="module-title">Confidence Thresholds</h1>
-<div class="module-subtitle">// Tier: Adept · Source: ~/.claude/agents/mercurio-pragmatist.md</div>
-
-<section id="primer" class="primer">
-  <h2><span class="tag">01</span>Primer</h2>
-  <h1>Calibrate before you commit</h1>
-  <p>MERCURIO the PRAGMATIST is the sub-agent whose entire job is to refuse to ship decisions that look good on paper but collapse on contact with real budgets, real team bandwidth, and real calendars. The agent file calls it the <em>master of navigating reality while maintaining vision</em> and organizes its work across three dimensions: <strong>Reality</strong> (seeing what actually is), <strong>Navigation</strong> (finding pragmatic paths), and <strong>Wisdom</strong> (keeping perspective on what matters).</p>
-  <p>The Reality Plane's opening discipline is <strong>unflinching constraint mapping</strong>. It distinguishes between <em>fixed</em> constraints and <em>negotiable</em> ones, understands real team capabilities and actual bandwidth (not the roadmap-cartoon version), assesses cost in terms people feel (time, money, energy), and identifies hidden constraints and second-order effects before they bite. The recurring question, stated verbatim in the agent file, is: <em>Is this actually possible in our real context?</em></p>
-  <p>Confidence thresholds are how that honesty gets operationalized. MERCURIO pairs each recommendation with a six-band confidence score: <strong>90%+ execute now</strong>, <strong>80-90% plan and commit</strong>, <strong>70-80% prototype first</strong>, <strong>60-70% run a spike</strong>, <strong>50-60% gather more data</strong>, and <strong>below 50% halt</strong>. Each band maps to a concrete next action — no band says <em>just wing it</em>. The Wisdom Plane's test is likewise stated in the source: <em>help distinguish between 'hard no' and 'hard but possible.'</em></p>
-  <p>In this module you read the pragmatist's own definition of reality, then calibrate one of your own open decisions against the six bands. The win condition is not reaching 90%. It is reaching the band that honestly describes what you know, and then taking the action that band requires.</p>
-  <blockquote class="pullquote">A 60% confidence score is not a failure — it is a prescription. It says "spike, do not ship." The hazard is not low confidence; the hazard is taking 90%-confidence actions on 60%-confidence evidence.</blockquote>
-</section>
-
-<section id="visual">
-  <h2><span class="tag">02</span>Visual</h2>
-  <div class="visual-frame">
-    <svg viewBox="0 0 540 300" role="img" aria-label="Vertical confidence ladder with six bands from top (90%+ execute) to bottom (below 50% halt), each tagged with its prescribed action." xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <style>
-          .band{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.45}
-          .label{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#66FAFF;font-weight:600}
-          .sub{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
-        
-
 
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
@@ -170,26 +120,23 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-accent-gold    { --lkd-accent: #E9B949; }
 
 /* ----------------------------------------------------------
-   3. GLOBAL TEXT DEFAULTS — halo via paint-order trick
-      Works in all modern browsers + Chromium SVG renderers.
+   3. GLOBAL TEXT DEFAULTS — halo only (does NOT force fill or
+      font-family; modules keep their own text-class hierarchies)
    ---------------------------------------------------------- */
 .lkd text {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: var(--lkd-fs-label);
-  fill: var(--lkd-text);
   paint-order: stroke fill;
   stroke: var(--lkd-halo);
-  stroke-width: 4px;
+  stroke-width: 2.5px;
   stroke-linejoin: round;
 }
 
-/* Display heading — Playfair for visual weight */
+/* Display heading — Playfair for visual weight (opt-in via class) */
 .lkd text.lkd-head {
   font-family: 'Playfair Display', 'Georgia', serif;
   font-size: var(--lkd-fs-head);
   font-weight: 700;
   fill: var(--lkd-accent);
-  stroke-width: 5px;
+  stroke-width: 4px;
 }
 
 /* Standard body label */
@@ -200,16 +147,24 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 
 /* Operator / accent inline label */
 .lkd text.lkd-op {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-op);
   fill: var(--lkd-accent);
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 /* Muted footnote / sublabel */
 .lkd text.lkd-note {
+  font-family: 'JetBrains Mono', monospace;
   font-size: var(--lkd-fs-note);
   fill: var(--lkd-dim);
-  stroke-width: 3px;
+  stroke-width: 2px;
+}
+
+/* Standard body label — opt-in helper */
+.lkd text.lkd-body, .lkd text.lkd-default {
+  font-family: 'JetBrains Mono', monospace;
+  fill: var(--lkd-text);
 }
 
 /* Monospace code fragment inside diagram */
@@ -580,6 +535,57 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 .lkd-codeblock .tok-fn { color: #FDA4AF; }
 .lkd-codeblock .tok-com { color: #6B7280; font-style: italic; }
 /* END-LUXOR-DIAGRAM-KIT */
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="topbar">
+  <svg class="glyph" viewBox="0 0 100 100" role="img" aria-label="Octahedron Quest glyph">
+    <g fill="none" stroke="#00F5FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50,8 92,50 50,92 8,50"/>
+      <line x1="8" y1="50" x2="92" y2="50"/><line x1="50" y1="8" x2="50" y2="50"/><line x1="50" y1="92" x2="50" y2="50"/>
+      <circle cx="50" cy="8" r="1.6" fill="#00F5FF"/><circle cx="50" cy="92" r="1.6" fill="#00F5FF"/>
+      <circle cx="8" cy="50" r="1.6" fill="#00F5FF"/><circle cx="92" cy="50" r="1.6" fill="#00F5FF"/>
+      <circle cx="50" cy="50" r="1.6" fill="#00F5FF"/>
+    </g>
+  </svg>
+  <div class="meta">
+    <div class="crumb">Orchestration · MERCURIO for Decisions · Module 03 of 05</div>
+    <div class="qname">Confidence Thresholds</div>
+  </div>
+  <div class="stats">
+    <span><strong>+100</strong> XP</span>
+    <span><strong>16</strong> min</span>
+    <button class="export" type="button" onclick="exportProgress()">Export XP</button>
+  </div>
+</header>
+
+<h1 class="module-title">Confidence Thresholds</h1>
+<div class="module-subtitle">// Tier: Adept · Source: ~/.claude/agents/mercurio-pragmatist.md</div>
+
+<section id="primer" class="primer">
+  <h2><span class="tag">01</span>Primer</h2>
+  <h1>Calibrate before you commit</h1>
+  <p>MERCURIO the PRAGMATIST is the sub-agent whose entire job is to refuse to ship decisions that look good on paper but collapse on contact with real budgets, real team bandwidth, and real calendars. The agent file calls it the <em>master of navigating reality while maintaining vision</em> and organizes its work across three dimensions: <strong>Reality</strong> (seeing what actually is), <strong>Navigation</strong> (finding pragmatic paths), and <strong>Wisdom</strong> (keeping perspective on what matters).</p>
+  <p>The Reality Plane's opening discipline is <strong>unflinching constraint mapping</strong>. It distinguishes between <em>fixed</em> constraints and <em>negotiable</em> ones, understands real team capabilities and actual bandwidth (not the roadmap-cartoon version), assesses cost in terms people feel (time, money, energy), and identifies hidden constraints and second-order effects before they bite. The recurring question, stated verbatim in the agent file, is: <em>Is this actually possible in our real context?</em></p>
+  <p>Confidence thresholds are how that honesty gets operationalized. MERCURIO pairs each recommendation with a six-band confidence score: <strong>90%+ execute now</strong>, <strong>80-90% plan and commit</strong>, <strong>70-80% prototype first</strong>, <strong>60-70% run a spike</strong>, <strong>50-60% gather more data</strong>, and <strong>below 50% halt</strong>. Each band maps to a concrete next action — no band says <em>just wing it</em>. The Wisdom Plane's test is likewise stated in the source: <em>help distinguish between 'hard no' and 'hard but possible.'</em></p>
+  <p>In this module you read the pragmatist's own definition of reality, then calibrate one of your own open decisions against the six bands. The win condition is not reaching 90%. It is reaching the band that honestly describes what you know, and then taking the action that band requires.</p>
+  <blockquote class="pullquote">A 60% confidence score is not a failure — it is a prescription. It says "spike, do not ship." The hazard is not low confidence; the hazard is taking 90%-confidence actions on 60%-confidence evidence.</blockquote>
+</section>
+
+<section id="visual">
+  <h2><span class="tag">02</span>Visual</h2>
+  <div class="visual-frame">
+    <svg viewBox="0 0 540 300" role="img" aria-label="Vertical confidence ladder with six bands from top (90%+ execute) to bottom (below 50% halt), each tagged with its prescribed action." xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .band{fill:#111D33;stroke:#00F5FF;stroke-opacity:0.45}
+          .label{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#66FAFF;font-weight:600}
+          .sub{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
+        
+
+
 </style>
       </defs>
       <rect class="band" x="40" y="20" width="460" height="40" rx="3"/>

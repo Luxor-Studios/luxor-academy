@@ -59,7 +59,10 @@ for (const p of htmls) {
     html = html.replace(stripPattern, "\n");
     if (html.length < before) stripped++;
   }
-  const idx = html.lastIndexOf("</style>");
+  // Inject into the FIRST </style> — i.e., the document <head>'s style block.
+  // Earlier versions used lastIndexOf which found SVG-internal <defs><style>
+  // closings in hand-crafted modules (forge-barque), corrupting the SVG.
+  const idx = html.indexOf("</style>");
   if (idx === -1) {
     console.error(`[skip-no-style] ${p}`);
     continue;
