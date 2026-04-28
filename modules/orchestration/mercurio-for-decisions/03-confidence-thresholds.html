@@ -127,6 +127,8 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
           .label{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#66FAFF;font-weight:600}
           .sub{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#94A3B8}
         
+
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -404,6 +406,179 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
     forced-color-adjust: none;
   }
 }
+
+/* ============================================================
+   LUXOR Diagram Kit v1.1 EXTENSIONS — primer callouts + code blocks
+   Added 2026-04-25 per decisions.md: break up text walls, polished code.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   PRIMER CALLOUTS — Inline, reusable text-break elements.
+   Use inside primer markdown rendered to HTML, e.g.:
+   <aside class="lkd-callout lkd-callout--insight">...</aside>
+   ---------------------------------------------------------- */
+.lkd-callout {
+  --callout-accent: var(--lkd-accent, #E9B949);
+  display: block;
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem 1rem 1.75rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, var(--callout-accent) 28%, transparent);
+  background: linear-gradient(135deg,
+    color-mix(in oklab, var(--callout-accent) 8%, transparent) 0%,
+    color-mix(in oklab, var(--callout-accent) 2%, transparent) 100%);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #E5E7EB;
+}
+.lkd-callout::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 8px 0 0 8px;
+  background: var(--callout-accent);
+}
+.lkd-callout strong { color: var(--callout-accent); font-weight: 600; }
+.lkd-callout code {
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  color: #F5D06B;
+}
+.lkd-callout__label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--callout-accent);
+  margin-bottom: 0.5rem;
+}
+
+/* Variants — each sets --callout-accent + adds an icon glyph. */
+.lkd-callout--insight   { --callout-accent: #00F5FF; }   /* cyan phosphor */
+.lkd-callout--warning   { --callout-accent: #FFB347; }   /* amber */
+.lkd-callout--ref       { --callout-accent: #A78BFA; }   /* violet */
+.lkd-callout--compare   { --callout-accent: #FF7E6B; }   /* coral */
+.lkd-callout--math      { --callout-accent: #39FF14; }   /* arcade-green */
+.lkd-callout--insight .lkd-callout__label::before { content: "★ "; }
+.lkd-callout--warning .lkd-callout__label::before { content: "⚠ "; }
+.lkd-callout--ref     .lkd-callout__label::before { content: "↗ "; }
+.lkd-callout--compare .lkd-callout__label::before { content: "⇄ "; }
+.lkd-callout--math    .lkd-callout__label::before { content: "∑ "; }
+
+/* Compare callout: two-column layout */
+.lkd-callout--compare > .lkd-callout__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.lkd-callout--compare .lkd-callout__col {
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 2px solid var(--callout-accent);
+  border-radius: 4px;
+}
+.lkd-callout--compare .lkd-callout__col-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--callout-accent);
+  margin-bottom: 0.4rem;
+}
+
+/* ----------------------------------------------------------
+   CODE BLOCK — line-number gutter + language badge.
+   Wrap a <pre><code> in a .lkd-codeblock container; add
+   data-lang="python" for the badge. Leading numbers via CSS
+   counter — no JS required.
+   ---------------------------------------------------------- */
+.lkd-codeblock {
+  position: relative;
+  margin: 1.25rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--lkd-border, rgba(233, 185, 73, 0.22));
+  background: var(--lkd-surface, #111D33);
+  overflow: hidden;
+}
+.lkd-codeblock__source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid var(--lkd-border, rgba(233, 185, 73, 0.22));
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--lkd-dim, #94A3B8);
+}
+.lkd-codeblock__source-path { color: var(--lkd-text, #FFFFFF); }
+.lkd-codeblock__source-link {
+  color: var(--lkd-accent, #E9B949);
+  border-bottom: 1px solid transparent;
+  transition: border-color 150ms;
+}
+.lkd-codeblock__source-link:hover { border-bottom-color: var(--lkd-accent, #E9B949); }
+.lkd-codeblock__lang {
+  display: inline-block;
+  padding: 0.1em 0.6em;
+  background: color-mix(in oklab, var(--lkd-accent, #E9B949) 18%, transparent);
+  border: 1px solid color-mix(in oklab, var(--lkd-accent, #E9B949) 35%, transparent);
+  border-radius: 999px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lkd-accent, #E9B949);
+}
+.lkd-codeblock pre {
+  margin: 0;
+  padding: 1rem 1rem 1rem 0;
+  counter-reset: lkd-line;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #E5E7EB;
+}
+.lkd-codeblock pre > code { display: block; }
+.lkd-codeblock pre > code .ln {
+  /* Each child .ln represents one line; counter does the gutter. */
+  display: block;
+  padding-left: 3.5rem;
+  position: relative;
+  white-space: pre;
+}
+.lkd-codeblock pre > code .ln::before {
+  counter-increment: lkd-line;
+  content: counter(lkd-line);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.75rem;
+  padding-right: 0.5rem;
+  text-align: right;
+  color: rgba(148, 163, 184, 0.4);
+  font-variant-numeric: tabular-nums;
+  border-right: 1px solid rgba(148, 163, 184, 0.15);
+  user-select: none;
+}
+.lkd-codeblock pre > code .ln + .ln { margin-top: 0; }
+
+/* Light-syntax hints — tone keywords/strings/comments without a full highlighter */
+.lkd-codeblock .tok-kw { color: #C4B5FD; }
+.lkd-codeblock .tok-str { color: #FCD34D; }
+.lkd-codeblock .tok-num { color: #67E8F9; }
+.lkd-codeblock .tok-fn { color: #FDA4AF; }
+.lkd-codeblock .tok-com { color: #6B7280; font-style: italic; }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
       </defs>

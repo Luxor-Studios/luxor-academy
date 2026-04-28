@@ -128,6 +128,8 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
   *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
 }
 
+
+
 /* LUXOR-DIAGRAM-KIT-INJECTED */
 /* ============================================================
    LUXOR Diagram Kit v1.0 — bioluminescent / Tron-precision
@@ -405,6 +407,179 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
     forced-color-adjust: none;
   }
 }
+
+/* ============================================================
+   LUXOR Diagram Kit v1.1 EXTENSIONS — primer callouts + code blocks
+   Added 2026-04-25 per decisions.md: break up text walls, polished code.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   PRIMER CALLOUTS — Inline, reusable text-break elements.
+   Use inside primer markdown rendered to HTML, e.g.:
+   <aside class="lkd-callout lkd-callout--insight">...</aside>
+   ---------------------------------------------------------- */
+.lkd-callout {
+  --callout-accent: var(--lkd-accent, #E9B949);
+  display: block;
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem 1rem 1.75rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, var(--callout-accent) 28%, transparent);
+  background: linear-gradient(135deg,
+    color-mix(in oklab, var(--callout-accent) 8%, transparent) 0%,
+    color-mix(in oklab, var(--callout-accent) 2%, transparent) 100%);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #E5E7EB;
+}
+.lkd-callout::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 8px 0 0 8px;
+  background: var(--callout-accent);
+}
+.lkd-callout strong { color: var(--callout-accent); font-weight: 600; }
+.lkd-callout code {
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  color: #F5D06B;
+}
+.lkd-callout__label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--callout-accent);
+  margin-bottom: 0.5rem;
+}
+
+/* Variants — each sets --callout-accent + adds an icon glyph. */
+.lkd-callout--insight   { --callout-accent: #00F5FF; }   /* cyan phosphor */
+.lkd-callout--warning   { --callout-accent: #FFB347; }   /* amber */
+.lkd-callout--ref       { --callout-accent: #A78BFA; }   /* violet */
+.lkd-callout--compare   { --callout-accent: #FF7E6B; }   /* coral */
+.lkd-callout--math      { --callout-accent: #39FF14; }   /* arcade-green */
+.lkd-callout--insight .lkd-callout__label::before { content: "★ "; }
+.lkd-callout--warning .lkd-callout__label::before { content: "⚠ "; }
+.lkd-callout--ref     .lkd-callout__label::before { content: "↗ "; }
+.lkd-callout--compare .lkd-callout__label::before { content: "⇄ "; }
+.lkd-callout--math    .lkd-callout__label::before { content: "∑ "; }
+
+/* Compare callout: two-column layout */
+.lkd-callout--compare > .lkd-callout__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.lkd-callout--compare .lkd-callout__col {
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 2px solid var(--callout-accent);
+  border-radius: 4px;
+}
+.lkd-callout--compare .lkd-callout__col-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--callout-accent);
+  margin-bottom: 0.4rem;
+}
+
+/* ----------------------------------------------------------
+   CODE BLOCK — line-number gutter + language badge.
+   Wrap a <pre><code> in a .lkd-codeblock container; add
+   data-lang="python" for the badge. Leading numbers via CSS
+   counter — no JS required.
+   ---------------------------------------------------------- */
+.lkd-codeblock {
+  position: relative;
+  margin: 1.25rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--lkd-border, rgba(233, 185, 73, 0.22));
+  background: var(--lkd-surface, #111D33);
+  overflow: hidden;
+}
+.lkd-codeblock__source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid var(--lkd-border, rgba(233, 185, 73, 0.22));
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--lkd-dim, #94A3B8);
+}
+.lkd-codeblock__source-path { color: var(--lkd-text, #FFFFFF); }
+.lkd-codeblock__source-link {
+  color: var(--lkd-accent, #E9B949);
+  border-bottom: 1px solid transparent;
+  transition: border-color 150ms;
+}
+.lkd-codeblock__source-link:hover { border-bottom-color: var(--lkd-accent, #E9B949); }
+.lkd-codeblock__lang {
+  display: inline-block;
+  padding: 0.1em 0.6em;
+  background: color-mix(in oklab, var(--lkd-accent, #E9B949) 18%, transparent);
+  border: 1px solid color-mix(in oklab, var(--lkd-accent, #E9B949) 35%, transparent);
+  border-radius: 999px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lkd-accent, #E9B949);
+}
+.lkd-codeblock pre {
+  margin: 0;
+  padding: 1rem 1rem 1rem 0;
+  counter-reset: lkd-line;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #E5E7EB;
+}
+.lkd-codeblock pre > code { display: block; }
+.lkd-codeblock pre > code .ln {
+  /* Each child .ln represents one line; counter does the gutter. */
+  display: block;
+  padding-left: 3.5rem;
+  position: relative;
+  white-space: pre;
+}
+.lkd-codeblock pre > code .ln::before {
+  counter-increment: lkd-line;
+  content: counter(lkd-line);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.75rem;
+  padding-right: 0.5rem;
+  text-align: right;
+  color: rgba(148, 163, 184, 0.4);
+  font-variant-numeric: tabular-nums;
+  border-right: 1px solid rgba(148, 163, 184, 0.15);
+  user-select: none;
+}
+.lkd-codeblock pre > code .ln + .ln { margin-top: 0; }
+
+/* Light-syntax hints — tone keywords/strings/comments without a full highlighter */
+.lkd-codeblock .tok-kw { color: #C4B5FD; }
+.lkd-codeblock .tok-str { color: #FCD34D; }
+.lkd-codeblock .tok-num { color: #67E8F9; }
+.lkd-codeblock .tok-fn { color: #FDA4AF; }
+.lkd-codeblock .tok-com { color: #6B7280; font-style: italic; }
 /* END-LUXOR-DIAGRAM-KIT */
 </style>
 </head>
@@ -451,7 +626,7 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
 <section id="visual">
   <h2><span class="tag">02</span>Visual</h2>
   <div class="visual-frame">
-    <svg viewBox="0 0 600 300" role="img" aria-label="A horizontal pipeline bar broken into five labeled stations with time, tokens, quality score, and agent for each. A running total below reads 22 min, 56k tokens, 9.18/10 avg, 3822 lines out." class="lkd lkd-accent-coral" style="--lkd-accent:#FF7E6B" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 400" role="img" aria-label="A horizontal pipeline bar broken into five labeled stations with time, tokens, quality score, and agent for each. A running total panel below reads 22 min wall time, 56k tokens, 9.18/10 average quality, 3822 lines out across four cells in a 2×2 grid." class="lkd lkd-accent-coral" style="--lkd-accent:#FF7E6B" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="lkd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M0,1 L9,5 L0,9 Z" fill="#FF7E6B"/>
@@ -518,26 +693,30 @@ section h2 .tag{font-family:var(--font-mono);font-size:0.68rem;color:var(--accen
       <text x="537" y="144" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">docs-</text>
       <text x="537" y="158" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">generator</text>
 
-      <!-- Totals bar -->
-      <rect x="20" y="188" width="572" height="92" rx="5" fill="#1C2B47" stroke="#FF7E6B" stroke-opacity="0.4" stroke-width="1.5"/>
-      <text x="306" y="210" text-anchor="middle" font-family="'Playfair Display',serif" font-size="13" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">TOTAL · CANVA-CODE VALIDATION RUN</text>
+      <!-- Totals panel — 2×2 grid, generous breathing room -->
+      <rect x="20" y="190" width="572" height="190" rx="6" fill="#1C2B47" stroke="#FF7E6B" stroke-opacity="0.4" stroke-width="1.5"/>
+      <text x="306" y="216" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" font-weight="700" fill="#FF7E6B" paint-order="stroke fill" stroke="#0A1628" stroke-width="4" stroke-linejoin="round">TOTAL · CANVA-CODE VALIDATION RUN</text>
+      <line x1="306" y1="232" x2="306" y2="370" stroke="#FF7E6B" stroke-opacity="0.18" stroke-width="1"/>
+      <line x1="40" y1="298" x2="572" y2="298" stroke="#FF7E6B" stroke-opacity="0.18" stroke-width="1"/>
 
-      <text x="85" y="240" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">22 min</text>
-      <text x="85" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">wall time</text>
+      <!-- Top-left cell: wall time -->
+      <text x="160" y="270" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">22 min</text>
+      <text x="160" y="288" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">wall time</text>
 
-      <text x="220" y="240" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">~56k</text>
-      <text x="220" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">tokens</text>
+      <!-- Top-right cell: tokens -->
+      <text x="450" y="270" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">~56k</text>
+      <text x="450" y="288" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">tokens used</text>
 
-      <text x="360" y="240" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">9.18/10</text>
-      <text x="360" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">avg quality</text>
+      <!-- Bottom-left cell: avg quality -->
+      <text x="160" y="338" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#22C55E" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">9.18/10</text>
+      <text x="160" y="356" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">avg quality</text>
 
-      <text x="490" y="240" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="20" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">3,822</text>
-      <text x="490" y="258" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">lines out · 91% token eff.</text>
+      <!-- Bottom-right cell: lines out -->
+      <text x="450" y="338" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#FFA595" paint-order="stroke fill" stroke="#0A1628" stroke-width="5" stroke-linejoin="round">3,822</text>
+      <text x="450" y="356" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#94A3B8" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">lines out</text>
 
-      <!-- Dividers inside totals bar -->
-      <line x1="150" y1="196" x2="150" y2="274" stroke="#FF7E6B" stroke-opacity="0.2" stroke-width="1"/>
-      <line x1="290" y1="196" x2="290" y2="274" stroke="#FF7E6B" stroke-opacity="0.2" stroke-width="1"/>
-      <line x1="430" y1="196" x2="430" y2="274" stroke="#FF7E6B" stroke-opacity="0.2" stroke-width="1"/>
+      <!-- Footer note inside totals -->
+      <text x="306" y="376" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#6B7280" paint-order="stroke fill" stroke="#0A1628" stroke-width="3" stroke-linejoin="round">measured · 91% token efficiency · all stations green</text>
 
     </svg>
     <p class="visual-caption">Fallback: static timeline. Each step is a station with an agent assignment and a validated quality score. Totals are measured, not estimated.</p>

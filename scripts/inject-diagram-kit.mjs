@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 /**
- * Inject the LUXOR Diagram Kit CSS into every module HTML's <style> block.
- *
- * Idempotent — detects a sentinel marker to avoid double-injection on re-runs.
- * Self-contained HTML is preserved (no external link added).
+ * Inject (or refresh) the LUXOR Diagram Kit CSS into every module HTML's
+ * <style> block. Idempotent — strips ALL prior kit blocks first, then
+ * injects a single fresh copy. Use --force to re-run after kit changes.
  *
  * Usage:  node scripts/inject-diagram-kit.mjs [--force]
  */
@@ -15,11 +14,20 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const KIT_PATH = path.join(ROOT, "modules/_shared/diagram-kit.css");
-const MARKER = "/* LUXOR-DIAGRAM-KIT-INJECTED */";
+const MARKER_START = "/* LUXOR-DIAGRAM-KIT-INJECTED */";
+const MARKER_END = "/* END-LUXOR-DIAGRAM-KIT */";
 
 const force = process.argv.includes("--force");
-
 const kitCss = fs.readFileSync(KIT_PATH, "utf-8");
+
+// Escape regex metachars so the markers (which contain `*` and `/`) match literally.
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+const stripPattern = new RegExp(
+  `\\n?${escapeRegex(MARKER_START)}[\\s\\S]*?${escapeRegex(MARKER_END)}\\n?`,
+  "g",
+);
 
 function walk(dir) {
   const out = [];
@@ -31,34 +39,37 @@ function walk(dir) {
   return out;
 }
 
-const modulesDir = path.join(ROOT, "modules");
-const htmls = walk(modulesDir);
+const htmls = walk(path.join(ROOT, "modules"));
 let injected = 0;
+let stripped = 0;
 let skipped = 0;
 
 for (const p of htmls) {
   let html = fs.readFileSync(p, "utf-8");
-  if (html.includes(MARKER) && !force) {
+  const hadKit = stripPattern.test(html);
+  if (hadKit && !force) {
+    // Already has it and we're not refreshing — leave alone.
     skipped++;
     continue;
   }
-  // Strip any previous injection before re-applying (force path).
-  if (html.includes(MARKER)) {
-    html = html.replace(
-      new RegExp(`\\n?${MARKER}[\\s\\S]*?/\\* END-LUXOR-DIAGRAM-KIT \\*/\\n?`),
-      "",
-    );
+  if (hadKit) {
+    // Reset lastIndex (test() advances it on global regex) and strip ALL copies.
+    stripPattern.lastIndex = 0;
+    const before = html.length;
+    html = html.replace(stripPattern, "\n");
+    if (html.length < before) stripped++;
   }
-  // Insert before the LAST </style> (every module has exactly one).
   const idx = html.lastIndexOf("</style>");
   if (idx === -1) {
     console.error(`[skip-no-style] ${p}`);
     continue;
   }
-  const injection = `\n${MARKER}\n${kitCss.trim()}\n/* END-LUXOR-DIAGRAM-KIT */\n`;
+  const injection = `\n${MARKER_START}\n${kitCss.trim()}\n${MARKER_END}\n`;
   html = html.slice(0, idx) + injection + html.slice(idx);
   fs.writeFileSync(p, html, "utf-8");
   injected++;
 }
 
-console.log(`[inject-diagram-kit] injected=${injected} skipped=${skipped} total=${htmls.length}`);
+console.log(
+  `[inject-diagram-kit] injected=${injected} stripped=${stripped} skipped=${skipped} total=${htmls.length}`,
+);
